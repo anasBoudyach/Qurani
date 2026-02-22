@@ -546,4 +546,24 @@ MIT License — free to use, modify, and distribute.
 33. `fe6ca24` - Audio player: replace seek buttons with skip next/previous navigation
 34. `c6df3ff` - Background audio playback with notification and lock screen controls
 35. `6a390eb` - UI polish: reciter mic icons with unique colors, fix localization
-36. `4d6ed2b` - Update PROGRESS.md with performance profiling completion
+36. `cee6ecd` - Fresh repo: clean single-commit push to GitHub (AnaXaX/Qurani)
+
+## Session Work (Feb 22, 2026)
+
+### Fixes
+- Background audio: `AudioServiceActivity` in MainActivity.kt for notification/lock screen controls
+- Single-player fix: RecordingScreen reuses shared AudioPlayer (just_audio_background only allows one)
+- Surah repeat: handled manually in `_handleCompletion` (LoopMode.all == LoopMode.one on single source)
+
+### UI Changes
+- Unified playback mode button: Single → Continuous → Repeat Surah → Repeat Ayah (was 2 confusing buttons)
+- Playback mode snackbar at top of screen on mode change
+- Removed "Now Playing" title from full player screen
+- Playback mode labels localized (14 languages)
+
+### Repo & Docs
+- GitHub repo created: https://github.com/AnaXaX/Qurani (public)
+- README.md: full feature list, tech stack, architecture, build instructions
+- PRIVACY_POLICY.md: for Google Play Store listing
+- `.claude/` and `.vscode/` added to .gitignore
+- Git history cleaned: single commit, no Co-Authored-By lines
