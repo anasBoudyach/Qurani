@@ -1,0 +1,100 @@
+name: qurani
+description: "Qurani - Complete Quran app with tajweed teaching, 260+ reciters, tafsir, and more."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Navigation
+  go_router: ^14.8.1
+
+  # Database & Storage
+  drift: ^2.22.1
+  sqlite3_flutter_libs: ^0.5.28
+  shared_preferences: ^2.3.4
+  path_provider: ^2.1.5
+  path: ^1.9.1
+
+  # Networking
+  dio: ^5.7.0
+  dio_cache_interceptor: ^3.5.0
+
+  # Audio
+  just_audio: ^0.9.43
+  just_audio_background: ^0.0.1-beta.15
+  audio_waveforms: ^1.2.0
+
+  # UI & Design
+  flutter_svg: ^2.0.16
+  lottie: ^3.3.1
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+  google_fonts: ^6.2.1
+
+  # Islamic Features
+  adhan_dart: ^1.0.4
+  geolocator: ^13.0.2
+  flutter_compass: ^0.8.1
+
+  # Data Models
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+
+  # Utilities
+  url_launcher: ^6.3.1
+  share_plus: ^10.1.4
+  flutter_local_notifications: ^18.0.1
+  permission_handler: ^11.3.1
+  wakelock_plus: ^1.2.10
+  intl: ^0.19.0
+  equatable: ^2.0.7
+  connectivity_plus: ^6.1.1
+  home_widget: ^0.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+  # Code Generation
+  riverpod_generator: ^2.6.3
+  freezed: ^2.5.7
+  json_serializable: ^6.9.4
+  drift_dev: ^2.22.1
+  build_runner: ^2.4.15
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/images/ornaments/
+    - assets/images/tajweed_diagrams/
+    - assets/images/achievements/
+    - assets/lessons/beginner/
+    - assets/lessons/intermediate/
+    - assets/lessons/advanced/
+    - assets/l10n/
+
+  fonts:
+    - family: AmiriQuran
+      fonts:
+        - asset: assets/fonts/AmiriQuran-Regular.ttf
+    - family: NotoSansArabic
+      fonts:
+        - asset: assets/fonts/NotoSansArabic-Regular.ttf
+        - asset: assets/fonts/NotoSansArabic-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansArabic-Bold.ttf
+          weight: 700

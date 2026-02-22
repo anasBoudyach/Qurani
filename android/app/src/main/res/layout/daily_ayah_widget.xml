@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/widget_background"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/ayah_arabic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ"
+        android:textSize="20sp"
+        android:textColor="#1B5E20"
+        android:gravity="center"
+        android:textDirection="rtl"
+        android:fontFamily="serif"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/ayah_translation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="In the name of Allah, the Most Gracious, the Most Merciful"
+        android:textSize="13sp"
+        android:textColor="#5D4037"
+        android:gravity="center"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/ayah_reference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Al-Fatihah 1:1"
+        android:textSize="11sp"
+        android:textColor="#9E9E9E"
+        android:gravity="center" />
+
+</LinearLayout>

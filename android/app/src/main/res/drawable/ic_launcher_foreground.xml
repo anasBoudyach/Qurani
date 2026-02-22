@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Open book shape (centered in the 108x108 adaptive icon safe zone 66x66 centered) -->
+    <!-- Left page -->
+    <path
+        android:pathData="M30,34 L30,74 Q30,76 32,76 L52,76 L52,38 Q52,36 50,34 L32,34 Q30,34 30,34Z"
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.95" />
+
+    <!-- Right page -->
+    <path
+        android:pathData="M56,34 L56,76 Q56,76 58,76 L76,76 Q78,76 78,74 L78,34 Q78,34 76,34 L58,38 Q56,36 56,38Z"
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.95" />
+
+    <!-- Center spine -->
+    <path
+        android:pathData="M52,36 L54,34 L56,36 L56,76 L54,78 L52,76Z"
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.7" />
+
+    <!-- Text lines on left page -->
+    <path
+        android:pathData="M34,44 L48,44"
+        android:strokeColor="#1B5E20"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.4" />
+    <path
+        android:pathData="M34,50 L48,50"
+        android:strokeColor="#1B5E20"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.4" />
+    <path
+        android:pathData="M34,56 L48,56"
+        android:strokeColor="#1B5E20"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.4" />
+    <path
+        android:pathData="M34,62 L44,62"
+        android:strokeColor="#1B5E20"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.4" />
+
+    <!-- Text lines on right page -->
+    <path
+        android:pathData="M60,44 L74,44"
+        android:strokeColor="#1B5E20"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.4" />
+    <path
+        android:pathData="M60,50 L74,50"
+        android:strokeColor="#1B5E20"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.4" />
+    <path
+        android:pathData="M60,56 L74,56"
+        android:strokeColor="#1B5E20"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.4" />
+    <path
+        android:pathData="M60,62 L70,62"
+        android:strokeColor="#1B5E20"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.4" />
+
+    <!-- Star/crescent decorative element above the book -->
+    <path
+        android:pathData="M54,28 L55.5,31 L59,31.5 L56.5,33.5 L57,37 L54,35.5 L51,37 L51.5,33.5 L49,31.5 L52.5,31Z"
+        android:fillColor="#BF8C2C"
+        android:fillAlpha="0.9" />
+
+</vector>

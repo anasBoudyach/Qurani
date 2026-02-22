@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Qurani</string>
+    <string name="daily_ayah_widget_desc">Shows a daily Quran ayah with translation</string>
+    <string name="prayer_time_widget_desc">Shows the next prayer time with countdown</string>
+</resources>
