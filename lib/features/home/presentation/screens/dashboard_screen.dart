@@ -21,6 +21,7 @@ import '../../../ahadith/presentation/screens/ahadith_screen.dart';
 import '../../../gamification/data/models/daily_goal.dart';
 import '../../../gamification/presentation/providers/gamification_providers.dart';
 import '../../../gamification/data/models/achievement_def.dart';
+import '../../../gamification/presentation/screens/achievements_screen.dart';
 import '../../../quran/data/models/surah_info.dart';
 import '../../../quran/presentation/screens/reading_screen.dart';
 
@@ -602,7 +603,7 @@ class _AchievementsPreview extends ConsumerWidget {
                       ),
                 ),
                 TextButton(
-                  onPressed: () => context.go(RouteNames.more),
+                  onPressed: () => Navigator.push(context, SlideUpRoute(page: const AchievementsScreen())),
                   child: Text(
                     '${unlocked.length} earned',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(

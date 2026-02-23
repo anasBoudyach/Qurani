@@ -33,8 +33,12 @@ class ReadingScreen extends ConsumerStatefulWidget {
 
 class _ReadingScreenState extends ConsumerState<ReadingScreen> {
   static final RegExp _htmlTagRegex = RegExp(r'<[^>]*>');
-  /// Matches trailing ayah-end sign (۝) + Arabic-Indic digits at end of text.
-  static final RegExp _ayahEndMarkerRegex = RegExp(r'[\s\u06DD]*[\u0660-\u0669]+\s*$');
+  /// Matches trailing ayah-end sign (۝) + Arabic-Indic digits (both ranges) at end of plain text.
+  static final RegExp _ayahEndMarkerRegex = RegExp(r'[\s\u06DD]*[\u0660-\u0669\u06F0-\u06F9]+[\s\u200F\u200E]*$');
+  /// Same but for tajweed HTML where digits may be wrapped in <span>...</span>.
+  static final RegExp _htmlAyahEndRegex = RegExp(
+    r'\s*(?:<span[^>]*>\s*)?[\u06DD]?\s*[\u0660-\u0669\u06F0-\u06F9]+\s*(?:</span>)?\s*$',
+  );
   ReadingMode _mode = ReadingMode.translation;
   double _fontSize = 28.0;
   bool _showTranslation = true;
@@ -48,6 +52,11 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen> {
   /// Plain text with trailing ayah number stripped (for card-based modes).
   String _plainTextNoNumber(Ayah ayah) {
     return _plainText(ayah).replaceAll(_ayahEndMarkerRegex, '').trimRight();
+  }
+
+  /// Tajweed HTML with trailing ayah number stripped (for card-based modes).
+  String _tajweedHtmlNoNumber(String html) {
+    return html.replaceAll(_htmlAyahEndRegex, '').trimRight();
   }
 
   @override
@@ -472,7 +481,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen> {
           // Arabic text (tajweed or plain based on preference)
           if (ref.watch(tajweedProvider) && ayah.textUthmaniTajweed != null) ...[
             TajweedTextWidget(
-              textUthmaniTajweed: ayah.textUthmaniTajweed!,
+              textUthmaniTajweed: _tajweedHtmlNoNumber(ayah.textUthmaniTajweed!),
               fontSize: _fontSize,
             ),
           ] else ...[
@@ -652,7 +661,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen> {
                   TextSpan(
                     children: ayahs.map((ayah) {
                       return TextSpan(
-                        text: '${_plainText(ayah)} ',
+                        text: '${_plainTextNoNumber(ayah)} \u06DD${formatAyahNumber(ayah.ayahNumber, NumeralStyle.arabic)} ',
                         style: TextStyle(
                           fontFamily: 'AmiriQuran',
                           fontSize: _fontSize,
@@ -774,7 +783,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen> {
                             ),
                             (ref.watch(tajweedProvider) && ayah.textUthmaniTajweed != null)
                                 ? TajweedTextWidget(
-                                    textUthmaniTajweed: ayah.textUthmaniTajweed!,
+                                    textUthmaniTajweed: _tajweedHtmlNoNumber(ayah.textUthmaniTajweed!),
                                     fontSize: _fontSize * 0.85,
                                   )
                                 : Text(

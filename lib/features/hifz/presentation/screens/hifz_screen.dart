@@ -33,11 +33,22 @@ class HifzScreen extends ConsumerStatefulWidget {
 class _HifzScreenState extends ConsumerState<HifzScreen> {
   static final RegExp _diacriticsRegex = RegExp(r'[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED]');
   static final RegExp _htmlTagRegex = RegExp(r'<[^>]*>');
+  static final RegExp _ayahEndMarkerRegex = RegExp(r'[\s\u06DD]*[\u0660-\u0669\u06F0-\u06F9]+[\s\u200F\u200E]*$');
+  static final RegExp _htmlAyahEndRegex = RegExp(
+    r'\s*(?:<span[^>]*>\s*)?[\u06DD]?\s*[\u0660-\u0669\u06F0-\u06F9]+\s*(?:</span>)?\s*$',
+  );
 
   /// Get plain Arabic text, falling back to stripped tajweed HTML.
   String _plainText(Ayah ayah) {
-    if (ayah.textUthmani.isNotEmpty) return ayah.textUthmani;
-    return ayah.textUthmaniTajweed?.replaceAll(_htmlTagRegex, '') ?? '';
+    final raw = ayah.textUthmani.isNotEmpty
+        ? ayah.textUthmani
+        : (ayah.textUthmaniTajweed?.replaceAll(_htmlTagRegex, '') ?? '');
+    return raw.replaceAll(_ayahEndMarkerRegex, '').trimRight();
+  }
+
+  /// Tajweed HTML with trailing ayah number stripped.
+  String _tajweedHtmlNoNumber(String html) {
+    return html.replaceAll(_htmlAyahEndRegex, '').trimRight();
   }
 
   HifzDifficulty _difficulty = HifzDifficulty.easy;
@@ -346,7 +357,7 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
             if (isRevealed)
               (ref.watch(tajweedProvider) && ayah.textUthmaniTajweed != null)
                   ? TajweedTextWidget(
-                      textUthmaniTajweed: ayah.textUthmaniTajweed!,
+                      textUthmaniTajweed: _tajweedHtmlNoNumber(ayah.textUthmaniTajweed!),
                       fontSize: 26,
                     )
                   : Text(
