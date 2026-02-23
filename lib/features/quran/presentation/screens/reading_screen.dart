@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/providers/reading_preferences_provider.dart';
 import '../../../audio/presentation/providers/audio_providers.dart';
+import '../../../gamification/data/models/daily_goal.dart';
+import '../../../gamification/presentation/providers/gamification_providers.dart';
 import '../../data/models/surah_info.dart';
 import '../providers/quran_providers.dart';
 import '../widgets/tajweed_text_widget.dart';
@@ -33,6 +35,15 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen> {
   ReadingMode _mode = ReadingMode.translation;
   double _fontSize = 28.0;
   bool _showTranslation = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Record reading activity for gamification
+    Future.microtask(() {
+      ref.read(gamificationServiceProvider).recordActivity(ActivityType.readQuran);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

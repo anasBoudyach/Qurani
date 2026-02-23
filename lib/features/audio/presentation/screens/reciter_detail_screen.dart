@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../gamification/data/models/daily_goal.dart';
+import '../../../gamification/presentation/providers/gamification_providers.dart';
 import '../../../quran/data/models/surah_info.dart';
 import '../../data/models/reciter.dart';
 import '../providers/audio_providers.dart';
@@ -287,6 +289,8 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
   void _playSurah(SurahInfo surah, ReciterMoshaf? moshaf, bool isDownloaded) {
     if (moshaf == null) return;
     final service = ref.read(audioPlayerServiceProvider);
+    // Record listening activity for gamification
+    ref.read(gamificationServiceProvider).recordActivity(ActivityType.listenQuran);
 
     if (isDownloaded) {
       // Play from local file

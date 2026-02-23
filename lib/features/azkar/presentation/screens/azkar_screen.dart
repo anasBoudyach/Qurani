@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../shared/widgets/celebration_overlay.dart';
 import '../../../../shared/widgets/gradient_header.dart';
+import '../../../gamification/data/models/daily_goal.dart';
+import '../../../gamification/presentation/providers/gamification_providers.dart';
 
 /// Azkar categories and their content.
 class _AzkarCategory {
@@ -194,15 +198,15 @@ class AzkarScreen extends StatelessWidget {
   }
 }
 
-class _AzkarListScreen extends StatefulWidget {
+class _AzkarListScreen extends ConsumerStatefulWidget {
   final _AzkarCategory category;
   const _AzkarListScreen({required this.category});
 
   @override
-  State<_AzkarListScreen> createState() => _AzkarListScreenState();
+  ConsumerState<_AzkarListScreen> createState() => _AzkarListScreenState();
 }
 
-class _AzkarListScreenState extends State<_AzkarListScreen> {
+class _AzkarListScreenState extends ConsumerState<_AzkarListScreen> {
   late List<int> _counters;
 
   @override
@@ -219,6 +223,21 @@ class _AzkarListScreenState extends State<_AzkarListScreen> {
     }
     if (_counters[index] >= target) {
       HapticFeedback.heavyImpact();
+      // Check if ALL azkar in category are complete
+      final allComplete = List.generate(
+        widget.category.items.length,
+        (i) => _counters[i] >= widget.category.items[i].count,
+      ).every((c) => c);
+      if (allComplete) {
+        CelebrationOverlay.show(context, color: widget.category.color);
+        // Record azkar activity based on category
+        final title = widget.category.title.toLowerCase();
+        if (title.contains('morning')) {
+          ref.read(gamificationServiceProvider).recordActivity(ActivityType.morningAzkar);
+        } else if (title.contains('evening')) {
+          ref.read(gamificationServiceProvider).recordActivity(ActivityType.eveningAzkar);
+        }
+      }
     }
   }
 

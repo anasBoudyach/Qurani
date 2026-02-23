@@ -603,3 +603,45 @@ MIT License — free to use, modify, and distribute.
 - 3 books per collection, 5 hadiths per book (90 total bundled, static offline)
 - Grade badges (Sahih=green, Hasan=amber, Da'if=red), narrator display, copy button
 - Deep red gradient header, collection → books → hadiths navigation
+
+## Session Work (Feb 23, 2026) — Homepage Redesign + Gamification + Animations
+
+### Animation Infrastructure
+- **StaggeredAnimationGrid**: Reusable widget with fade + scale + slide-up per child (50ms stagger, 400ms duration)
+- **AnimatedCounter**: TweenAnimationBuilder for smooth number roll-up (streak count, stats)
+- **SlideUpRoute / FadeScaleRoute**: Custom page transitions replacing MaterialPageRoute
+- **CelebrationOverlay**: Confetti particles via CustomPainter, auto-dismiss after 1.5s
+- **Parallax header**: GradientHeader now accepts scrollOffset for mosque/circle parallax
+
+### Gamification System
+- **DailyActivityLog** table added to Drift DB (schema v2 with migration)
+- **ActivityType** enum: readQuran, listenQuran, morningAzkar, eveningAzkar, makeDua, tajweedLesson
+- **GamificationService**: Records activities, updates streak, checks achievement conditions
+- **DailyGoal** model: 4 default goals (Read, Listen, Azkar, Du'a) with auto-completion tracking
+- **15 AchievementDefs**: first_read, streak_3/7/30, azkar_morning/evening, tajweed levels, hifz, listener, explorer, dedicated
+- **Riverpod providers**: dailyStreakProvider, dailyGoalsProvider, unlockedAchievementsProvider, gamificationServiceProvider
+
+### Dashboard Rewrite
+- All 12 features on homepage (4x3 grid with staggered animation) — no need for More screen
+- Streak & Daily Goals card: fire icon + AnimatedCounter + circular progress ring + 4 goal chips
+- Achievements preview section: shows 4 most recent unlocked badges
+- Parallax gradient header with ScrollController
+- Compact FeatureTile mode (48x48 icons) for 4-column grid
+- All navigation uses SlideUpRoute custom page transition
+
+### More Screen Simplification
+- Removed 9-tile feature grid (all features now on dashboard)
+- Clean utility list: Achievements, Downloads, Settings, Support, About
+- AchievementsScreen: 3-column grid of 15 badges (unlocked=color, locked=grey+lock icon)
+
+### Gamification Wiring
+- ReadingScreen: records readQuran on initState
+- ReciterDetailScreen: records listenQuran on play
+- AzkarListScreen: records morningAzkar/eveningAzkar on category completion + celebration
+- DuaListScreen: records makeDua on all du'as completed + celebration
+- QuizScreen: records tajweedLesson on pass + celebration
+
+### Celebration Animations
+- Azkar: triggers when all items in a category are counted
+- Du'as: triggers when all repeatable du'as in a category are done
+- Quiz: triggers on passing score (70%+) with 300ms delay

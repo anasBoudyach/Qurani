@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../shared/widgets/feature_tile.dart';
+import '../../../../core/utils/page_transitions.dart';
 import '../../../../shared/widgets/gradient_header.dart';
-import '../../../azkar/presentation/screens/azkar_screen.dart';
-import '../../../prayer_times/presentation/screens/prayer_times_screen.dart';
-import '../../../prayer_times/presentation/screens/qibla_screen.dart';
-import '../../../prayer_times/presentation/screens/hijri_screen.dart';
+import '../../../audio/presentation/screens/downloads_screen.dart';
 import '../../../donate/presentation/screens/donate_screen.dart';
-import '../../../hifz/presentation/screens/hifz_setup_screen.dart';
-import '../../../reading_plans/presentation/screens/khatmah_screen.dart';
-import '../../../duas/presentation/screens/duas_screen.dart';
-import '../../../ahkam/presentation/screens/ahkam_screen.dart';
-import '../../../ahadith/presentation/screens/ahadith_screen.dart';
+import '../../../gamification/presentation/providers/gamification_providers.dart';
+import '../../../gamification/presentation/screens/achievements_screen.dart';
 import 'settings_screen.dart';
 
-class MoreScreen extends StatelessWidget {
+class MoreScreen extends ConsumerWidget {
   const MoreScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final achievementCount =
+        ref.watch(achievementCountProvider).whenOrNull(data: (c) => c) ?? 0;
 
     return Scaffold(
       body: ListView(
@@ -29,10 +26,10 @@ class MoreScreen extends StatelessWidget {
             gradient: isDark
                 ? AppColors.gradientGreenDark
                 : AppColors.gradientGreen,
-            height: 140,
+            height: 120,
             showMosque: true,
             padding: EdgeInsets.fromLTRB(
-              24, MediaQuery.of(context).padding.top + 12, 24, 20,
+              24, MediaQuery.of(context).padding.top + 12, 24, 16,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,11 +43,11 @@ class MoreScreen extends StatelessWidget {
                     color: Colors.white.withAlpha(230),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
-                  'Explore all features',
+                  'Settings & utilities',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 13,
                     color: Colors.white.withAlpha(170),
                   ),
                 ),
@@ -61,107 +58,64 @@ class MoreScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // Feature grid — 3 columns, 3 rows
-                GridView.count(
-                  crossAxisCount: 3,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 0.85,
-                  children: [
-                    FeatureTile(
-                      icon: Icons.access_time_rounded,
-                      label: 'Prayer',
-                      color: AppColors.accentPrayer,
-                      onTap: () => _push(context, const PrayerTimesScreen()),
-                    ),
-                    FeatureTile(
-                      icon: Icons.auto_awesome_rounded,
-                      label: 'Azkar',
-                      color: AppColors.accentAzkar,
-                      onTap: () => _push(context, const AzkarScreen()),
-                    ),
-                    FeatureTile(
-                      icon: Icons.explore_rounded,
-                      label: 'Qibla',
-                      color: AppColors.accentQibla,
-                      onTap: () => _push(context, const QiblaScreen()),
-                    ),
-                    FeatureTile(
-                      icon: Icons.calendar_month_rounded,
-                      label: 'Hijri',
-                      color: AppColors.accentHijri,
-                      onTap: () => _push(context, const HijriScreen()),
-                    ),
-                    FeatureTile(
-                      icon: Icons.menu_book_rounded,
-                      label: 'Hifz',
-                      color: AppColors.accentHifz,
-                      onTap: () => _push(context, const HifzSetupScreen()),
-                    ),
-                    FeatureTile(
-                      icon: Icons.track_changes_rounded,
-                      label: 'Khatmah',
-                      color: AppColors.accentKhatmah,
-                      onTap: () => _push(context, const KhatmahScreen()),
-                    ),
-                    FeatureTile(
-                      icon: Icons.volunteer_activism_rounded,
-                      label: "Du'as",
-                      color: AppColors.accentDua,
-                      onTap: () => _push(context, const DuasScreen()),
-                    ),
-                    FeatureTile(
-                      icon: Icons.gavel_rounded,
-                      label: 'Ahkam',
-                      color: AppColors.accentAhkam,
-                      onTap: () => _push(context, const AhkamScreen()),
-                    ),
-                    FeatureTile(
-                      icon: Icons.auto_stories_rounded,
-                      label: 'Ahadith',
-                      color: AppColors.accentAhadith,
-                      onTap: () => _push(context, const AhadithScreen()),
-                    ),
-                  ],
+                _UtilityTile(
+                  icon: Icons.emoji_events_rounded,
+                  iconColor: Colors.amber.shade700,
+                  bgColor: Colors.amber,
+                  title: 'Achievements',
+                  subtitle: '$achievementCount badge${achievementCount == 1 ? '' : 's'} unlocked',
+                  onTap: () => _push(context, const AchievementsScreen()),
                 ),
-                const SizedBox(height: 24),
-                // Settings
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primaryContainer
-                          .withAlpha(77),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(Icons.settings_rounded,
-                        color: Theme.of(context).colorScheme.primary),
-                  ),
-                  title: const Text('Settings'),
-                  subtitle: const Text('Theme, language, audio preferences'),
-                  trailing: const Icon(Icons.chevron_right),
+                _UtilityTile(
+                  icon: Icons.download_rounded,
+                  iconColor: Colors.blue.shade700,
+                  bgColor: Colors.blue,
+                  title: 'Downloads',
+                  subtitle: 'Manage offline audio',
+                  onTap: () => _push(context, const DownloadsScreen()),
+                ),
+                _UtilityTile(
+                  icon: Icons.settings_rounded,
+                  iconColor: Theme.of(context).colorScheme.primary,
+                  bgColor: Theme.of(context).colorScheme.primary,
+                  title: 'Settings',
+                  subtitle: 'Theme, language, audio preferences',
                   onTap: () => _push(context, const SettingsScreen()),
                 ),
-                const Divider(),
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.pink.withAlpha(26),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child:
-                        const Icon(Icons.favorite_rounded, color: Colors.pink),
-                  ),
-                  title: const Text('Support Qurani'),
-                  subtitle: const Text(
-                      'Help keep this app free - Sadaqah Jariyah'),
-                  trailing: const Icon(Icons.chevron_right),
+                const Divider(height: 32),
+                _UtilityTile(
+                  icon: Icons.favorite_rounded,
+                  iconColor: Colors.pink,
+                  bgColor: Colors.pink,
+                  title: 'Support Qurani',
+                  subtitle: 'Help keep this app free - Sadaqah Jariyah',
                   onTap: () => _push(context, const DonateScreen()),
+                ),
+                _UtilityTile(
+                  icon: Icons.info_outline_rounded,
+                  iconColor: Theme.of(context).colorScheme.onSurface.withAlpha(180),
+                  bgColor: Theme.of(context).colorScheme.onSurface,
+                  title: 'About Qurani',
+                  subtitle: 'Version, licenses, open source',
+                  onTap: () => showAboutDialog(
+                    context: context,
+                    applicationName: 'Qurani',
+                    applicationVersion: '1.0.0',
+                    applicationLegalese:
+                        'Built with love as Sadaqah Jariyah.\nMay Allah accept it from us.',
+                    applicationIcon: Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryGreen.withAlpha(30),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.menu_book_rounded,
+                        color: AppColors.primaryGreen,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -172,7 +126,51 @@ class MoreScreen extends StatelessWidget {
   }
 
   void _push(BuildContext context, Widget screen) {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+    Navigator.push(context, SlideUpRoute(page: screen));
   }
+}
 
+class _UtilityTile extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final Color bgColor;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  const _UtilityTile({
+    required this.icon,
+    required this.iconColor,
+    required this.bgColor,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      leading: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: bgColor.withAlpha(26),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(icon, color: iconColor, size: 24),
+      ),
+      title: Text(title),
+      subtitle: Text(
+        subtitle,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(140),
+            ),
+      ),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: Theme.of(context).colorScheme.onSurface.withAlpha(80),
+      ),
+      onTap: onTap,
+    );
+  }
 }

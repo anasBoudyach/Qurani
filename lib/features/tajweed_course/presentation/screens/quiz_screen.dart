@@ -2,6 +2,9 @@ import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../shared/widgets/celebration_overlay.dart';
+import '../../../gamification/data/models/daily_goal.dart';
+import '../../../gamification/presentation/providers/gamification_providers.dart';
 import '../../../quran/presentation/providers/quran_providers.dart';
 import '../../data/models/tajweed_lesson.dart';
 
@@ -50,6 +53,12 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     } else {
       setState(() => _quizComplete = true);
       _saveProgress();
+      if (passed) {
+        ref.read(gamificationServiceProvider).recordActivity(ActivityType.tajweedLesson);
+        Future.delayed(const Duration(milliseconds: 300), () {
+          if (mounted) CelebrationOverlay.show(context, color: Colors.amber);
+        });
+      }
     }
   }
 

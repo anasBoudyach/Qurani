@@ -4930,6 +4930,319 @@ class RecordingSessionsCompanion extends UpdateCompanion<RecordingSession> {
   }
 }
 
+class $DailyActivityLogTable extends DailyActivityLog
+    with TableInfo<$DailyActivityLogTable, DailyActivityLogData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DailyActivityLogTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _activityTypeMeta = const VerificationMeta(
+    'activityType',
+  );
+  @override
+  late final GeneratedColumn<String> activityType = GeneratedColumn<String>(
+    'activity_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _completedAtMeta = const VerificationMeta(
+    'completedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> completedAt = GeneratedColumn<DateTime>(
+    'completed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<String> date = GeneratedColumn<String>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, activityType, completedAt, date];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'daily_activity_log';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DailyActivityLogData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('activity_type')) {
+      context.handle(
+        _activityTypeMeta,
+        activityType.isAcceptableOrUnknown(
+          data['activity_type']!,
+          _activityTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_activityTypeMeta);
+    }
+    if (data.containsKey('completed_at')) {
+      context.handle(
+        _completedAtMeta,
+        completedAt.isAcceptableOrUnknown(
+          data['completed_at']!,
+          _completedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_completedAtMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DailyActivityLogData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DailyActivityLogData(
+      id:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}id'],
+          )!,
+      activityType:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}activity_type'],
+          )!,
+      completedAt:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}completed_at'],
+          )!,
+      date:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}date'],
+          )!,
+    );
+  }
+
+  @override
+  $DailyActivityLogTable createAlias(String alias) {
+    return $DailyActivityLogTable(attachedDatabase, alias);
+  }
+}
+
+class DailyActivityLogData extends DataClass
+    implements Insertable<DailyActivityLogData> {
+  final int id;
+  final String activityType;
+  final DateTime completedAt;
+  final String date;
+  const DailyActivityLogData({
+    required this.id,
+    required this.activityType,
+    required this.completedAt,
+    required this.date,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['activity_type'] = Variable<String>(activityType);
+    map['completed_at'] = Variable<DateTime>(completedAt);
+    map['date'] = Variable<String>(date);
+    return map;
+  }
+
+  DailyActivityLogCompanion toCompanion(bool nullToAbsent) {
+    return DailyActivityLogCompanion(
+      id: Value(id),
+      activityType: Value(activityType),
+      completedAt: Value(completedAt),
+      date: Value(date),
+    );
+  }
+
+  factory DailyActivityLogData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DailyActivityLogData(
+      id: serializer.fromJson<int>(json['id']),
+      activityType: serializer.fromJson<String>(json['activityType']),
+      completedAt: serializer.fromJson<DateTime>(json['completedAt']),
+      date: serializer.fromJson<String>(json['date']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'activityType': serializer.toJson<String>(activityType),
+      'completedAt': serializer.toJson<DateTime>(completedAt),
+      'date': serializer.toJson<String>(date),
+    };
+  }
+
+  DailyActivityLogData copyWith({
+    int? id,
+    String? activityType,
+    DateTime? completedAt,
+    String? date,
+  }) => DailyActivityLogData(
+    id: id ?? this.id,
+    activityType: activityType ?? this.activityType,
+    completedAt: completedAt ?? this.completedAt,
+    date: date ?? this.date,
+  );
+  DailyActivityLogData copyWithCompanion(DailyActivityLogCompanion data) {
+    return DailyActivityLogData(
+      id: data.id.present ? data.id.value : this.id,
+      activityType:
+          data.activityType.present
+              ? data.activityType.value
+              : this.activityType,
+      completedAt:
+          data.completedAt.present ? data.completedAt.value : this.completedAt,
+      date: data.date.present ? data.date.value : this.date,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DailyActivityLogData(')
+          ..write('id: $id, ')
+          ..write('activityType: $activityType, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('date: $date')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, activityType, completedAt, date);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DailyActivityLogData &&
+          other.id == this.id &&
+          other.activityType == this.activityType &&
+          other.completedAt == this.completedAt &&
+          other.date == this.date);
+}
+
+class DailyActivityLogCompanion extends UpdateCompanion<DailyActivityLogData> {
+  final Value<int> id;
+  final Value<String> activityType;
+  final Value<DateTime> completedAt;
+  final Value<String> date;
+  const DailyActivityLogCompanion({
+    this.id = const Value.absent(),
+    this.activityType = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.date = const Value.absent(),
+  });
+  DailyActivityLogCompanion.insert({
+    this.id = const Value.absent(),
+    required String activityType,
+    required DateTime completedAt,
+    required String date,
+  }) : activityType = Value(activityType),
+       completedAt = Value(completedAt),
+       date = Value(date);
+  static Insertable<DailyActivityLogData> custom({
+    Expression<int>? id,
+    Expression<String>? activityType,
+    Expression<DateTime>? completedAt,
+    Expression<String>? date,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (activityType != null) 'activity_type': activityType,
+      if (completedAt != null) 'completed_at': completedAt,
+      if (date != null) 'date': date,
+    });
+  }
+
+  DailyActivityLogCompanion copyWith({
+    Value<int>? id,
+    Value<String>? activityType,
+    Value<DateTime>? completedAt,
+    Value<String>? date,
+  }) {
+    return DailyActivityLogCompanion(
+      id: id ?? this.id,
+      activityType: activityType ?? this.activityType,
+      completedAt: completedAt ?? this.completedAt,
+      date: date ?? this.date,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (activityType.present) {
+      map['activity_type'] = Variable<String>(activityType.value);
+    }
+    if (completedAt.present) {
+      map['completed_at'] = Variable<DateTime>(completedAt.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<String>(date.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DailyActivityLogCompanion(')
+          ..write('id: $id, ')
+          ..write('activityType: $activityType, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('date: $date')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4951,6 +5264,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $AchievementsTable achievements = $AchievementsTable(this);
   late final $RecordingSessionsTable recordingSessions =
       $RecordingSessionsTable(this);
+  late final $DailyActivityLogTable dailyActivityLog = $DailyActivityLogTable(
+    this,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4967,6 +5283,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     userStreaks,
     achievements,
     recordingSessions,
+    dailyActivityLog,
   ];
 }
 
@@ -8880,6 +9197,209 @@ typedef $$RecordingSessionsTableProcessedTableManager =
       RecordingSession,
       PrefetchHooks Function()
     >;
+typedef $$DailyActivityLogTableCreateCompanionBuilder =
+    DailyActivityLogCompanion Function({
+      Value<int> id,
+      required String activityType,
+      required DateTime completedAt,
+      required String date,
+    });
+typedef $$DailyActivityLogTableUpdateCompanionBuilder =
+    DailyActivityLogCompanion Function({
+      Value<int> id,
+      Value<String> activityType,
+      Value<DateTime> completedAt,
+      Value<String> date,
+    });
+
+class $$DailyActivityLogTableFilterComposer
+    extends Composer<_$AppDatabase, $DailyActivityLogTable> {
+  $$DailyActivityLogTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get activityType => $composableBuilder(
+    column: $table.activityType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$DailyActivityLogTableOrderingComposer
+    extends Composer<_$AppDatabase, $DailyActivityLogTable> {
+  $$DailyActivityLogTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get activityType => $composableBuilder(
+    column: $table.activityType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$DailyActivityLogTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DailyActivityLogTable> {
+  $$DailyActivityLogTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get activityType => $composableBuilder(
+    column: $table.activityType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+}
+
+class $$DailyActivityLogTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DailyActivityLogTable,
+          DailyActivityLogData,
+          $$DailyActivityLogTableFilterComposer,
+          $$DailyActivityLogTableOrderingComposer,
+          $$DailyActivityLogTableAnnotationComposer,
+          $$DailyActivityLogTableCreateCompanionBuilder,
+          $$DailyActivityLogTableUpdateCompanionBuilder,
+          (
+            DailyActivityLogData,
+            BaseReferences<
+              _$AppDatabase,
+              $DailyActivityLogTable,
+              DailyActivityLogData
+            >,
+          ),
+          DailyActivityLogData,
+          PrefetchHooks Function()
+        > {
+  $$DailyActivityLogTableTableManager(
+    _$AppDatabase db,
+    $DailyActivityLogTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer:
+              () =>
+                  $$DailyActivityLogTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () => $$DailyActivityLogTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer:
+              () => $$DailyActivityLogTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> activityType = const Value.absent(),
+                Value<DateTime> completedAt = const Value.absent(),
+                Value<String> date = const Value.absent(),
+              }) => DailyActivityLogCompanion(
+                id: id,
+                activityType: activityType,
+                completedAt: completedAt,
+                date: date,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String activityType,
+                required DateTime completedAt,
+                required String date,
+              }) => DailyActivityLogCompanion.insert(
+                id: id,
+                activityType: activityType,
+                completedAt: completedAt,
+                date: date,
+              ),
+          withReferenceMapper:
+              (p0) =>
+                  p0
+                      .map(
+                        (e) => (
+                          e.readTable(table),
+                          BaseReferences(db, table, e),
+                        ),
+                      )
+                      .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$DailyActivityLogTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DailyActivityLogTable,
+      DailyActivityLogData,
+      $$DailyActivityLogTableFilterComposer,
+      $$DailyActivityLogTableOrderingComposer,
+      $$DailyActivityLogTableAnnotationComposer,
+      $$DailyActivityLogTableCreateCompanionBuilder,
+      $$DailyActivityLogTableUpdateCompanionBuilder,
+      (
+        DailyActivityLogData,
+        BaseReferences<
+          _$AppDatabase,
+          $DailyActivityLogTable,
+          DailyActivityLogData
+        >,
+      ),
+      DailyActivityLogData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -8906,4 +9426,6 @@ class $AppDatabaseManager {
       $$AchievementsTableTableManager(_db, _db.achievements);
   $$RecordingSessionsTableTableManager get recordingSessions =>
       $$RecordingSessionsTableTableManager(_db, _db.recordingSessions);
+  $$DailyActivityLogTableTableManager get dailyActivityLog =>
+      $$DailyActivityLogTableTableManager(_db, _db.dailyActivityLog);
 }

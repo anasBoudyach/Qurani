@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../shared/widgets/celebration_overlay.dart';
+import '../../../gamification/data/models/daily_goal.dart';
+import '../../../gamification/presentation/providers/gamification_providers.dart';
 import '../../data/models/dua.dart';
 
-class DuaListScreen extends StatefulWidget {
+class DuaListScreen extends ConsumerStatefulWidget {
   final DuaCategory category;
 
   const DuaListScreen({super.key, required this.category});
 
   @override
-  State<DuaListScreen> createState() => _DuaListScreenState();
+  ConsumerState<DuaListScreen> createState() => _DuaListScreenState();
 }
 
-class _DuaListScreenState extends State<DuaListScreen> {
+class _DuaListScreenState extends ConsumerState<DuaListScreen> {
   late List<int> _counters;
 
   @override
@@ -38,12 +42,26 @@ class _DuaListScreenState extends State<DuaListScreen> {
             counter: _counters[index],
             onTap: () {
               if (dua.repeatCount > 1) {
-                setState(() {
-                  if (_counters[index] < dua.repeatCount) {
+                if (_counters[index] < dua.repeatCount) {
+                  setState(() {
                     _counters[index]++;
                     HapticFeedback.lightImpact();
+                  });
+                  // Check if all countable du'as are complete
+                  if (_counters[index] >= dua.repeatCount) {
+                    final allComplete = List.generate(
+                      widget.category.duas.length,
+                      (i) {
+                        final d = widget.category.duas[i];
+                        return d.repeatCount <= 1 || _counters[i] >= d.repeatCount;
+                      },
+                    ).every((c) => c);
+                    if (allComplete) {
+                      CelebrationOverlay.show(context, color: AppColors.accentDua);
+                      ref.read(gamificationServiceProvider).recordActivity(ActivityType.makeDua);
+                    }
                   }
-                });
+                }
               }
             },
             onCopy: () {

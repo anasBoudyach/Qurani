@@ -13,6 +13,10 @@ class GradientHeader extends StatelessWidget {
   final bool showMosque;
   final EdgeInsets padding;
 
+  /// Scroll offset for parallax effect. When provided, mosque and
+  /// decorative circles translate at different speeds for depth.
+  final double scrollOffset;
+
   const GradientHeader({
     super.key,
     required this.gradient,
@@ -20,6 +24,7 @@ class GradientHeader extends StatelessWidget {
     this.child,
     this.showMosque = false,
     this.padding = const EdgeInsets.fromLTRB(24, 16, 24, 24),
+    this.scrollOffset = 0,
   });
 
   @override
@@ -48,7 +53,7 @@ class GradientHeader extends StatelessWidget {
             if (showMosque)
               Positioned(
                 right: -20,
-                bottom: -10,
+                bottom: -10 + scrollOffset * 0.3,
                 child: CustomPaint(
                   size: const Size(180, 140),
                   painter: _MosqueSilhouettePainter(
@@ -56,10 +61,10 @@ class GradientHeader extends StatelessWidget {
                   ),
                 ),
               ),
-            // Decorative circles
+            // Decorative circles with parallax
             Positioned(
               left: -30,
-              top: -30,
+              top: -30 + scrollOffset * 0.5,
               child: Container(
                 width: 100,
                 height: 100,
@@ -71,7 +76,7 @@ class GradientHeader extends StatelessWidget {
             ),
             Positioned(
               right: -15,
-              top: 20,
+              top: 20 + scrollOffset * 0.4,
               child: Container(
                 width: 60,
                 height: 60,

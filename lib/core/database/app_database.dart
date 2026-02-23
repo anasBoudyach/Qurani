@@ -119,6 +119,15 @@ class Achievements extends Table {
   DateTimeColumn get unlockedAt => dateTime()();
 }
 
+// ─── Gamification ───
+
+class DailyActivityLog extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get activityType => text()(); // ActivityType.name
+  DateTimeColumn get completedAt => dateTime()();
+  TextColumn get date => text()(); // 'YYYY-MM-DD' for easy grouping
+}
+
 class RecordingSessions extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get lessonId => integer()();
@@ -145,12 +154,23 @@ class RecordingSessions extends Table {
   UserStreaks,
   Achievements,
   RecordingSessions,
+  DailyActivityLog,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) => m.createAll(),
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            await m.createTable(dailyActivityLog);
+          }
+        },
+      );
 
   // ─── Surah Queries ───
 
@@ -208,6 +228,17 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> unlockAchievement(AchievementsCompanion achievement) =>
       into(achievements).insert(achievement);
+
+  // ─── Daily Activity Log ───
+
+  Future<List<DailyActivityLogData>> getActivitiesForDate(String date) =>
+      (select(dailyActivityLog)..where((a) => a.date.equals(date))).get();
+
+  Future<List<DailyActivityLogData>> getAllActivities() =>
+      select(dailyActivityLog).get();
+
+  Future<int> logActivity(DailyActivityLogCompanion data) =>
+      into(dailyActivityLog).insert(data);
 
   // ─── Downloads ───
 

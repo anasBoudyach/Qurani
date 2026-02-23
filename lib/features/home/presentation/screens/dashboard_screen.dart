@@ -3,11 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/router/route_names.dart';
+import '../../../../core/utils/page_transitions.dart';
+import '../../../../shared/widgets/animated_counter.dart';
 import '../../../../shared/widgets/gradient_header.dart';
 import '../../../../shared/widgets/feature_tile.dart';
+import '../../../../shared/widgets/staggered_grid.dart';
 import '../../../azkar/presentation/screens/azkar_screen.dart';
 import '../../../bookmarks/presentation/providers/bookmark_providers.dart';
 import '../../../prayer_times/presentation/screens/prayer_times_screen.dart';
+import '../../../prayer_times/presentation/screens/qibla_screen.dart';
+import '../../../prayer_times/presentation/screens/hijri_screen.dart';
+import '../../../hifz/presentation/screens/hifz_setup_screen.dart';
+import '../../../reading_plans/presentation/screens/khatmah_screen.dart';
+import '../../../duas/presentation/screens/duas_screen.dart';
+import '../../../ahkam/presentation/screens/ahkam_screen.dart';
+import '../../../ahadith/presentation/screens/ahadith_screen.dart';
+import '../../../gamification/data/models/daily_goal.dart';
+import '../../../gamification/presentation/providers/gamification_providers.dart';
+import '../../../gamification/data/models/achievement_def.dart';
 import '../../../quran/data/models/surah_info.dart';
 import '../../../quran/presentation/screens/reading_screen.dart';
 
@@ -86,8 +99,35 @@ const _dailyAyahs = [
   ),
 ];
 
-class DashboardScreen extends ConsumerWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  final ScrollController _scrollController = ScrollController();
+  double _scrollOffset = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    setState(() {
+      _scrollOffset = _scrollController.offset.clamp(0, 200);
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   String _greeting() {
     final hour = DateTime.now().hour;
@@ -98,31 +138,32 @@ class DashboardScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final lastPosition = ref.watch(lastReadingPositionProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Pick daily ayah based on day of year (changes every day)
+    // Pick daily ayah based on day of year
     final now = DateTime.now();
     final dayOfYear = now.difference(DateTime(now.year)).inDays;
     final dailyAyah = _dailyAyahs[dayOfYear % _dailyAyahs.length];
 
     return Scaffold(
       body: ListView(
+        controller: _scrollController,
         padding: EdgeInsets.zero,
         children: [
-          // Gradient sky header with greeting + daily ayah
+          // ── Gradient Header with parallax ──
           GradientHeader(
-            gradient: isDark
-                ? AppColors.gradientSkyDark
-                : AppColors.gradientSky,
-            height: 260,
+            gradient:
+                isDark ? AppColors.gradientSkyDark : AppColors.gradientSky,
+            height: 200,
             showMosque: true,
+            scrollOffset: _scrollOffset,
             padding: EdgeInsets.fromLTRB(
               24,
-              MediaQuery.of(context).padding.top + 16,
+              MediaQuery.of(context).padding.top + 12,
               24,
-              24,
+              16,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,13 +191,12 @@ class DashboardScreen extends ConsumerWidget {
                   ],
                 ),
                 const Spacer(),
-                // Daily ayah in header
                 Center(
                   child: Text(
                     dailyAyah.$1,
                     style: TextStyle(
                       fontFamily: 'AmiriQuran',
-                      fontSize: 22,
+                      fontSize: 20,
                       color: Colors.white.withAlpha(240),
                       height: 1.8,
                     ),
@@ -164,24 +204,24 @@ class DashboardScreen extends ConsumerWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 4),
                 Center(
                   child: Text(
                     '"${dailyAyah.$2}"',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 12,
                       fontStyle: FontStyle.italic,
                       color: Colors.white.withAlpha(180),
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Center(
                   child: Text(
                     dailyAyah.$3,
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 10,
                       color: Colors.white.withAlpha(140),
                     ),
                   ),
@@ -191,28 +231,30 @@ class DashboardScreen extends ConsumerWidget {
           ),
 
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Continue Reading card
+                // ── Streak & Daily Goals Card ──
+                const _StreakGoalsCard(),
+                const SizedBox(height: 16),
+
+                // ── Continue Reading ──
                 lastPosition.when(
                   data: (position) {
                     if (position == null) return const SizedBox.shrink();
-
                     final surah = SurahInfo.all.firstWhere(
                       (s) => s.number == position.surahId,
                       orElse: () => SurahInfo.all.first,
                     );
-
                     return _ContinueReadingCard(
                       surah: surah,
                       ayahNumber: position.ayahNumber,
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => ReadingScreen(
+                          SlideUpRoute(
+                            page: ReadingScreen(
                               surah: surah,
                               initialAyah: position.ayahNumber,
                             ),
@@ -224,69 +266,142 @@ class DashboardScreen extends ConsumerWidget {
                   loading: () => const SizedBox.shrink(),
                   error: (_, __) => const SizedBox.shrink(),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
 
-                // Feature grid
+                // ── Features Header ──
                 Text(
                   'Features',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
-                const SizedBox(height: 16),
-                GridView.count(
-                  crossAxisCount: 3,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 0.85,
+                const SizedBox(height: 12),
+
+                // ── 4x3 Feature Grid with staggered animation ──
+                StaggeredAnimationGrid(
+                  crossAxisCount: 4,
+                  childAspectRatio: 0.80,
+                  mainAxisSpacing: 6,
+                  crossAxisSpacing: 4,
                   children: [
                     FeatureTile(
                       icon: Icons.menu_book_rounded,
                       label: 'Quran',
                       color: AppColors.accentQuran,
+                      compact: true,
                       onTap: () => context.go(RouteNames.quran),
                     ),
                     FeatureTile(
                       icon: Icons.headphones_rounded,
                       label: 'Listen',
                       color: AppColors.accentListen,
+                      compact: true,
                       onTap: () => context.go(RouteNames.listen),
                     ),
                     FeatureTile(
                       icon: Icons.school_rounded,
                       label: 'Tajweed',
                       color: AppColors.accentTajweed,
+                      compact: true,
                       onTap: () => context.go(RouteNames.learn),
                     ),
                     FeatureTile(
                       icon: Icons.auto_awesome_rounded,
                       label: 'Azkar',
                       color: AppColors.accentAzkar,
+                      compact: true,
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const AzkarScreen()),
+                        SlideUpRoute(page: const AzkarScreen()),
                       ),
                     ),
                     FeatureTile(
                       icon: Icons.access_time_rounded,
                       label: 'Prayer',
                       color: AppColors.accentPrayer,
+                      compact: true,
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (_) => const PrayerTimesScreen()),
+                        SlideUpRoute(page: const PrayerTimesScreen()),
                       ),
                     ),
                     FeatureTile(
-                      icon: Icons.more_horiz_rounded,
-                      label: 'More',
-                      color: Theme.of(context).colorScheme.onSurface.withAlpha(150),
-                      onTap: () => context.go(RouteNames.more),
+                      icon: Icons.volunteer_activism_rounded,
+                      label: "Du'as",
+                      color: AppColors.accentDua,
+                      compact: true,
+                      onTap: () => Navigator.push(
+                        context,
+                        SlideUpRoute(page: const DuasScreen()),
+                      ),
+                    ),
+                    FeatureTile(
+                      icon: Icons.gavel_rounded,
+                      label: 'Ahkam',
+                      color: AppColors.accentAhkam,
+                      compact: true,
+                      onTap: () => Navigator.push(
+                        context,
+                        SlideUpRoute(page: const AhkamScreen()),
+                      ),
+                    ),
+                    FeatureTile(
+                      icon: Icons.auto_stories_rounded,
+                      label: 'Ahadith',
+                      color: AppColors.accentAhadith,
+                      compact: true,
+                      onTap: () => Navigator.push(
+                        context,
+                        SlideUpRoute(page: const AhadithScreen()),
+                      ),
+                    ),
+                    FeatureTile(
+                      icon: Icons.menu_book_rounded,
+                      label: 'Hifz',
+                      color: AppColors.accentHifz,
+                      compact: true,
+                      onTap: () => Navigator.push(
+                        context,
+                        SlideUpRoute(page: const HifzSetupScreen()),
+                      ),
+                    ),
+                    FeatureTile(
+                      icon: Icons.track_changes_rounded,
+                      label: 'Khatmah',
+                      color: AppColors.accentKhatmah,
+                      compact: true,
+                      onTap: () => Navigator.push(
+                        context,
+                        SlideUpRoute(page: const KhatmahScreen()),
+                      ),
+                    ),
+                    FeatureTile(
+                      icon: Icons.explore_rounded,
+                      label: 'Qibla',
+                      color: AppColors.accentQibla,
+                      compact: true,
+                      onTap: () => Navigator.push(
+                        context,
+                        SlideUpRoute(page: const QiblaScreen()),
+                      ),
+                    ),
+                    FeatureTile(
+                      icon: Icons.calendar_month_rounded,
+                      label: 'Hijri',
+                      color: AppColors.accentHijri,
+                      compact: true,
+                      onTap: () => Navigator.push(
+                        context,
+                        SlideUpRoute(page: const HijriScreen()),
+                      ),
                     ),
                   ],
                 ),
+                const SizedBox(height: 20),
+
+                // ── Achievements Preview ──
+                const _AchievementsPreview(),
+                const SizedBox(height: 16),
               ],
             ),
           ),
@@ -295,6 +410,259 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 }
+
+// ── Streak & Daily Goals Card ──
+
+class _StreakGoalsCard extends ConsumerWidget {
+  const _StreakGoalsCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final streakAsync = ref.watch(dailyStreakProvider);
+    final goalsAsync = ref.watch(dailyGoalsProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final currentStreak = streakAsync.whenOrNull(data: (s) => s?.currentStreak) ?? 0;
+    final goals = goalsAsync.whenOrNull(data: (g) => g) ?? DailyGoal.defaults;
+    final completedCount = goals.where((g) => g.isCompleted).length;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDark
+              ? [const Color(0xFF3E2E00), const Color(0xFF1A1200)]
+              : [const Color(0xFFFFF8E1), const Color(0xFFFFECB3)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: (isDark ? Colors.black : Colors.amber).withAlpha(30),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Top row: streak + progress ring
+          Row(
+            children: [
+              // Fire icon + streak count
+              Icon(
+                Icons.local_fire_department_rounded,
+                color: currentStreak > 0
+                    ? Colors.orange
+                    : Theme.of(context).colorScheme.onSurface.withAlpha(80),
+                size: 32,
+              ),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimatedCounter(
+                    value: currentStreak,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: currentStreak > 0
+                              ? Colors.orange.shade800
+                              : Theme.of(context).colorScheme.onSurface,
+                        ),
+                  ),
+                  Text(
+                    'day streak',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withAlpha(150),
+                        ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              // Circular progress ring
+              SizedBox(
+                width: 48,
+                height: 48,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      value: goals.isEmpty
+                          ? 0
+                          : completedCount / goals.length,
+                      strokeWidth: 4,
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withAlpha(30),
+                      valueColor: const AlwaysStoppedAnimation(Colors.orange),
+                    ),
+                    Text(
+                      '$completedCount/${goals.length}',
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Daily goal chips
+          Row(
+            children: goals.map((goal) {
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: _GoalChip(goal: goal),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GoalChip extends StatelessWidget {
+  final DailyGoal goal;
+  const _GoalChip({required this.goal});
+
+  @override
+  Widget build(BuildContext context) {
+    final completed = goal.isCompleted;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+      decoration: BoxDecoration(
+        color: completed
+            ? Colors.green.withAlpha(25)
+            : Theme.of(context).colorScheme.surface.withAlpha(180),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: completed
+              ? Colors.green.withAlpha(120)
+              : Theme.of(context).colorScheme.outline.withAlpha(40),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            completed ? Icons.check_circle_rounded : goal.icon,
+            size: 18,
+            color: completed
+                ? Colors.green
+                : Theme.of(context).colorScheme.onSurface.withAlpha(140),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            goal.title,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontSize: 10,
+                  fontWeight: completed ? FontWeight.bold : FontWeight.w500,
+                  color: completed
+                      ? Colors.green
+                      : Theme.of(context).colorScheme.onSurface.withAlpha(140),
+                ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Achievements Preview ──
+
+class _AchievementsPreview extends ConsumerWidget {
+  const _AchievementsPreview();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final achievementsAsync = ref.watch(unlockedAchievementsProvider);
+
+    return achievementsAsync.when(
+      data: (unlocked) {
+        if (unlocked.isEmpty) return const SizedBox.shrink();
+
+        // Show up to 4 most recent
+        final recent = unlocked.length > 4
+            ? unlocked.sublist(unlocked.length - 4)
+            : unlocked;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Achievements',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                TextButton(
+                  onPressed: () => context.go(RouteNames.more),
+                  child: Text(
+                    '${unlocked.length} earned',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: recent.map((achievement) {
+                final def = AchievementDef.getById(achievement.achievementId);
+                if (def == null) return const SizedBox.shrink();
+                return Expanded(
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: def.color.withAlpha(30),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(def.icon, color: def.color, size: 22),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        def.title,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              fontSize: 9,
+                            ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+}
+
+// ── Continue Reading Card ──
 
 class _ContinueReadingCard extends StatelessWidget {
   final SurahInfo surah;
@@ -330,7 +698,8 @@ class _ContinueReadingCard extends StatelessWidget {
                     ),
                     child: Icon(
                       Icons.play_arrow_rounded,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      color:
+                          Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -340,28 +709,33 @@ class _ContinueReadingCard extends StatelessWidget {
                       children: [
                         Text(
                           'Continue Reading',
-                          style:
-                              Theme.of(context).textTheme.labelMedium?.copyWith(
-                                    color: Theme.of(context).colorScheme.primary,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium
+                              ?.copyWith(
+                                color:
+                                    Theme.of(context).colorScheme.primary,
+                              ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           surah.nameTransliteration,
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Text(
                           'Ayah $ayahNumber of ${surah.ayahCount}',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withAlpha(153),
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withAlpha(153),
+                              ),
                         ),
                       ],
                     ),
@@ -377,7 +751,6 @@ class _ContinueReadingCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              // Progress bar
               ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
