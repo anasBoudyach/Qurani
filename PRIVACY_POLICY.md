@@ -12,16 +12,16 @@ Used **only locally on your device** to calculate prayer times and Qibla directi
 ### Audio Recordings
 Used **only locally** for tajweed practice comparison (recording your recitation to compare with a sheikh). Recordings are stored temporarily on your device and are never uploaded or shared.
 
-## Offline Content
+## Local-Only Features
 
-The following features use data bundled entirely within the app. No network requests are made and no data is collected:
+The following features operate entirely on your device with no data collection:
 
-- **Du'as** — ~100 authentic supplications stored locally
 - **Ahkam** — Islamic rulings from 4 madhabs stored locally
-- **Ahadith** — Hadith collections (Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa'i, Ibn Majah) stored locally
-- **Azkar** — Morning, evening, after-salah, and sleep azkar stored locally
 - **Hifz** — Memorization mode operates entirely on-device
 - **Khatmah** — Reading plans tracked locally on your device
+- **Gamification** — Daily goals, streaks, and achievements stored locally
+- **Bookmarks** — Saved ayah bookmarks stored in local database
+- **Reading Progress** — Auto-saved reading position stored locally
 
 ## Data We Do NOT Collect
 
@@ -35,7 +35,7 @@ The following features use data bundled entirely within the app. No network requ
 
 ## Network Usage
 
-Qurani connects to the internet only to fetch Quran data and stream audio:
+Qurani connects to the internet only to fetch Islamic content and stream audio:
 
 | Service | Purpose | Data sent |
 |---------|---------|-----------|
@@ -43,17 +43,26 @@ Qurani connects to the internet only to fetch Quran data and stream audio:
 | Al Quran Cloud API | Fallback text and audio | Surah/ayah numbers only |
 | MP3Quran.net | Audio streaming (260+ reciters) | Reciter ID, surah number |
 | EveryAyah.com | Verse-by-verse audio | Surah/ayah numbers only |
+| HisnMuslim API | Azkar (132 categories) and Du'as (23 categories) | Category ID only |
+| Fawaz Ahmed Hadith CDN | 40,000+ hadiths from 6 collections | Collection/section ID only |
 
 All fetched data is cached locally on your device for offline use. No personal data is ever transmitted.
+
+## Notifications
+
+Qurani can send **local notifications** for prayer time reminders and Islamic event alerts. These are scheduled entirely on your device using local prayer time calculations. No data is sent to any server. You can enable or disable notifications per prayer in the app settings.
 
 ## Permissions
 
 | Permission | Why | Shared? |
 |-----------|-----|---------|
-| Internet | Stream audio and fetch Quran data | No |
+| Internet | Stream audio and fetch Islamic content | No |
 | Location | Calculate prayer times and Qibla direction (offline math) | Never |
 | Microphone | Record your recitation for tajweed practice | Never |
 | Storage | Save downloaded audio for offline listening | No |
+| Notifications | Prayer time reminders and Islamic event alerts (local only) | No |
+| Exact Alarm | Schedule prayer reminders at precise times | No |
+| Boot Completed | Reschedule prayer reminders after device restart | No |
 
 ## Third-Party Services
 
