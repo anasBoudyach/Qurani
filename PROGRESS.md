@@ -136,7 +136,7 @@
 
 - [x] `DonateScreen` - Sadaqah Jariyah, external links (PayPal, Buy Me a Coffee)
 - [x] Donation screen wired into More tab
-- [x] Android home screen widgets (Daily Ayah + Prayer Time) with home_widget package
+- [x] Android home screen widgets (5 total: Daily Ayah, Prayer Time, Hijri Date, Daily Azkar, Hadith of the Day)
 - [x] All 4 themes polished (Colors.white → colorScheme.onPrimary/onSecondary, primaryColor → colorScheme.primary)
 - [x] `AppLocalizations` - 14 languages (English, Arabic, French, Turkish, Urdu, Indonesian, Spanish, German, Russian, Bengali, Malay, Hindi, Portuguese, Chinese)
 - [x] flutter_localizations wired into MaterialApp
@@ -361,7 +361,7 @@ Built with Flutter as Sadaqah Jariyah (ongoing charity).
 - Quran search (Arabic + translation)
 - 4 themes: Light, Dark, Sepia, AMOLED
 - 14 languages
-- Home screen widgets (Daily Ayah, Prayer Time)
+- Home screen widgets (Daily Ayah, Prayer Time, Hijri Date, Azkar, Hadith)
 - Offline-first architecture
 
 ## Tech Stack
@@ -806,3 +806,97 @@ MIT License — free to use, modify, and distribute.
 10. `lib/features/duas/data/repositories/duas_repository.dart`
 11. `lib/features/duas/presentation/providers/duas_providers.dart`
 12. (Du'as model removed — uses CachedAzkarData from Drift directly)
+
+## Session Work (Feb 24, 2026) — Widgets, Prayer Reminders, Islamic Events & Hijri
+
+### Shared Hijri Utilities
+- Extracted Kuwaiti algorithm from HijriScreen into `lib/core/utils/hijri_utils.dart`
+- Public `HijriDate` class with `formatCompact()` and `formatArabic()` methods
+- Public `gregorianToHijri()` and `hijriToGregorian()` conversion functions
+- Reusable across homepage, widgets, events, and Hijri screen
+
+### Notification Service Foundation
+- `NotificationService` singleton (`lib/core/services/notification_service.dart`)
+- `flutter_local_notifications` + `flutter_timezone` + `timezone` packages wired up
+- Two notification channels: prayer_reminders (high priority), islamic_events (default)
+- Notification ID scheme: prayer=100-105, events=200-299, test=999
+- Android 13+ POST_NOTIFICATIONS permission request
+- `BootReceiver.kt` for rescheduling notifications after device reboot
+- Initialized in `main.dart` after audio service
+
+### Prayer Time Reminders
+- Per-prayer reminder toggles (Fajr, Dhuhr, Asr, Maghrib, Isha — no Sunrise)
+- Configurable offset: "At prayer time", 5/10/15/30 minutes before
+- `PrayerReminderSettingsNotifier` with SharedPreferences persistence
+- `PrayerReminderService`: schedules today + tomorrow's prayers via adhan_dart
+- Bell icons on PrayerTimesScreen rows (tap to toggle reminder)
+- `PrayerNotificationSettingsScreen`: full settings with test notification button
+- Notifications section added to SettingsScreen
+- Notifications use `zonedSchedule` with TZDateTime for timezone-safe scheduling
+
+### Islamic Events Service
+- `IslamicEventsService` with 10 recurring Islamic events (fixed Hijri dates)
+- Events: Islamic New Year, Ashura, Mawlid, Isra wal Mi'raj, Mid-Sha'ban, Ramadan, Laylat al-Qadr, Eid al-Fitr, Day of Arafah, Eid al-Adha
+- Automatic Gregorian date computation via `hijriToGregorian()`
+- `getUpcomingEvents()`, `getTodayEvent()`, `getNextMajorEvent()` methods
+- Deduplication across Hijri year boundaries
+- Riverpod providers for upcoming/today/next-major events
+
+### Hijri Date on Homepage
+- Hijri date in compact English format displayed in homepage gradient header
+- Upcoming Islamic event countdown card (gold gradient, shows within 60 days)
+- Tapping event card navigates to Hijri screen
+
+### Enhanced Hijri Screen with Events Timeline
+- Converted to `ConsumerStatefulWidget` for Riverpod access
+- "Upcoming Events" section below Islamic Months with count badge
+- Timeline items: colored dots (gold=major, green=minor), countdown badges
+- Today's events highlighted with amber accent, past events dimmed
+- Hijri + Gregorian dates per event, moon sighting disclaimer
+
+### 5 Android Home Screen Widgets
+1. **Daily Ayah** (existing): daily rotation of 31 ayahs with translation
+2. **Prayer Time** (existing): next prayer name + time + countdown
+3. **Hijri Date** (NEW): today's Hijri date (English + Arabic) + next Islamic event
+4. **Daily Azkar** (NEW): morning/evening remembrance auto-switching, 10 azkar each
+5. **Hadith of the Day** (NEW): daily hadith with collection badge + Sahih/Hasan grade
+
+Widget infrastructure:
+- 3 new Kotlin providers (`HijriDateWidgetProvider`, `DailyAzkarWidgetProvider`, `DailyHadithWidgetProvider`)
+- 3 XML layouts with consistent styling (rounded corners, green/gold theme)
+- `HomeWidgetService` expanded with `updateHijriWidget()`, `updateAzkarWidget()`, `updateHadithWidget()`
+- All 5 widgets initialized on app start
+- 10 morning azkar + 10 evening azkar + 31 hadiths as offline fallback data
+
+### New Files (14)
+1. `lib/core/utils/hijri_utils.dart` — shared Hijri conversion
+2. `lib/core/services/notification_service.dart` — notification scheduling
+3. `lib/features/prayer_times/data/prayer_reminder_provider.dart` — reminder settings
+4. `lib/features/prayer_times/data/prayer_reminder_service.dart` — reminder scheduling
+5. `lib/features/prayer_times/presentation/screens/prayer_notification_settings_screen.dart` — notification UI
+6. `lib/features/islamic_events/data/models/islamic_event.dart` — event model
+7. `lib/features/islamic_events/data/islamic_events_service.dart` — events service
+8. `lib/features/islamic_events/presentation/providers/islamic_events_providers.dart` — Riverpod providers
+9. `android/app/src/main/kotlin/com/qurani/qurani/BootReceiver.kt` — boot receiver
+10. `android/app/src/main/kotlin/com/qurani/qurani/HijriDateWidgetProvider.kt`
+11. `android/app/src/main/kotlin/com/qurani/qurani/DailyAzkarWidgetProvider.kt`
+12. `android/app/src/main/kotlin/com/qurani/qurani/DailyHadithWidgetProvider.kt`
+13. `android/app/src/main/res/layout/{hijri_date,daily_azkar,daily_hadith}_widget.xml`
+14. `android/app/src/main/res/xml/{hijri_date,daily_azkar,daily_hadith}_widget_info.xml`
+
+### Modified Files (9)
+- `pubspec.yaml` — added flutter_timezone, timezone
+- `lib/main.dart` — init NotificationService
+- `lib/features/home/presentation/screens/dashboard_screen.dart` — Hijri date + event card
+- `lib/features/prayer_times/presentation/screens/prayer_times_screen.dart` — bell toggles
+- `lib/features/prayer_times/presentation/screens/hijri_screen.dart` — events timeline
+- `lib/features/settings/presentation/screens/settings_screen.dart` — notifications section
+- `lib/features/widgets/home_widget_service.dart` — 5 widget update methods
+- `android/app/src/main/AndroidManifest.xml` — 3 new widget receivers
+- `android/app/src/main/res/values/strings.xml` — 3 new widget descriptions
+
+### Git Commits (this session)
+38. `4c67728` - Add notification service + prayer time reminders with per-prayer toggles
+39. `10413b6` - Add Islamic events service + Hijri date on homepage + event countdown card
+40. `68fe766` - Enhance Hijri screen with Islamic events timeline
+41. `6e6b8b0` - Add 3 new Android home screen widgets (5 total) + widget data service
