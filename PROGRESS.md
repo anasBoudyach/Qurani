@@ -998,3 +998,26 @@ Widget infrastructure:
 
 ### Files Created (1)
 - `lib/features/bookmarks/presentation/screens/bookmarks_screen.dart` — Bookmarks list screen
+
+## Session Work (Feb 24, 2026) — Widget Navigation, Notification Icons & Hijri Fixes
+
+### Widget Tap-to-Open-App
+- All 5 home screen widgets now open the app when tapped (PendingIntent)
+- `MainActivity.kt`: Added MethodChannel (`com.qurani.qurani/widget`) for widget-to-Flutter navigation
+- `onNewIntent()`: Handles navigation when app is already running
+- Each widget provider sets `setOnClickPendingIntent` on `widget_root`
+- Widget XML layouts updated with `widget_root` IDs for click targets
+
+### Notification Icon Fix
+- Replaced `@mipmap/ic_launcher` with `@drawable/ic_notification` in NotificationService
+- Fixed 3 references: prayer channel, event channel, initialization settings
+- `@mipmap/ic_launcher` (full-color) rendered as blank square — Android requires monochrome notification icons
+- Regenerated `ic_notification.png` at all 5 densities (proper white silhouette via Android Studio Image Asset)
+
+### Other Fixes
+- Added `CLAUDE.md` to `.gitignore`
+- Hijri screen UI improvements
+- `app.dart` startup and widget navigation handling
+
+### Git Commits (this session)
+42. `0f2ec55` - Fix notification icons, add widget tap-to-open, and Hijri screen improvements

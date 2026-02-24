@@ -36,7 +36,7 @@ class NotificationService {
     importance: Importance.high,
     priority: Priority.high,
     playSound: true,
-    icon: '@mipmap/ic_launcher',
+    icon: '@drawable/ic_notification',
   );
 
   static const _eventChannel = AndroidNotificationDetails(
@@ -45,7 +45,7 @@ class NotificationService {
     channelDescription: 'Notifications for Islamic holidays and events',
     importance: Importance.defaultImportance,
     priority: Priority.defaultPriority,
-    icon: '@mipmap/ic_launcher',
+    icon: '@drawable/ic_notification',
   );
 
   /// Initialize the notification system. Call once in main().
@@ -63,7 +63,7 @@ class NotificationService {
     }
 
     // 2. Android initialization settings
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings('@drawable/ic_notification');
     const initSettings = InitializationSettings(android: androidSettings);
 
     await _plugin.initialize(

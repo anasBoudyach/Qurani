@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -35,12 +36,13 @@
             android:paddingStart="8dp" />
     </LinearLayout>
 
-    <View
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#22BF8C2C"
         android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp" />
+        android:layout_marginEnd="12dp"
+        android:importantForAccessibility="no" />
 
     <!-- Content -->
     <LinearLayout
@@ -76,12 +78,13 @@
             android:fontFamily="serif"
             android:paddingTop="2dp" />
 
-        <View
+        <ImageView
             android:layout_width="40dp"
             android:layout_height="1dp"
             android:background="#33000000"
             android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="6dp"
+            android:importantForAccessibility="no" />
 
         <TextView
             android:id="@+id/next_event"

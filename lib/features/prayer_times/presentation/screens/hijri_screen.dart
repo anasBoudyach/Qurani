@@ -170,142 +170,165 @@ class _HijriScreenState extends ConsumerState<HijriScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          // Islamic months reference
-          Text(
-            'Islamic Months',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 12),
-          ...List.generate(12, (index) {
-            final monthNum = index + 1;
-            final isCurrent = monthNum == hijri.month;
-            return Container(
-              margin: const EdgeInsets.only(bottom: 4),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: isCurrent
-                    ? Theme.of(context)
-                        .colorScheme
-                        .primaryContainer
-                        .withAlpha(77)
-                    : null,
-                borderRadius: BorderRadius.circular(8),
-                border: isCurrent
-                    ? Border.all(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withAlpha(102))
-                    : null,
-              ),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 24,
-                    child: Text(
-                      '$monthNum',
-                      style: TextStyle(
-                        fontWeight:
-                            isCurrent ? FontWeight.bold : FontWeight.normal,
-                        color: isCurrent
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withAlpha(128),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      hijriMonthNames[index],
-                      style: TextStyle(
-                        fontWeight:
-                            isCurrent ? FontWeight.bold : FontWeight.normal,
-                        color: isCurrent
-                            ? Theme.of(context).colorScheme.primary
-                            : null,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    hijriMonthNamesArabic[index],
-                    style: TextStyle(
-                      fontFamily: 'AmiriQuran',
-                      fontSize: 16,
-                      color: isCurrent
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withAlpha(153),
-                    ),
-                    textDirection: TextDirection.rtl,
-                  ),
-                ],
-              ),
-            );
-          }),
-          const SizedBox(height: 24),
-          // ── Upcoming Islamic Events ──
-          _buildEventsSection(),
+          const SizedBox(height: 16),
+          // ── Upcoming Islamic Events (collapsible) ──
+          _buildEventsCollapsible(),
+          const SizedBox(height: 8),
+          // ── Islamic Months (collapsible) ──
+          _buildMonthsCollapsible(hijri),
           const SizedBox(height: 16),
         ],
       ),
     );
   }
 
-  Widget _buildEventsSection() {
+  Widget _buildEventsCollapsible() {
     final events = ref.watch(upcomingEventsProvider);
     if (events.isEmpty) return const SizedBox.shrink();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Upcoming Events',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+    // Find next upcoming event (first with daysUntil >= 0)
+    final nextEvent = events.cast<IslamicEvent?>().firstWhere(
+          (e) => (e!.daysUntil ?? 0) >= 0,
+          orElse: () => events.first,
+        );
+
+    final subtitle = nextEvent != null
+        ? '${nextEvent.name} — ${nextEvent.daysUntil == 0 ? 'Today!' : 'in ${nextEvent.daysUntil} days'}'
+        : '${events.length} events';
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.zero,
+      child: ExpansionTile(
+        leading: Icon(Icons.event, color: Colors.amber.shade700),
+        title: const Text(
+          'Upcoming Events',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: TextStyle(
+            fontSize: 12,
+            color: Theme.of(context).colorScheme.onSurface.withAlpha(160),
+          ),
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'Dates may vary based on local moon sighting',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withAlpha(128),
+                    fontStyle: FontStyle.italic,
                   ),
             ),
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withAlpha(30),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                '${events.length}',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
+          ),
+          const SizedBox(height: 8),
+          ...events.map((event) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: _EventTimelineItem(event: event),
+              )),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMonthsCollapsible(HijriDate hijri) {
+    final currentMonthName = hijriMonthNames[(hijri.month - 1).clamp(0, 11)];
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.zero,
+      child: ExpansionTile(
+        leading: Icon(Icons.date_range,
+            color: Theme.of(context).colorScheme.primary),
+        title: const Text(
+          'Islamic Months',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          '$currentMonthName ${hijri.year} AH',
+          style: TextStyle(
+            fontSize: 12,
+            color: Theme.of(context).colorScheme.onSurface.withAlpha(160),
+          ),
+        ),
+        children: List.generate(12, (index) {
+          final monthNum = index + 1;
+          final isCurrent = monthNum == hijri.month;
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: isCurrent
+                  ? Theme.of(context)
+                      .colorScheme
+                      .primaryContainer
+                      .withAlpha(77)
+                  : null,
+              borderRadius: BorderRadius.circular(8),
+              border: isCurrent
+                  ? Border.all(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withAlpha(102))
+                  : null,
             ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'Dates may vary based on local moon sighting',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withAlpha(128),
-                fontStyle: FontStyle.italic,
-              ),
-        ),
-        const SizedBox(height: 12),
-        ...events.map((event) => _EventTimelineItem(event: event)),
-      ],
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 24,
+                  child: Text(
+                    '$monthNum',
+                    style: TextStyle(
+                      fontWeight:
+                          isCurrent ? FontWeight.bold : FontWeight.normal,
+                      color: isCurrent
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withAlpha(128),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    hijriMonthNames[index],
+                    style: TextStyle(
+                      fontWeight:
+                          isCurrent ? FontWeight.bold : FontWeight.normal,
+                      color: isCurrent
+                          ? Theme.of(context).colorScheme.primary
+                          : null,
+                    ),
+                  ),
+                ),
+                Text(
+                  hijriMonthNamesArabic[index],
+                  style: TextStyle(
+                    fontFamily: 'AmiriQuran',
+                    fontSize: 16,
+                    color: isCurrent
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withAlpha(153),
+                  ),
+                  textDirection: TextDirection.rtl,
+                ),
+              ],
+            ),
+          );
+        })..add(const SizedBox(height: 8)),
+      ),
     );
   }
 

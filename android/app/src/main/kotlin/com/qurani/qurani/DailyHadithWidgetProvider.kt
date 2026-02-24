@@ -1,8 +1,10 @@
 package com.qurani.qurani
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.Intent
 import android.widget.RemoteViews
 
 class DailyHadithWidgetProvider : AppWidgetProvider() {
@@ -15,6 +17,15 @@ class DailyHadithWidgetProvider : AppWidgetProvider() {
 
         appWidgetIds.forEach { widgetId ->
             try {
+                val intent = Intent(context, MainActivity::class.java).apply {
+                    putExtra("navigate_to", "ahadith")
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                }
+                val pendingIntent = PendingIntent.getActivity(
+                    context, widgetId, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+
                 val views = RemoteViews(context.packageName, R.layout.daily_hadith_widget).apply {
                     setTextViewText(R.id.hadith_text,
                         prefs.getString("hadith_text",
@@ -23,6 +34,7 @@ class DailyHadithWidgetProvider : AppWidgetProvider() {
                         prefs.getString("hadith_collection", "Bukhari"))
                     setTextViewText(R.id.hadith_grade,
                         prefs.getString("hadith_grade", "Sahih"))
+                    setOnClickPendingIntent(R.id.widget_root, pendingIntent)
                 }
                 appWidgetManager.updateAppWidget(widgetId, views)
             } catch (e: Exception) {

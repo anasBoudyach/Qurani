@@ -1,9 +1,10 @@
 package com.qurani.qurani
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
-import android.content.SharedPreferences
+import android.content.Intent
 import android.widget.RemoteViews
 
 class DailyAyahWidgetProvider : AppWidgetProvider() {
@@ -16,6 +17,14 @@ class DailyAyahWidgetProvider : AppWidgetProvider() {
 
         appWidgetIds.forEach { widgetId ->
             try {
+                val intent = Intent(context, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                }
+                val pendingIntent = PendingIntent.getActivity(
+                    context, widgetId, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+
                 val views = RemoteViews(context.packageName, R.layout.daily_ayah_widget).apply {
                     setTextViewText(R.id.ayah_arabic,
                         prefs.getString("ayah_arabic",
@@ -25,10 +34,10 @@ class DailyAyahWidgetProvider : AppWidgetProvider() {
                             "In the name of Allah, the Most Gracious, the Most Merciful"))
                     setTextViewText(R.id.ayah_reference,
                         prefs.getString("ayah_reference", "Al-Fatihah 1:1"))
+                    setOnClickPendingIntent(R.id.widget_root, pendingIntent)
                 }
                 appWidgetManager.updateAppWidget(widgetId, views)
             } catch (e: Exception) {
-                // Fallback: show default layout
                 val views = RemoteViews(context.packageName, R.layout.daily_ayah_widget)
                 appWidgetManager.updateAppWidget(widgetId, views)
             }
