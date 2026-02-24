@@ -9,9 +9,8 @@
 <h1 align="center">Qurani قُرآني</h1>
 
 <p align="center">
-  A comprehensive, completely free Quran app for Android.<br/>
-  No ads. No subscriptions. No premium features.<br/>
-  Everything is free for the sake of Allah.
+  <strong>The all-in-one Islamic app that other apps charge you for — completely free.</strong><br/>
+  No ads. No subscriptions. No "premium" lock. Every feature, every reciter, every lesson — free for the sake of Allah.
 </p>
 
 <p align="center">
@@ -21,90 +20,110 @@
   <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"/>
 </p>
 
+<p align="center">
+  <code>260+ Reciters</code> &nbsp;·&nbsp;
+  <code>40,000+ Hadiths</code> &nbsp;·&nbsp;
+  <code>132 Azkar Categories</code> &nbsp;·&nbsp;
+  <code>24 Tajweed Lessons</code> &nbsp;·&nbsp;
+  <code>14 Languages</code> &nbsp;·&nbsp;
+  <code>5 Home Widgets</code>
+</p>
+
 <p align="center"><em>Built with love as Sadaqah Jariyah (ongoing charity)</em></p>
+
+---
+
+## Why Qurani?
+
+Most popular Islamic apps either lock features behind a paywall or only cover one area (just prayer times, just audio, just reading). Qurani gives you **everything in one app, for free**.
+
+| Feature | Qurani | Muslim Pro | Athan | Quran.com | Tarteel |
+|---------|:------:|:----------:|:-----:|:---------:|:-------:|
+| **Reciters** | **260+** | ~40 | ~10 | ~20 | ~10 |
+| **Tajweed course** | **24 lessons FREE** | No | No | No | Premium |
+| **Record & compare** | **FREE** | No | No | No | Premium |
+| **Hadiths** | **40,000+** (6 collections) | Limited | No | No | No |
+| **Azkar** | **132 categories** | Basic | Basic | No | No |
+| **Du'as** | **23 categories** | Basic | No | No | No |
+| **Fiqh / Ahkam** | **4 madhabs** | No | No | No | No |
+| **Hifz mode** | **3 levels FREE** | Premium | No | No | Premium |
+| **Offline downloads** | **FREE** | Premium | No | Partial | No |
+| **Home screen widgets** | **5 widgets** | Premium | 1 | No | No |
+| **Gamification** | **Goals + streaks + badges** | No | No | No | No |
+| **Prayer reminders** | **Per-prayer + offsets** | Yes | Yes | No | No |
+| **Islamic events** | **10 events + countdown** | Yes | Yes | No | No |
+| **Themes** | **4** (Light/Dark/Sepia/AMOLED) | 2 | 2 | 2 | 1 |
+| **Price** | **Free forever** | $4.99/mo | Ads | Free | $9.99/mo |
+| **Ads** | **None** | Yes (free tier) | Yes | No | No |
+
+---
 
 ## Features
 
-### Quran Reading
-- 2 reading modes: Recitation (ayah-by-ayah cards) and Mushaf (page-by-page)
-- Optional translation overlay (24 translations in 20+ languages, or None)
-- Tajweed color-coded text with all 17 rules highlighted
-- Tap any colored word to learn the tajweed rule
-- Auto-save reading position (resumes exactly where you left off)
-- Audio auto-scroll: reading follows along as you listen
-- Bookmark any ayah for quick access later
-- Arabic-Indic or Western numeral styles
-- Tafsir integration (multiple sources, tap any ayah)
-- Full-text search (Arabic + translation)
+### Read the Quran Your Way
+- **Recitation mode**: ayah-by-ayah cards with optional translation (24 translations, 20+ languages)
+- **Mushaf mode**: authentic page-by-page layout
+- Tajweed color-coded text — all 17 rules highlighted, tap any word to learn
+- Auto-save your reading position — pick up exactly where you left off
+- Audio auto-scroll: the text follows along as you listen
+- Bookmark any ayah, search Arabic + translation, access tafsir with one tap
 
-### Audio — 260+ Reciters
-- Stream from the world's largest collection of Quran reciters
-- Download surahs for offline listening (batch download supported)
+### Listen to 260+ Reciters
+More than any other app. Mishary, Sudais, Abdul Basit, Maher Al Muaiqly, and 256+ more.
+- Stream or download entire surahs for offline listening
 - Background playback with notification + lock screen controls
 - Playback modes: Single, Continuous, Repeat Surah, Repeat Ayah
-- Skip previous/next navigation (surah-level + ayah-level)
-- Play any individual ayah directly from the reading screen
-- Persistent mini player across all tabs with full controls
+- Mini player stays visible across all tabs
 
-### Tajweed Course — 24 Free Lessons
-- Structured curriculum: Beginner (8), Intermediate (8), Advanced (8)
-- Theory, audio examples, practice exercises, and quizzes per lesson
-- Record yourself and compare side-by-side with sheikh recitation
+### Learn Tajweed — 24 Free Lessons
+No other app teaches all tajweed rules for free.
+- 3 levels: Beginner (8), Intermediate (8), Advanced (8)
+- Theory, sheikh audio examples, practice exercises, and quizzes
+- Record yourself and compare side-by-side with the sheikh
 - 70% pass threshold with progress tracking
-- All 24 lessons completely free
 
 ### Prayer Times, Qibla & Reminders
-- Offline prayer time calculation from GPS (no API needed)
-- 12 calculation methods (MWL, Egyptian, Umm Al-Qura, ISNA, Karachi, etc.)
+- Offline calculation from GPS — works without internet (12 methods: MWL, Egyptian, Umm Al-Qura, ISNA, Karachi, etc.)
 - Live countdown to next prayer
-- Per-prayer notification reminders (configurable: at time, 5/10/15/30 min before)
-- Qibla compass with real-time bearing to the Kaaba
-- Hijri calendar with Gregorian conversion
-- Islamic events timeline (10 events: Ramadan, Eid al-Fitr, Eid al-Adha, Laylat al-Qadr, etc.)
+- Per-prayer notification reminders (at time, or 5/10/15/30 min before)
+- Qibla compass with real-time bearing
+- Hijri calendar + 10 Islamic events timeline with countdown
 
-### Azkar — 132 Categories from Hisn al-Muslim
-- API-powered from HisnMuslim (complete Fortress of the Muslim)
-- 132 categories: morning, evening, prayer, sleep, travel, rain, sickness, and more
-- Searchable category grid with tap-to-count tasbih counter and haptic feedback
-- Cached locally on first view for offline access
+### Azkar & Du'as — Complete Hisn al-Muslim
+- **132 azkar categories**: morning, evening, prayer, sleep, travel, rain, sickness, and more
+- **23 du'a categories**: Istikhara, Anxiety, Travel, Sickness, Tawbah, Hajj, and more
+- Tap-to-count tasbih with haptic feedback
+- All from HisnMuslim API, cached offline
 
-### Du'as — 23 Supplication Categories
-- API-powered from HisnMuslim
-- Categories: Istikhara, Anxiety, Distress, Travel, Sickness, Tawbah, Hajj, and more
-- Arabic text with tap-to-count for repeated du'as
-- Copy to clipboard, celebration on category completion
-
-### Ahadith — 40,000+ Hadiths
+### 40,000+ Hadiths
 - 6 major collections: Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa'i, Ibn Majah
-- API-powered from Fawaz Ahmed Hadith CDN
-- Arabic text with English translation, organized by sections/chapters
-- Grade badges (Sahih, Hasan, Da'if) and narrator display
-- Cached locally on first view for offline access
+- Arabic + English text, organized by chapters
+- Authenticity grades: Sahih, Hasan, Da'if
+- Cached locally for offline reading
 
-### Ahkam — Islamic Rulings (4 Madhabs)
+### Islamic Rulings (Ahkam) — 4 Madhabs Side by Side
 - 8 categories: Purification, Prayer, Fasting, Zakat, Hajj, Marriage, Food, Daily Life
-- Side-by-side rulings from Hanafi, Maliki, Shafi'i, and Hanbali schools
-- Quran and Hadith evidence for each position
-- 40+ topics with expandable details
+- Each topic shows Hanafi, Maliki, Shafi'i, and Hanbali positions with Quran/Hadith evidence
 
-### Memorization (Hifz)
-- Progressive verse hiding (3 difficulty levels)
-- Easy: first word shown | Medium: fully hidden | Hard: type from memory
-- Self-assessment rating (correct/wrong) with score tracking
+### Memorize the Quran (Hifz)
+- Progressive verse hiding — 3 difficulty levels
+- Easy (first word shown), Medium (fully hidden), Hard (type from memory)
+- Self-assessment with score tracking
 
-### Gamification
-- 4 daily goals: Read Quran, Listen, Azkar, Du'a
-- Daily streak counter with fire animation
-- 15 unlockable achievements (badges for milestones)
-- Celebration confetti on goal/achievement completion
+### Gamification — Build Consistent Habits
+- 4 daily goals: Read, Listen, Azkar, Du'a
+- Daily streak with fire counter
+- 15 achievements to unlock
+- Celebration confetti when you hit milestones
 
-### More
-- Reading plans (Khatmah): finish the Quran in 30, 60, 90, or 365 days
-- 5 Android home screen widgets: Daily Ayah, Prayer Time, Hijri Date, Daily Azkar, Hadith of the Day
-- 4 themes: Light, Dark, Sepia, AMOLED
-- 14 UI languages
-- 5-page onboarding with live preference pickers
-- Offline-first architecture
+### Even More
+- **Khatmah**: finish the Quran in 30, 60, 90, or 365 days
+- **5 home screen widgets**: Daily Ayah, Prayer Time, Hijri Date, Daily Azkar, Hadith of the Day
+- **4 themes**: Light, Dark, Sepia, AMOLED
+- **14 UI languages**: English, Arabic, French, Turkish, Urdu, Indonesian, Spanish, German, Russian, Bengali, Malay, Hindi, Portuguese, Chinese
+- **Offline-first**: everything cached locally after first load
+
+---
 
 ## Tech Stack
 
