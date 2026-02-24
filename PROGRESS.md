@@ -900,3 +900,48 @@ Widget infrastructure:
 39. `10413b6` - Add Islamic events service + Hijri date on homepage + event countdown card
 40. `68fe766` - Enhance Hijri screen with Islamic events timeline
 41. `6e6b8b0` - Add 3 new Android home screen widgets (5 total) + widget data service
+
+## Session Work (Feb 24, 2026) — Reading Position Auto-Save & Audio Follow
+
+### Problem
+- Reading position was NEVER actually saved — the DB table, repository, provider and "Continue Reading" card all existed, but ReadingScreen never called `saveReadingPosition()`
+- Reading mode (recitation vs mushaf) reset to recitation every time
+- Switching between modes was not synchronized (lost your place)
+- No auto-scroll to follow audio playback
+- Competitive apps (Muslim Pro, Quran.com, Ayah, iQuran) all auto-save silently
+
+### Reading Position Auto-Save
+- `WidgetsBindingObserver` mixin on ReadingScreen: saves on app pause/inactive
+- `PopScope` wrapper: saves when user navigates back
+- Scroll listener (recitation mode): debounced 500ms, estimates visible ayah from scroll offset
+- PageView `onPageChanged` (mushaf mode): debounced save on page flip
+- Initial save on screen open via `addPostFrameCallback`
+- `_saveCurrentPosition()` saves surahId, ayahNumber, pageNumber + persists reading mode
+
+### Reading Mode Persistence
+- `ReadingMode` enum moved from reading_screen.dart to reading_preferences_provider.dart
+- `readingModeProvider` (StateNotifierProvider + SharedPreferences): persists recitation vs mushaf
+- ReadingScreen initializes `_mode` from saved preference instead of hardcoding recitation
+- Mode switch also saved via provider
+
+### Synchronized Mode Switching
+- Both modes share a single `_currentAyah` tracking variable
+- Recitation → Mushaf: finds which page `_currentAyah` belongs to, opens PageView at that page
+- Mushaf → Recitation: scrolls ListView to the ayah card matching `_currentAyah`
+- User can switch modes without losing their position (critical for audio follow)
+
+### Audio Auto-Scroll
+- `ref.listen()` on `currentAudioStateProvider.select((s) => s.currentAyah)` for real-time tracking
+- Recitation mode: `_scrollController.animateTo()` smoothly scrolls to the playing ayah card
+- Mushaf mode: `_pageController.animateToPage()` auto-flips to the correct page
+- Only activates when audio is playing for the current surah
+- `_userIsScrolling` flag (via `NotificationListener<ScrollNotification>`) prevents fighting with manual scroll
+
+### Startup Screen Preference
+- `StartupScreen` enum (home, lastPosition) + `startupScreenProvider` added
+- SharedPreferences key: `startup_screen`
+- Will be wired into onboarding + settings + app.dart in next commit
+
+### Files Modified
+- `lib/core/providers/reading_preferences_provider.dart` — added ReadingMode, readingModeProvider, StartupScreen, startupScreenProvider
+- `lib/features/quran/presentation/screens/reading_screen.dart` — complete rewrite with auto-save, mode sync, audio follow

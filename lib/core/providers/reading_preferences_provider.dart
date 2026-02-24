@@ -6,6 +6,8 @@ const _translationKey = 'default_translation';
 const _reciterKey = 'default_reciter';
 const _tajweedKey = 'show_tajweed_colors';
 const _numeralStyleKey = 'numeral_style';
+const _readingModeKey = 'last_reading_mode';
+const _startupScreenKey = 'startup_screen';
 
 // ─── Font Size ───
 
@@ -213,4 +215,58 @@ String formatAyahNumber(int number, NumeralStyle style) {
   if (style == NumeralStyle.western) return '$number';
   const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
   return number.toString().split('').map((d) => arabicDigits[int.parse(d)]).join();
+}
+
+// ─── Reading Mode (Recitation vs Mushaf) ───
+
+enum ReadingMode { recitation, mushaf }
+
+final readingModeProvider =
+    StateNotifierProvider<ReadingModeNotifier, ReadingMode>((ref) {
+  return ReadingModeNotifier();
+});
+
+class ReadingModeNotifier extends StateNotifier<ReadingMode> {
+  ReadingModeNotifier() : super(ReadingMode.recitation) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString(_readingModeKey);
+    if (value == 'mushaf') state = ReadingMode.mushaf;
+  }
+
+  Future<void> setMode(ReadingMode mode) async {
+    state = mode;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_readingModeKey, mode.name);
+  }
+}
+
+// ─── Startup Screen (Home vs Last Reading Position) ───
+
+enum StartupScreen { home, lastPosition }
+
+final startupScreenProvider =
+    StateNotifierProvider<StartupScreenNotifier, StartupScreen>((ref) {
+  return StartupScreenNotifier();
+});
+
+class StartupScreenNotifier extends StateNotifier<StartupScreen> {
+  StartupScreenNotifier() : super(StartupScreen.home) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString(_startupScreenKey);
+    if (value == 'lastPosition') state = StartupScreen.lastPosition;
+  }
+
+  Future<void> setStartupScreen(StartupScreen screen) async {
+    state = screen;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_startupScreenKey, screen.name);
+  }
 }
