@@ -8,7 +8,7 @@ import '../../features/tajweed_course/presentation/screens/course_home_screen.da
 import '../../features/settings/presentation/screens/more_screen.dart';
 import 'route_names.dart';
 
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _quranNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'quran');
 final _listenNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'listen');
 final _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
@@ -16,7 +16,7 @@ final _learnNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'learn');
 final _moreNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'more');
 
 final appRouter = GoRouter(
-  navigatorKey: _rootNavigatorKey,
+  navigatorKey: rootNavigatorKey,
   initialLocation: RouteNames.home,
   routes: [
     StatefulShellRoute.indexedStack(

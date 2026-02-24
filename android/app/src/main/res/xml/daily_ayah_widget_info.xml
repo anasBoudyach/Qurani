@@ -4,6 +4,7 @@
     android:minHeight="110dp"
     android:updatePeriodMillis="3600000"
     android:initialLayout="@layout/daily_ayah_widget"
+    android:previewLayout="@layout/daily_ayah_widget"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
     android:description="@string/daily_ayah_widget_desc" />

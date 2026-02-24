@@ -3,48 +3,96 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="12dp"
     android:background="@drawable/widget_background"
     android:gravity="center">
 
-    <TextView
-        android:id="@+id/widget_title"
+    <!-- Blue header: Mosque icon + title -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Next Prayer"
-        android:textSize="12sp"
-        android:textColor="#9E9E9E"
-        android:gravity="center" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="6dp">
 
-    <TextView
-        android:id="@+id/prayer_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Dhuhr"
-        android:textSize="22sp"
-        android:textColor="#1B5E20"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:paddingTop="4dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🕌"
+            android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/prayer_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="12:30 PM"
-        android:textSize="16sp"
-        android:textColor="#5D4037"
-        android:gravity="center"
-        android:paddingTop="2dp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Prayer Time"
+            android:textSize="12sp"
+            android:textColor="#1565C0"
+            android:textStyle="bold"
+            android:gravity="end"
+            android:paddingStart="8dp" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/prayer_countdown"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="in 2h 15m"
-        android:textSize="12sp"
-        android:textColor="#BF8C2C"
+        android:layout_height="1dp"
+        android:background="#221565C0"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp" />
+
+    <!-- Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
         android:gravity="center"
-        android:paddingTop="4dp" />
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Next Prayer"
+            android:textSize="11sp"
+            android:textColor="#9E9E9E"
+            android:gravity="center"
+            android:paddingTop="4dp" />
+
+        <TextView
+            android:id="@+id/prayer_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dhuhr"
+            android:textSize="22sp"
+            android:textColor="#1565C0"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingTop="2dp" />
+
+        <TextView
+            android:id="@+id/prayer_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="12:30 PM"
+            android:textSize="15sp"
+            android:textColor="#5D4037"
+            android:gravity="center"
+            android:paddingTop="2dp" />
+
+        <TextView
+            android:id="@+id/prayer_countdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="in 2h 15m"
+            android:textSize="11sp"
+            android:textColor="#BF8C2C"
+            android:gravity="center"
+            android:paddingTop="2dp" />
+    </LinearLayout>
 
 </LinearLayout>

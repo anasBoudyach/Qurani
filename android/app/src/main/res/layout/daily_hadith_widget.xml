@@ -3,63 +3,97 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="14dp"
     android:background="@drawable/widget_background"
     android:gravity="center">
 
+    <!-- Red header: Scroll icon + title + collection badge -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center_vertical"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="6dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📜"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hadith of the Day"
             android:textSize="12sp"
-            android:textColor="#9E9E9E" />
+            android:textColor="#C62828"
+            android:textStyle="bold"
+            android:paddingStart="8dp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/hadith_collection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Bukhari"
-            android:textSize="11sp"
+            android:textSize="10sp"
             android:textColor="#FFFFFF"
             android:background="#C62828"
             android:paddingStart="6dp"
             android:paddingEnd="6dp"
             android:paddingTop="1dp"
-            android:paddingBottom="1dp"
-            android:layout_marginStart="8dp" />
-
+            android:paddingBottom="1dp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/hadith_text"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ"
-        android:textSize="17sp"
-        android:textColor="#1B5E20"
-        android:gravity="center"
-        android:textDirection="rtl"
-        android:fontFamily="serif"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:maxLines="3"
-        android:ellipsize="end" />
+        android:layout_height="1dp"
+        android:background="#22C62828"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp" />
 
-    <TextView
-        android:id="@+id/hadith_grade"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sahih"
-        android:textSize="11sp"
-        android:textColor="#4CAF50"
-        android:textStyle="bold"
+    <!-- Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
         android:gravity="center"
-        android:layout_gravity="center" />
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/hadith_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ"
+            android:textSize="17sp"
+            android:textColor="#1B5E20"
+            android:gravity="center"
+            android:textDirection="rtl"
+            android:fontFamily="serif"
+            android:paddingTop="8dp"
+            android:paddingBottom="6dp"
+            android:maxLines="3"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/hadith_grade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sahih"
+            android:textSize="11sp"
+            android:textColor="#4CAF50"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_gravity="center" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -76,7 +76,6 @@ class _QuranAppState extends ConsumerState<QuranApp> {
               _startupHandled = true;
               final startupPref = ref.read(startupScreenProvider);
               if (startupPref == StartupScreen.lastPosition) {
-                final nav = Navigator.of(context);
                 WidgetsBinding.instance.addPostFrameCallback((_) async {
                   final position =
                       await ref.read(lastReadingPositionProvider.future);
@@ -85,7 +84,7 @@ class _QuranAppState extends ConsumerState<QuranApp> {
                       (s) => s.number == position.surahId,
                       orElse: () => SurahInfo.all.first,
                     );
-                    nav.push(MaterialPageRoute(
+                    rootNavigatorKey.currentState?.push(MaterialPageRoute(
                       builder: (_) => ReadingScreen(
                         surah: surah,
                         initialAyah: position.ayahNumber,

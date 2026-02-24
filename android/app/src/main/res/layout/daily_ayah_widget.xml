@@ -3,39 +3,93 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     android:background="@drawable/widget_background"
     android:gravity="center">
 
-    <TextView
-        android:id="@+id/ayah_arabic"
+    <!-- Green header: Quran icon + title -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ"
-        android:textSize="20sp"
-        android:textColor="#1B5E20"
-        android:gravity="center"
-        android:textDirection="rtl"
-        android:fontFamily="serif"
-        android:paddingBottom="8dp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="6dp">
 
-    <TextView
-        android:id="@+id/ayah_translation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="In the name of Allah, the Most Gracious, the Most Merciful"
-        android:textSize="13sp"
-        android:textColor="#5D4037"
-        android:gravity="center"
-        android:paddingBottom="8dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="﷽"
+            android:textSize="16sp"
+            android:textColor="#1B5E20"
+            android:fontFamily="serif" />
 
-    <TextView
-        android:id="@+id/ayah_reference"
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Daily Ayah"
+            android:textSize="12sp"
+            android:textColor="#1B5E20"
+            android:textStyle="bold"
+            android:gravity="end"
+            android:paddingStart="8dp" />
+    </LinearLayout>
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Al-Fatihah 1:1"
-        android:textSize="11sp"
-        android:textColor="#9E9E9E"
-        android:gravity="center" />
+        android:layout_height="1dp"
+        android:background="#221B5E20"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp" />
+
+    <!-- Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/ayah_arabic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ"
+            android:textSize="18sp"
+            android:textColor="#1B5E20"
+            android:gravity="center"
+            android:textDirection="rtl"
+            android:fontFamily="serif"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/ayah_translation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="In the name of Allah, the Most Gracious, the Most Merciful"
+            android:textSize="12sp"
+            android:textColor="#5D4037"
+            android:gravity="center"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/ayah_reference"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Al-Fatihah 1:1"
+            android:textSize="10sp"
+            android:textColor="#9E9E9E"
+            android:gravity="center" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -4,6 +4,7 @@
     android:minHeight="110dp"
     android:updatePeriodMillis="1800000"
     android:initialLayout="@layout/prayer_time_widget"
+    android:previewLayout="@layout/prayer_time_widget"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
     android:description="@string/prayer_time_widget_desc" />

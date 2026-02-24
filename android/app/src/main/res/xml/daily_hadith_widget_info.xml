@@ -4,6 +4,7 @@
     android:minHeight="130dp"
     android:updatePeriodMillis="43200000"
     android:initialLayout="@layout/daily_hadith_widget"
+    android:previewLayout="@layout/daily_hadith_widget"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
     android:description="@string/daily_hadith_widget_desc" />

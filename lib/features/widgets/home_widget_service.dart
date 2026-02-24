@@ -94,11 +94,19 @@ class HomeWidgetService {
 
   /// Initialize all widgets on app start.
   static Future<void> initialize() async {
-    await updateDailyAyahWidget();
-    await updateHijriWidget();
-    await updateAzkarWidget();
-    await updateHadithWidget();
-    // Prayer time widget will be updated when location is available
+    try {
+      await updateDailyAyahWidget();
+      await updatePrayerTimeWidget(
+        prayerName: 'Dhuhr',
+        prayerTime: '12:30 PM',
+        countdown: 'Open app for live times',
+      );
+      await updateHijriWidget();
+      await updateAzkarWidget();
+      await updateHadithWidget();
+    } catch (_) {
+      // Widget updates are best-effort; don't crash the app
+    }
   }
 }
 
