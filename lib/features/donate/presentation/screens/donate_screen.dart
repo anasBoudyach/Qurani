@@ -135,14 +135,14 @@ class DonateScreen extends StatelessWidget {
             title: 'Buy Me a Coffee',
             subtitle: 'One-time or monthly support',
             color: const Color(0xFFFFDD00),
-            onTap: () => _launchUrl('https://buymeacoffee.com/qurani'),
+            onTap: () => _launchUrl('https://buymeacoffee.com/anasboudyach'),
           ),
           _DonationOption(
             icon: Icons.payment_rounded,
             title: 'PayPal',
             subtitle: 'Direct donation via PayPal',
             color: const Color(0xFF003087),
-            onTap: () => _launchUrl('https://paypal.me/qurani'),
+            onTap: () => _launchUrl('https://paypal.me/AnasBOUDYACH'),
           ),
           _DonationOption(
             icon: Icons.star_rounded,

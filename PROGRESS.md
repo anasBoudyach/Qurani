@@ -1012,7 +1012,12 @@ Widget infrastructure:
 - Replaced `@mipmap/ic_launcher` with `@drawable/ic_notification` in NotificationService
 - Fixed 3 references: prayer channel, event channel, initialization settings
 - `@mipmap/ic_launcher` (full-color) rendered as blank square — Android requires monochrome notification icons
-- Regenerated `ic_notification.png` at all 5 densities (proper white silhouette via Android Studio Image Asset)
+- Replaced broken PNG icons with XML vector drawable (crescent + star + open book)
+- Deleted 5 density-specific PNGs, single XML in `drawable/` works at all densities
+
+### Donation Links
+- Buy Me a Coffee: updated to `buymeacoffee.com/anasboudyach`
+- PayPal: updated to `paypal.me/AnasBOUDYACH`
 
 ### Other Fixes
 - Added `CLAUDE.md` to `.gitignore`
@@ -1020,4 +1025,5 @@ Widget infrastructure:
 - `app.dart` startup and widget navigation handling
 
 ### Git Commits (this session)
-42. `0f2ec55` - Fix notification icons, add widget tap-to-open, and Hijri screen improvements
+42. `276df83` - Fix notification icons, add widget tap-to-open, and Hijri screen improvements
+43. `0e6e459` - Replace notification icon PNGs with XML vector, fix donation links

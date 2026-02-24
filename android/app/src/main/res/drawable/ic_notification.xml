@@ -1,0 +1,28 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Crescent Moon (top, opening left) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M11,1.5 A3.5,3.5,0,1,1,11,8.5 A3.5,3.5,0,1,1,11,1.5 Z M12.5,2 A3,3,0,1,1,12.5,8 A3,3,0,1,1,12.5,2 Z"/>
+
+    <!-- Star (right of crescent) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M17.5,3.5 L18.1,5 L19.5,5.2 L18.5,6.1 L18.7,7.5 L17.5,6.8 L16.3,7.5 L16.5,6.1 L15.5,5.2 L16.9,5 Z"/>
+
+    <!-- Open Book - Left Page -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M1,21 L1,13 L11.5,11 L11.5,22 Z"/>
+
+    <!-- Open Book - Right Page -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12.5,22 L12.5,11 L23,13 L23,21 Z"/>
+
+</vector>
