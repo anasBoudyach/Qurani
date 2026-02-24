@@ -1012,8 +1012,8 @@ Widget infrastructure:
 - Replaced `@mipmap/ic_launcher` with `@drawable/ic_notification` in NotificationService
 - Fixed 3 references: prayer channel, event channel, initialization settings
 - `@mipmap/ic_launcher` (full-color) rendered as blank square — Android requires monochrome notification icons
-- Replaced broken PNG icons with XML vector drawable (crescent + star + open book)
-- Deleted 5 density-specific PNGs, single XML in `drawable/` works at all densities
+- Replaced PNG icons with XML vector drawable in base `drawable/` folder (crescent + star + open book)
+- PNGs in density folders weren't resolving; single XML in base `drawable/` works at all densities
 
 ### Donation Links
 - Buy Me a Coffee: updated to `buymeacoffee.com/anasboudyach`
