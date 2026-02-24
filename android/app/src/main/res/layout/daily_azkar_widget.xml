@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="14dp"
+    android:background="@drawable/widget_background"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/azkar_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Morning Azkar"
+        android:textSize="12sp"
+        android:textColor="#5C6BC0"
+        android:textStyle="bold"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/azkar_arabic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ"
+        android:textSize="18sp"
+        android:textColor="#1B5E20"
+        android:gravity="center"
+        android:textDirection="rtl"
+        android:fontFamily="serif"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:maxLines="3"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/azkar_repeat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Repeat 3 times"
+        android:textSize="11sp"
+        android:textColor="#9E9E9E"
+        android:gravity="center" />
+
+</LinearLayout>

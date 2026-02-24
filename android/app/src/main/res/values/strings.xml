@@ -3,4 +3,7 @@
     <string name="app_name">Qurani</string>
     <string name="daily_ayah_widget_desc">Shows a daily Quran ayah with translation</string>
     <string name="prayer_time_widget_desc">Shows the next prayer time with countdown</string>
+    <string name="hijri_date_widget_desc">Shows today\'s Hijri date and next Islamic event</string>
+    <string name="daily_azkar_widget_desc">Morning and evening remembrance from Hisn al-Muslim</string>
+    <string name="daily_hadith_widget_desc">Daily hadith from authentic collections</string>
 </resources>

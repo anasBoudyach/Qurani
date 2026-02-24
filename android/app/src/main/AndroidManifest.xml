@@ -59,6 +59,42 @@
                 android:resource="@xml/prayer_time_widget_info" />
         </receiver>
 
+        <!-- Hijri Date Widget -->
+        <receiver
+            android:name=".HijriDateWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/hijri_date_widget_info" />
+        </receiver>
+
+        <!-- Daily Azkar Widget -->
+        <receiver
+            android:name=".DailyAzkarWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/daily_azkar_widget_info" />
+        </receiver>
+
+        <!-- Daily Hadith Widget -->
+        <receiver
+            android:name=".DailyHadithWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/daily_hadith_widget_info" />
+        </receiver>
+
         <!-- Boot receiver to reschedule prayer notifications after reboot -->
         <receiver
             android:name=".BootReceiver"
