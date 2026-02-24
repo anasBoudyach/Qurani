@@ -4,7 +4,7 @@ import '../../shared/widgets/app_shell.dart';
 import '../../features/home/presentation/screens/dashboard_screen.dart';
 import '../../features/quran/presentation/screens/quran_browse_screen.dart';
 import '../../features/audio/presentation/screens/reciter_list_screen.dart';
-import '../../features/tajweed_course/presentation/screens/course_home_screen.dart';
+import '../../features/bookmarks/presentation/screens/bookmarks_screen.dart';
 import '../../features/settings/presentation/screens/more_screen.dart';
 import 'route_names.dart';
 
@@ -12,7 +12,7 @@ final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _quranNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'quran');
 final _listenNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'listen');
 final _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
-final _learnNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'learn');
+final _bookmarksNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'bookmarks');
 final _moreNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'more');
 
 final appRouter = GoRouter(
@@ -54,13 +54,13 @@ final appRouter = GoRouter(
             ),
           ],
         ),
-        // Tab 4: Learn (Tajweed Course)
+        // Tab 4: Bookmarks
         StatefulShellBranch(
-          navigatorKey: _learnNavigatorKey,
+          navigatorKey: _bookmarksNavigatorKey,
           routes: [
             GoRoute(
-              path: RouteNames.learn,
-              builder: (context, state) => const CourseHomeScreen(),
+              path: RouteNames.bookmarks,
+              builder: (context, state) => const BookmarksScreen(),
             ),
           ],
         ),

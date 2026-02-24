@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/providers/reading_preferences_provider.dart';
@@ -479,6 +480,87 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
     );
   }
 
+  void _showReciterPicker() {
+    final current = ref.read(defaultReciterProvider);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.5,
+        maxChildSize: 0.8,
+        minChildSize: 0.3,
+        expand: false,
+        builder: (sheetContext, scrollController) => Padding(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Reciter',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                current.name,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withAlpha(153),
+                    ),
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: ListView(
+                  controller: scrollController,
+                  children: reciterOptions
+                      .map((option) => RadioListTile<String>(
+                            value: option.id,
+                            groupValue: current.id,
+                            title: Text(option.name),
+                            secondary: Icon(
+                              Icons.mic_rounded,
+                              color: option.id == current.id
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withAlpha(100),
+                              size: 20,
+                            ),
+                            onChanged: (_) {
+                              ref
+                                  .read(defaultReciterProvider.notifier)
+                                  .setReciter(option);
+                              Navigator.pop(sheetContext);
+                            },
+                          ))
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildErrorView(Object error) {
     return Center(
       child: Padding(
@@ -642,6 +724,44 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                 ),
               ),
             ),
+            const SizedBox(height: 8),
+            // Reciter selector chip
+            Consumer(builder: (context, ref, _) {
+              final reciter = ref.watch(defaultReciterProvider);
+              return GestureDetector(
+                onTap: _showReciterPicker,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: onPrimary.withAlpha(36),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: onPrimary.withAlpha(60),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.mic_rounded,
+                          size: 14, color: onPrimary.withAlpha(220)),
+                      const SizedBox(width: 6),
+                      Text(
+                        reciter.name,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: onPrimary.withAlpha(220),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(Icons.expand_more_rounded,
+                          size: 16, color: onPrimary.withAlpha(180)),
+                    ],
+                  ),
+                ),
+              );
+            }),
           ],
         );
       }),
@@ -689,6 +809,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
               ),
               const Spacer(),
               _playPauseButton(ayah.ayahNumber),
+              _bookmarkButton(ayah.ayahNumber),
               _ayahActionButton(Icons.menu_book_rounded, () {
                 Navigator.push(
                   context,
@@ -745,6 +866,42 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
         ],
       ),
     );
+  }
+
+  Widget _bookmarkButton(int ayahNumber) {
+    return Consumer(builder: (context, ref, _) {
+      final isBookmarked = ref.watch(isAyahBookmarkedProvider(
+        (surahId: widget.surah.number, ayahNumber: ayahNumber),
+      ));
+
+      return IconButton(
+        icon: Icon(
+          isBookmarked.valueOrNull == true
+              ? Icons.bookmark_rounded
+              : Icons.bookmark_outline_rounded,
+          size: 20,
+        ),
+        onPressed: () async {
+          HapticFeedback.lightImpact();
+          final repo = ref.read(bookmarkRepositoryProvider);
+          await repo.toggleBookmark(
+            surahId: widget.surah.number,
+            ayahNumber: ayahNumber,
+          );
+          ref.invalidate(isAyahBookmarkedProvider(
+            (surahId: widget.surah.number, ayahNumber: ayahNumber),
+          ));
+          ref.invalidate(bookmarksProvider);
+        },
+        tooltip: isBookmarked.valueOrNull == true
+            ? 'Remove bookmark'
+            : 'Bookmark ayah',
+        constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+        color: isBookmarked.valueOrNull == true
+            ? Theme.of(context).colorScheme.primary
+            : Theme.of(context).colorScheme.onSurface.withAlpha(153),
+      );
+    });
   }
 
   Widget _ayahActionButton(

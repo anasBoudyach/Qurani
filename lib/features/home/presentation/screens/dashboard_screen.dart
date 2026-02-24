@@ -21,6 +21,7 @@ import '../../../reading_plans/presentation/screens/khatmah_screen.dart';
 import '../../../duas/presentation/screens/duas_screen.dart';
 import '../../../ahkam/presentation/screens/ahkam_screen.dart';
 import '../../../ahadith/presentation/screens/ahadith_screen.dart';
+import '../../../tajweed_course/presentation/screens/course_home_screen.dart';
 import '../../../gamification/data/models/daily_goal.dart';
 import '../../../gamification/presentation/providers/gamification_providers.dart';
 import '../../../gamification/data/models/achievement_def.dart';
@@ -315,7 +316,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       label: 'Tajweed',
                       color: AppColors.accentTajweed,
                       compact: true,
-                      onTap: () => context.go(RouteNames.learn),
+                      onTap: () => Navigator.push(
+                        context,
+                        SlideUpRoute(page: const CourseHomeScreen()),
+                      ),
                     ),
                     FeatureTile(
                       icon: Icons.auto_awesome_rounded,

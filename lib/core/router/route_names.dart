@@ -5,7 +5,7 @@ class RouteNames {
   static const String quran = '/quran';
   static const String listen = '/listen';
   static const String home = '/home';
-  static const String learn = '/learn';
+  static const String bookmarks = '/bookmarks';
   static const String more = '/more';
 
   // Quran sub-routes
@@ -20,13 +20,6 @@ class RouteNames {
 
   // Home sub-routes
   static const String notes = '/home/notes';
-
-  // Learn sub-routes
-  static const String levelOverview = '/learn/level/:levelId';
-  static const String lesson = '/learn/lesson/:lessonId';
-  static const String quiz = '/learn/quiz/:quizId';
-  static const String record = '/learn/record/:lessonId';
-  static const String progress = '/learn/progress';
 
   // More sub-routes
   static const String azkar = '/more/azkar';

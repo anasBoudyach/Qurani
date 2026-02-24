@@ -6635,6 +6635,318 @@ class CachedAzkarCompanion extends UpdateCompanion<CachedAzkarData> {
   }
 }
 
+class $AyahBookmarksTable extends AyahBookmarks
+    with TableInfo<$AyahBookmarksTable, AyahBookmark> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AyahBookmarksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _surahIdMeta = const VerificationMeta(
+    'surahId',
+  );
+  @override
+  late final GeneratedColumn<int> surahId = GeneratedColumn<int>(
+    'surah_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES surahs (id)',
+    ),
+  );
+  static const VerificationMeta _ayahNumberMeta = const VerificationMeta(
+    'ayahNumber',
+  );
+  @override
+  late final GeneratedColumn<int> ayahNumber = GeneratedColumn<int>(
+    'ayah_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, surahId, ayahNumber, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'ayah_bookmarks';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AyahBookmark> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('surah_id')) {
+      context.handle(
+        _surahIdMeta,
+        surahId.isAcceptableOrUnknown(data['surah_id']!, _surahIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_surahIdMeta);
+    }
+    if (data.containsKey('ayah_number')) {
+      context.handle(
+        _ayahNumberMeta,
+        ayahNumber.isAcceptableOrUnknown(data['ayah_number']!, _ayahNumberMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ayahNumberMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {surahId, ayahNumber},
+  ];
+  @override
+  AyahBookmark map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AyahBookmark(
+      id:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}id'],
+          )!,
+      surahId:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}surah_id'],
+          )!,
+      ayahNumber:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}ayah_number'],
+          )!,
+      createdAt:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}created_at'],
+          )!,
+    );
+  }
+
+  @override
+  $AyahBookmarksTable createAlias(String alias) {
+    return $AyahBookmarksTable(attachedDatabase, alias);
+  }
+}
+
+class AyahBookmark extends DataClass implements Insertable<AyahBookmark> {
+  final int id;
+  final int surahId;
+  final int ayahNumber;
+  final DateTime createdAt;
+  const AyahBookmark({
+    required this.id,
+    required this.surahId,
+    required this.ayahNumber,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['surah_id'] = Variable<int>(surahId);
+    map['ayah_number'] = Variable<int>(ayahNumber);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  AyahBookmarksCompanion toCompanion(bool nullToAbsent) {
+    return AyahBookmarksCompanion(
+      id: Value(id),
+      surahId: Value(surahId),
+      ayahNumber: Value(ayahNumber),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory AyahBookmark.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AyahBookmark(
+      id: serializer.fromJson<int>(json['id']),
+      surahId: serializer.fromJson<int>(json['surahId']),
+      ayahNumber: serializer.fromJson<int>(json['ayahNumber']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'surahId': serializer.toJson<int>(surahId),
+      'ayahNumber': serializer.toJson<int>(ayahNumber),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  AyahBookmark copyWith({
+    int? id,
+    int? surahId,
+    int? ayahNumber,
+    DateTime? createdAt,
+  }) => AyahBookmark(
+    id: id ?? this.id,
+    surahId: surahId ?? this.surahId,
+    ayahNumber: ayahNumber ?? this.ayahNumber,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  AyahBookmark copyWithCompanion(AyahBookmarksCompanion data) {
+    return AyahBookmark(
+      id: data.id.present ? data.id.value : this.id,
+      surahId: data.surahId.present ? data.surahId.value : this.surahId,
+      ayahNumber:
+          data.ayahNumber.present ? data.ayahNumber.value : this.ayahNumber,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AyahBookmark(')
+          ..write('id: $id, ')
+          ..write('surahId: $surahId, ')
+          ..write('ayahNumber: $ayahNumber, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, surahId, ayahNumber, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AyahBookmark &&
+          other.id == this.id &&
+          other.surahId == this.surahId &&
+          other.ayahNumber == this.ayahNumber &&
+          other.createdAt == this.createdAt);
+}
+
+class AyahBookmarksCompanion extends UpdateCompanion<AyahBookmark> {
+  final Value<int> id;
+  final Value<int> surahId;
+  final Value<int> ayahNumber;
+  final Value<DateTime> createdAt;
+  const AyahBookmarksCompanion({
+    this.id = const Value.absent(),
+    this.surahId = const Value.absent(),
+    this.ayahNumber = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  AyahBookmarksCompanion.insert({
+    this.id = const Value.absent(),
+    required int surahId,
+    required int ayahNumber,
+    required DateTime createdAt,
+  }) : surahId = Value(surahId),
+       ayahNumber = Value(ayahNumber),
+       createdAt = Value(createdAt);
+  static Insertable<AyahBookmark> custom({
+    Expression<int>? id,
+    Expression<int>? surahId,
+    Expression<int>? ayahNumber,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (surahId != null) 'surah_id': surahId,
+      if (ayahNumber != null) 'ayah_number': ayahNumber,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  AyahBookmarksCompanion copyWith({
+    Value<int>? id,
+    Value<int>? surahId,
+    Value<int>? ayahNumber,
+    Value<DateTime>? createdAt,
+  }) {
+    return AyahBookmarksCompanion(
+      id: id ?? this.id,
+      surahId: surahId ?? this.surahId,
+      ayahNumber: ayahNumber ?? this.ayahNumber,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (surahId.present) {
+      map['surah_id'] = Variable<int>(surahId.value);
+    }
+    if (ayahNumber.present) {
+      map['ayah_number'] = Variable<int>(ayahNumber.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AyahBookmarksCompanion(')
+          ..write('id: $id, ')
+          ..write('surahId: $surahId, ')
+          ..write('ayahNumber: $ayahNumber, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6663,6 +6975,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $CachedHadithSectionsTable(this);
   late final $CachedHadithsTable cachedHadiths = $CachedHadithsTable(this);
   late final $CachedAzkarTable cachedAzkar = $CachedAzkarTable(this);
+  late final $AyahBookmarksTable ayahBookmarks = $AyahBookmarksTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6683,6 +6996,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     cachedHadithSections,
     cachedHadiths,
     cachedAzkar,
+    ayahBookmarks,
   ];
 }
 
@@ -6805,6 +7119,24 @@ final class $$SurahsTableReferences
     final cache = $_typedResult.readTableOrNull(
       _readingProgressRefsTable($_db),
     );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$AyahBookmarksTable, List<AyahBookmark>>
+  _ayahBookmarksRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.ayahBookmarks,
+    aliasName: $_aliasNameGenerator(db.surahs.id, db.ayahBookmarks.surahId),
+  );
+
+  $$AyahBookmarksTableProcessedTableManager get ayahBookmarksRefs {
+    final manager = $$AyahBookmarksTableTableManager(
+      $_db,
+      $_db.ayahBookmarks,
+    ).filter((f) => f.surahId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_ayahBookmarksRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -6976,6 +7308,31 @@ class $$SurahsTableFilterComposer
           }) => $$ReadingProgressTableFilterComposer(
             $db: $db,
             $table: $db.readingProgress,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> ayahBookmarksRefs(
+    Expression<bool> Function($$AyahBookmarksTableFilterComposer f) f,
+  ) {
+    final $$AyahBookmarksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.ayahBookmarks,
+      getReferencedColumn: (t) => t.surahId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AyahBookmarksTableFilterComposer(
+            $db: $db,
+            $table: $db.ayahBookmarks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7203,6 +7560,31 @@ class $$SurahsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> ayahBookmarksRefs<T extends Object>(
+    Expression<T> Function($$AyahBookmarksTableAnnotationComposer a) f,
+  ) {
+    final $$AyahBookmarksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.ayahBookmarks,
+      getReferencedColumn: (t) => t.surahId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AyahBookmarksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.ayahBookmarks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$SurahsTableTableManager
@@ -7224,6 +7606,7 @@ class $$SurahsTableTableManager
             bool downloadedAudioRefs,
             bool userNotesRefs,
             bool readingProgressRefs,
+            bool ayahBookmarksRefs,
           })
         > {
   $$SurahsTableTableManager(_$AppDatabase db, $SurahsTable table)
@@ -7293,6 +7676,7 @@ class $$SurahsTableTableManager
             downloadedAudioRefs = false,
             userNotesRefs = false,
             readingProgressRefs = false,
+            ayahBookmarksRefs = false,
           }) {
             return PrefetchHooks(
               db: db,
@@ -7302,6 +7686,7 @@ class $$SurahsTableTableManager
                 if (downloadedAudioRefs) db.downloadedAudio,
                 if (userNotesRefs) db.userNotes,
                 if (readingProgressRefs) db.readingProgress,
+                if (ayahBookmarksRefs) db.ayahBookmarks,
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
@@ -7405,6 +7790,28 @@ class $$SurahsTableTableManager
                           ),
                       typedResults: items,
                     ),
+                  if (ayahBookmarksRefs)
+                    await $_getPrefetchedData<
+                      Surah,
+                      $SurahsTable,
+                      AyahBookmark
+                    >(
+                      currentTable: table,
+                      referencedTable: $$SurahsTableReferences
+                          ._ayahBookmarksRefsTable(db),
+                      managerFromTypedResult:
+                          (p0) =>
+                              $$SurahsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).ayahBookmarksRefs,
+                      referencedItemsForCurrentItem:
+                          (item, referencedItems) => referencedItems.where(
+                            (e) => e.surahId == item.id,
+                          ),
+                      typedResults: items,
+                    ),
                 ];
               },
             );
@@ -7431,6 +7838,7 @@ typedef $$SurahsTableProcessedTableManager =
         bool downloadedAudioRefs,
         bool userNotesRefs,
         bool readingProgressRefs,
+        bool ayahBookmarksRefs,
       })
     >;
 typedef $$AyahsTableCreateCompanionBuilder =
@@ -11549,6 +11957,311 @@ typedef $$CachedAzkarTableProcessedTableManager =
       CachedAzkarData,
       PrefetchHooks Function()
     >;
+typedef $$AyahBookmarksTableCreateCompanionBuilder =
+    AyahBookmarksCompanion Function({
+      Value<int> id,
+      required int surahId,
+      required int ayahNumber,
+      required DateTime createdAt,
+    });
+typedef $$AyahBookmarksTableUpdateCompanionBuilder =
+    AyahBookmarksCompanion Function({
+      Value<int> id,
+      Value<int> surahId,
+      Value<int> ayahNumber,
+      Value<DateTime> createdAt,
+    });
+
+final class $$AyahBookmarksTableReferences
+    extends BaseReferences<_$AppDatabase, $AyahBookmarksTable, AyahBookmark> {
+  $$AyahBookmarksTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $SurahsTable _surahIdTable(_$AppDatabase db) => db.surahs.createAlias(
+    $_aliasNameGenerator(db.ayahBookmarks.surahId, db.surahs.id),
+  );
+
+  $$SurahsTableProcessedTableManager get surahId {
+    final $_column = $_itemColumn<int>('surah_id')!;
+
+    final manager = $$SurahsTableTableManager(
+      $_db,
+      $_db.surahs,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_surahIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$AyahBookmarksTableFilterComposer
+    extends Composer<_$AppDatabase, $AyahBookmarksTable> {
+  $$AyahBookmarksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ayahNumber => $composableBuilder(
+    column: $table.ayahNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$SurahsTableFilterComposer get surahId {
+    final $$SurahsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.surahId,
+      referencedTable: $db.surahs,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SurahsTableFilterComposer(
+            $db: $db,
+            $table: $db.surahs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AyahBookmarksTableOrderingComposer
+    extends Composer<_$AppDatabase, $AyahBookmarksTable> {
+  $$AyahBookmarksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ayahNumber => $composableBuilder(
+    column: $table.ayahNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$SurahsTableOrderingComposer get surahId {
+    final $$SurahsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.surahId,
+      referencedTable: $db.surahs,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SurahsTableOrderingComposer(
+            $db: $db,
+            $table: $db.surahs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AyahBookmarksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AyahBookmarksTable> {
+  $$AyahBookmarksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get ayahNumber => $composableBuilder(
+    column: $table.ayahNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$SurahsTableAnnotationComposer get surahId {
+    final $$SurahsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.surahId,
+      referencedTable: $db.surahs,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SurahsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.surahs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AyahBookmarksTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AyahBookmarksTable,
+          AyahBookmark,
+          $$AyahBookmarksTableFilterComposer,
+          $$AyahBookmarksTableOrderingComposer,
+          $$AyahBookmarksTableAnnotationComposer,
+          $$AyahBookmarksTableCreateCompanionBuilder,
+          $$AyahBookmarksTableUpdateCompanionBuilder,
+          (AyahBookmark, $$AyahBookmarksTableReferences),
+          AyahBookmark,
+          PrefetchHooks Function({bool surahId})
+        > {
+  $$AyahBookmarksTableTableManager(_$AppDatabase db, $AyahBookmarksTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer:
+              () => $$AyahBookmarksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () =>
+                  $$AyahBookmarksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer:
+              () => $$AyahBookmarksTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> surahId = const Value.absent(),
+                Value<int> ayahNumber = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => AyahBookmarksCompanion(
+                id: id,
+                surahId: surahId,
+                ayahNumber: ayahNumber,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int surahId,
+                required int ayahNumber,
+                required DateTime createdAt,
+              }) => AyahBookmarksCompanion.insert(
+                id: id,
+                surahId: surahId,
+                ayahNumber: ayahNumber,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper:
+              (p0) =>
+                  p0
+                      .map(
+                        (e) => (
+                          e.readTable(table),
+                          $$AyahBookmarksTableReferences(db, table, e),
+                        ),
+                      )
+                      .toList(),
+          prefetchHooksCallback: ({surahId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                T extends TableManagerState<
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic
+                >
+              >(state) {
+                if (surahId) {
+                  state =
+                      state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.surahId,
+                            referencedTable: $$AyahBookmarksTableReferences
+                                ._surahIdTable(db),
+                            referencedColumn:
+                                $$AyahBookmarksTableReferences
+                                    ._surahIdTable(db)
+                                    .id,
+                          )
+                          as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$AyahBookmarksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AyahBookmarksTable,
+      AyahBookmark,
+      $$AyahBookmarksTableFilterComposer,
+      $$AyahBookmarksTableOrderingComposer,
+      $$AyahBookmarksTableAnnotationComposer,
+      $$AyahBookmarksTableCreateCompanionBuilder,
+      $$AyahBookmarksTableUpdateCompanionBuilder,
+      (AyahBookmark, $$AyahBookmarksTableReferences),
+      AyahBookmark,
+      PrefetchHooks Function({bool surahId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -11583,4 +12296,6 @@ class $AppDatabaseManager {
       $$CachedHadithsTableTableManager(_db, _db.cachedHadiths);
   $$CachedAzkarTableTableManager get cachedAzkar =>
       $$CachedAzkarTableTableManager(_db, _db.cachedAzkar);
+  $$AyahBookmarksTableTableManager get ayahBookmarks =>
+      $$AyahBookmarksTableTableManager(_db, _db.ayahBookmarks);
 }

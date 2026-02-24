@@ -40,9 +40,9 @@ class AppShell extends StatelessWidget {
                 label: 'Home',
               ),
               NavigationDestination(
-                icon: Icon(Icons.school_outlined),
-                selectedIcon: Icon(Icons.school),
-                label: 'Learn',
+                icon: Icon(Icons.bookmark_outline_rounded),
+                selectedIcon: Icon(Icons.bookmark_rounded),
+                label: 'Bookmarks',
               ),
               NavigationDestination(
                 icon: Icon(Icons.more_horiz_outlined),

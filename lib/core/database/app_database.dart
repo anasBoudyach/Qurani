@@ -172,6 +172,20 @@ class CachedHadiths extends Table {
       ];
 }
 
+// ─── Ayah Bookmarks ───
+
+class AyahBookmarks extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get surahId => integer().references(Surahs, #id)();
+  IntColumn get ayahNumber => integer()();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+        {surahId, ayahNumber}
+      ];
+}
+
 // ─── Azkar & Du'as Cache ───
 
 class CachedAzkar extends Table {
@@ -207,12 +221,13 @@ class CachedAzkar extends Table {
   CachedHadithSections,
   CachedHadiths,
   CachedAzkar,
+  AyahBookmarks,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -225,6 +240,9 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(cachedHadithSections);
             await m.createTable(cachedHadiths);
             await m.createTable(cachedAzkar);
+          }
+          if (from < 4) {
+            await m.createTable(ayahBookmarks);
           }
         },
       );
@@ -359,6 +377,28 @@ class AppDatabase extends _$AppDatabase {
             ..where((a) => a.categoryId.equals(categoryId))
             ..orderBy([(a) => OrderingTerm.asc(a.itemId)]))
           .get();
+
+  // ─── Ayah Bookmark Queries ───
+
+  Future<List<AyahBookmark>> getAllBookmarks() =>
+      (select(ayahBookmarks)
+            ..orderBy([(b) => OrderingTerm.desc(b.createdAt)]))
+          .get();
+
+  Future<AyahBookmark?> getBookmark(int surahId, int ayahNumber) =>
+      (select(ayahBookmarks)
+            ..where((b) =>
+                b.surahId.equals(surahId) & b.ayahNumber.equals(ayahNumber)))
+          .getSingleOrNull();
+
+  Future<int> addBookmark(AyahBookmarksCompanion bookmark) =>
+      into(ayahBookmarks).insert(bookmark);
+
+  Future<int> removeBookmark(int surahId, int ayahNumber) =>
+      (delete(ayahBookmarks)
+            ..where((b) =>
+                b.surahId.equals(surahId) & b.ayahNumber.equals(ayahNumber)))
+          .go();
 }
 
 LazyDatabase _openConnection() {

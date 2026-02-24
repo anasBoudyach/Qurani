@@ -955,3 +955,46 @@ Widget infrastructure:
 - `lib/features/onboarding/presentation/screens/onboarding_screen.dart` — added App Startup preference card + picker
 - `lib/features/settings/presentation/screens/settings_screen.dart` — added App Startup setting + picker
 - `lib/app.dart` — added startup redirect logic for last reading position
+
+## Session Work (Feb 24, 2026) — Bookmark System, Navigation, Reciter Picker, Search
+
+### Ayah Bookmark System
+- New `AyahBookmarks` Drift table (schema v3 -> v4 with migration)
+- `BookmarkRepository`: CRUD methods — `getBookmarks()`, `addBookmark()`, `removeBookmark()`, `toggleBookmark()`, `isBookmarked()`
+- Riverpod providers: `bookmarksProvider` (all bookmarks sorted desc) + `isAyahBookmarkedProvider` (per-ayah check)
+- `BookmarksScreen`: list of bookmarked ayahs with surah name, ayah number, time ago, swipe-to-delete, tap to navigate, empty state
+- Bookmark toggle button (filled/outlined icon) on each ayah card in ReadingScreen with haptic feedback
+
+### Footer Navigation: Learn -> Bookmarks
+- Replaced "Learn" tab (Tajweed Course) with "Bookmarks" tab in bottom navigation
+- AppShell: icon changed to `bookmark_outline_rounded` / `bookmark_rounded`, label "Bookmarks"
+- GoRouter: branch 4 now routes to `BookmarksScreen` at `/bookmarks`
+- Route names: removed `/learn` and all learn sub-routes (levelOverview, lesson, quiz, record, progress)
+- Tajweed course still accessible from dashboard "Tajweed" tile (Navigator.push instead of tab route)
+
+### Reciter Selector on Quran Reading Page
+- Tappable reciter chip in surah info header (gradient card): mic icon + reciter name + dropdown arrow
+- Semi-transparent pill design matching the Meccan/Medinan badge
+- Bottom sheet picker with all 10 reciters as RadioListTiles with mic icons
+- Updates `defaultReciterProvider` immediately on selection
+
+### Search Bars for Duas and Ahadith
+- `DuasScreen`: converted to StatefulWidget, search bar filters categories by title/titleArabic
+- `AhadithScreen`: converted to StatefulWidget, search bar filters collections by name/nameArabic/author
+- Same search pattern as existing AzkarScreen (TextField with real-time filtering)
+
+### Files Modified (10)
+- `lib/core/database/app_database.dart` — AyahBookmarks table, schema v4, bookmark queries
+- `lib/core/database/app_database.g.dart` — regenerated Drift code
+- `lib/features/bookmarks/data/repositories/bookmark_repository.dart` — bookmark CRUD methods
+- `lib/features/bookmarks/presentation/providers/bookmark_providers.dart` — bookmarksProvider, isAyahBookmarkedProvider
+- `lib/features/quran/presentation/screens/reading_screen.dart` — bookmark button + reciter chip + reciter picker
+- `lib/shared/widgets/app_shell.dart` — Learn tab replaced with Bookmarks
+- `lib/core/router/app_router.dart` — Learn branch replaced with Bookmarks
+- `lib/core/router/route_names.dart` — learn -> bookmarks, removed learn sub-routes
+- `lib/features/home/presentation/screens/dashboard_screen.dart` — Tajweed tile uses Navigator.push
+- `lib/features/duas/presentation/screens/duas_screen.dart` — added search bar
+- `lib/features/ahadith/presentation/screens/ahadith_screen.dart` — added search bar
+
+### Files Created (1)
+- `lib/features/bookmarks/presentation/screens/bookmarks_screen.dart` — Bookmarks list screen
