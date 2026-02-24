@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../../core/utils/hijri_utils.dart';
 
 /// Hijri calendar screen with date display and conversion.
-/// Uses a simple Hijri date calculation algorithm.
 class HijriScreen extends StatefulWidget {
   const HijriScreen({super.key});
 
@@ -20,7 +20,7 @@ class _HijriScreenState extends State<HijriScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final hijri = _gregorianToHijri(_selectedDate);
+    final hijri = gregorianToHijri(_selectedDate);
     final isToday = _isSameDay(_selectedDate, DateTime.now());
 
     return Scaffold(
@@ -80,7 +80,7 @@ class _HijriScreenState extends State<HijriScreen> {
                 const SizedBox(height: 8),
                 // Arabic date
                 Text(
-                  '${_toArabicNumeral(hijri.day)} ${hijri.monthNameArabic} ${_toArabicNumeral(hijri.year)} هـ',
+                  hijri.formatArabic(),
                   style: const TextStyle(
                     fontFamily: 'AmiriQuran',
                     fontSize: 22,
@@ -219,7 +219,7 @@ class _HijriScreenState extends State<HijriScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      _hijriMonthNames[index],
+                      hijriMonthNames[index],
                       style: TextStyle(
                         fontWeight:
                             isCurrent ? FontWeight.bold : FontWeight.normal,
@@ -230,7 +230,7 @@ class _HijriScreenState extends State<HijriScreen> {
                     ),
                   ),
                   Text(
-                    _hijriMonthNamesArabic[index],
+                    hijriMonthNamesArabic[index],
                     style: TextStyle(
                       fontFamily: 'AmiriQuran',
                       fontSize: 16,
@@ -271,89 +271,4 @@ class _HijriScreenState extends State<HijriScreen> {
     ];
     return '${months[d.month - 1]} ${d.day}';
   }
-
-  String _toArabicNumeral(int number) {
-    const arabicDigits = [
-      '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'
-    ];
-    return number
-        .toString()
-        .split('')
-        .map((d) => arabicDigits[int.parse(d)])
-        .join();
-  }
-}
-
-// ─── Hijri Date Calculation ───
-
-const _hijriMonthNames = [
-  'Muharram', 'Safar', 'Rabi al-Awwal', 'Rabi al-Thani',
-  'Jumada al-Ula', 'Jumada al-Thani', 'Rajab', 'Shaban',
-  'Ramadan', 'Shawwal', 'Dhul Qadah', 'Dhul Hijjah',
-];
-
-const _hijriMonthNamesArabic = [
-  'مُحَرَّم', 'صَفَر', 'رَبِيع الأَوَّل', 'رَبِيع الثَّانِي',
-  'جُمَادَى الأُولَى', 'جُمَادَى الثَّانِيَة', 'رَجَب', 'شَعْبَان',
-  'رَمَضَان', 'شَوَّال', 'ذُو القَعْدَة', 'ذُو الحِجَّة',
-];
-
-const _dayNames = [
-  'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-  'Friday', 'Saturday', 'Sunday',
-];
-
-class _HijriDate {
-  final int day;
-  final int month;
-  final int year;
-  final String monthName;
-  final String monthNameArabic;
-  final String dayName;
-
-  const _HijriDate({
-    required this.day,
-    required this.month,
-    required this.year,
-    required this.monthName,
-    required this.monthNameArabic,
-    required this.dayName,
-  });
-}
-
-/// Approximate Gregorian to Hijri conversion using the Kuwaiti algorithm.
-/// Accuracy: +/- 1 day. For production, use Umm al-Qura calendar tables.
-_HijriDate _gregorianToHijri(DateTime date) {
-  // Julian Day Number
-  final y = date.year;
-  final m = date.month;
-  final d = date.day;
-
-  final jd = ((1461 * (y + 4800 + ((m - 14) ~/ 12))) ~/ 4) +
-      ((367 * (m - 2 - 12 * ((m - 14) ~/ 12))) ~/ 12) -
-      ((3 * (((y + 4900 + ((m - 14) ~/ 12)) ~/ 100))) ~/ 4) +
-      d -
-      32075;
-
-  // Kuwaiti algorithm
-  final l = jd - 1948440 + 10632;
-  final n = ((l - 1) ~/ 10631);
-  final l2 = l - 10631 * n + 354;
-  final j = ((10985 - l2) ~/ 5316) * ((50 * l2) ~/ 17719) +
-      ((l2 ~/ 5670)) * ((43 * l2) ~/ 15238);
-  final l3 = l2 - ((30 - j) ~/ 15) * ((17719 * j) ~/ 50) -
-      ((j ~/ 16)) * ((15238 * j) ~/ 43) +
-      29;
-  final hijriMonth = ((24 * l3) ~/ 709);
-  final hijriDay = l3 - ((709 * hijriMonth) ~/ 24);
-  final hijriYear = 30 * n + j - 30;
-
-  return _HijriDate(
-    day: hijriDay,
-    month: hijriMonth,
-    year: hijriYear,
-    monthName: _hijriMonthNames[(hijriMonth - 1).clamp(0, 11)],
-    monthNameArabic: _hijriMonthNamesArabic[(hijriMonth - 1).clamp(0, 11)],
-    dayName: _dayNames[date.weekday - 1],
-  );
 }

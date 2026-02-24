@@ -61,6 +61,7 @@ dependencies:
   equatable: ^2.0.7
   connectivity_plus: ^6.1.1
   home_widget: ^0.7.0
+  flutter_timezone: ^5.0.1
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,27 @@ dev_dependencies:
   json_serializable: ^6.9.4
   drift_dev: ^2.22.1
   build_runner: ^2.4.15
+
+  # App Icon
+  flutter_launcher_icons: ^0.14.3
+
+  # Splash Screen
+  flutter_native_splash: ^2.4.4
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "icon.png"
+  adaptive_icon_background: "#1B5E20"
+  adaptive_icon_foreground: "icon.png"
+
+flutter_native_splash:
+  background_image: background.png
+  image: splash_icon_padded.png
+  android_12:
+    color: "#1B5E20"
+    image: splash_icon_padded.png
+    icon_background_color: "#1B5E20"
 
 flutter:
   uses-material-design: true

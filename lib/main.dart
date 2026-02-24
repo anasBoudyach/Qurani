@@ -12,6 +12,7 @@ Future<void> main() async {
     androidNotificationChannelId: 'com.qurani.audio',
     androidNotificationChannelName: 'Qurani Audio',
     androidNotificationOngoing: true,
+    androidNotificationIcon: 'drawable/ic_notification',
   );
 
   // Initialize home screen widgets

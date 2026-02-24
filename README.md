@@ -1,16 +1,35 @@
-# Qurani قُرآني
+<p align="center">
+  <img src="assets/store/feature_graphic.png" width="100%" alt="Qurani Feature Graphic"/>
+</p>
 
-A comprehensive, completely free Quran app for Android. No ads. No subscriptions. No premium features. Everything is free for the sake of Allah.
+<p align="center">
+  <img src="assets/store/icon.png" width="120" alt="Qurani Icon"/>
+</p>
 
-Built with Flutter as Sadaqah Jariyah (ongoing charity).
+<h1 align="center">Qurani قُرآني</h1>
+
+<p align="center">
+  A comprehensive, completely free Quran app for Android.<br/>
+  No ads. No subscriptions. No premium features.<br/>
+  Everything is free for the sake of Allah.
+</p>
+
+<p align="center">
+  <a href="https://github.com/sponsors/anasBoudyach"><img src="https://img.shields.io/badge/Sponsor-❤-db61a2?style=for-the-badge" alt="Sponsor"/></a>
+  <img src="https://img.shields.io/badge/Platform-Android-3ddc84?style=for-the-badge&logo=android&logoColor=white" alt="Android"/>
+  <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter"/>
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"/>
+</p>
+
+<p align="center"><em>Built with love as Sadaqah Jariyah (ongoing charity)</em></p>
 
 ## Features
 
 ### Quran Reading
-- 3 reading modes: Mushaf (page-by-page), Translation, and Split view
+- 2 reading modes: Recitation (ayah-by-ayah cards) and Mushaf (page-by-page)
+- Optional translation overlay (25 options including None)
 - Tajweed color-coded text with all 17 rules highlighted
 - Tap any colored word to learn the tajweed rule
-- 24 translations in multiple languages
 - Reading progress tracking
 
 ### Audio — 260+ Reciters
@@ -134,7 +153,15 @@ flutter build appbundle --release
 
 ## Screenshots
 
-<!-- Add screenshots here -->
+<!-- Add device screenshots here -->
+<!-- Example:
+<p align="center">
+  <img src="assets/store/screenshot1.png" width="24%" />
+  <img src="assets/store/screenshot2.png" width="24%" />
+  <img src="assets/store/screenshot3.png" width="24%" />
+  <img src="assets/store/screenshot4.png" width="24%" />
+</p>
+-->
 
 ## Contributing
 
@@ -146,6 +173,7 @@ This is a Sadaqah Jariyah project. Contributions are welcome:
 ## Support
 
 This app is free and will always be free. If you'd like to support the project:
+- [**Sponsor on GitHub**](https://github.com/sponsors/anasBoudyach) — one-time or monthly
 - Make dua for the developers
 - Share the app with others
 - Leave a review on the Play Store
@@ -160,4 +188,4 @@ MIT License — free to use, modify, and distribute.
 
 ---
 
-*Built with love as Sadaqah Jariyah. May Allah accept it from us.*
+<p align="center"><em>بارك الله فيكم — May Allah accept it from us.</em></p>

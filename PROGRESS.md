@@ -293,7 +293,7 @@ PERMISSIONS:
 - Microphone: for tajweed recording practice (local only)
 - Storage: to save downloaded audio for offline listening
 
-Contact: [your email]
+Contact: anas.boudyach@gmail.com
 ```
 
 ### Release Signing Key Command
@@ -550,7 +550,7 @@ MIT License — free to use, modify, and distribute.
 33. `fe6ca24` - Audio player: replace seek buttons with skip next/previous navigation
 34. `c6df3ff` - Background audio playback with notification and lock screen controls
 35. `6a390eb` - UI polish: reciter mic icons with unique colors, fix localization
-36. `cee6ecd` - Fresh repo: clean single-commit push to GitHub (AnaXaX/Qurani)
+36. `cee6ecd` - Fresh repo: clean single-commit push to GitHub (anasBoudyach/Qurani)
 
 ## Session Work (Feb 22, 2026)
 
@@ -566,7 +566,7 @@ MIT License — free to use, modify, and distribute.
 - Playback mode labels localized (14 languages)
 
 ### Repo & Docs
-- GitHub repo created: https://github.com/AnaXaX/Qurani (public)
+- GitHub repo created: https://github.com/anasBoudyach/Qurani (public)
 - README.md: full feature list, tech stack, architecture, build instructions
 - PRIVACY_POLICY.md: for Google Play Store listing
 - `.claude/` and `.vscode/` added to .gitignore
@@ -691,3 +691,29 @@ MIT License — free to use, modify, and distribute.
 - **Settings**: Added Tajweed Colors SwitchListTile + Ayah Numbers picker in "Quran Reading" section
 - **Onboarding**: Added `_ToggleCard` widget for tajweed + numeral style on preferences page
 - Wrapped preferences page content in `SingleChildScrollView` (more items now fit)
+
+## Session Work (Feb 24, 2026) — Reading Screen Simplification
+
+### Reading Mode Cleanup
+- Simplified from 3 modes to 2: **Recitation** (ayah-by-ayah cards) + **Mushaf** (page-by-page)
+- Removed **Split** mode entirely (redundant now that translation is optional)
+- Renamed `ReadingMode.translation` → `ReadingMode.recitation` across enum and UI
+
+### Translation as Optional Toggle
+- Added **"None"** option to translation picker (first in list, edition `'none'`)
+- Translation visibility driven by selected translation: pick a language = shown, pick "None" = hidden
+- Skips API call entirely when translation is set to "None" (no wasted network)
+- Default for new users remains Saheeh International (English)
+- Removed `_showTranslation` local state variable — no longer needed
+
+### Font Size Cleanup
+- Removed font size picker from reading screen 3-dot menu
+- Reading screen now uses `ref.watch(fontSizeProvider)` from Riverpod provider (persisted in Settings)
+- Single source of truth: font size only changeable in Settings → Default Font Size
+- Removed local `_fontSize` state variable
+
+### Store Assets Organization
+- Moved `feature_graphic.png` and `icon.png` from root to `assets/store/`
+- Added `background.png` to `assets/store/`
+- Updated README with feature graphic banner, app icon, badges, and GitHub Sponsors link
+- Added GitHub Sponsors donation option to DonateScreen

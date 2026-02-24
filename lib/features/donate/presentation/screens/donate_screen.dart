@@ -124,6 +124,13 @@ class DonateScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           _DonationOption(
+            icon: Icons.favorite_rounded,
+            title: 'GitHub Sponsors',
+            subtitle: 'One-time or monthly support',
+            color: const Color(0xFFDB61A2),
+            onTap: () => _launchUrl('https://github.com/sponsors/anasBoudyach'),
+          ),
+          _DonationOption(
             icon: Icons.coffee_rounded,
             title: 'Buy Me a Coffee',
             subtitle: 'One-time or monthly support',

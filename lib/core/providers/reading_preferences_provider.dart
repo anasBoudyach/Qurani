@@ -54,7 +54,7 @@ final defaultTranslationProvider =
 });
 
 class DefaultTranslationNotifier extends StateNotifier<TranslationOption> {
-  DefaultTranslationNotifier() : super(translationOptions.first) {
+  DefaultTranslationNotifier() : super(translationOptions[1]) {
     _load();
   }
 
@@ -75,6 +75,7 @@ class DefaultTranslationNotifier extends StateNotifier<TranslationOption> {
 }
 
 const translationOptions = [
+  TranslationOption(0, 'none', 'None', 'No translation'),
   TranslationOption(1, 'en.sahih', 'Saheeh International', 'English'),
   TranslationOption(2, 'en.pickthall', 'Pickthall', 'English'),
   TranslationOption(3, 'en.yusufali', 'Yusuf Ali', 'English'),
