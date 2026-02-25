@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../data/models/tajweed_lesson.dart';
 import 'quiz_screen.dart';
 import 'recording_screen.dart';
@@ -27,11 +28,11 @@ class LessonScreen extends ConsumerWidget {
               ),
             ],
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Theory'),
-              Tab(text: 'Examples'),
-              Tab(text: 'Quiz'),
+              Tab(text: AppLocalizations.of(context).theoryTab),
+              Tab(text: AppLocalizations.of(context).examplesTab),
+              Tab(text: AppLocalizations.of(context).quiz),
             ],
           ),
         ),
@@ -202,7 +203,7 @@ class _ExamplesTab extends StatelessWidget {
                     );
                   },
                   icon: const Icon(Icons.mic_rounded, size: 18),
-                  label: const Text('Practice'),
+                  label: Text(AppLocalizations.of(context).practice),
                 ),
               ],
             ),
@@ -261,7 +262,7 @@ class _QuizTab extends StatelessWidget {
                     }
                   : null,
               icon: const Icon(Icons.play_arrow_rounded),
-              label: const Text('Start Quiz'),
+              label: Text(AppLocalizations.of(context).startQuiz),
             ),
           ],
         ),

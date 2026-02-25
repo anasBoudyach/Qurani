@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../data/models/tajweed_lesson.dart';
 import '../providers/course_providers.dart';
 import 'lesson_screen.dart';
@@ -16,9 +17,9 @@ class LevelOverviewScreen extends ConsumerWidget {
     final allProgressAsync = ref.watch(allLessonProgressProvider);
 
     final levelName = switch (level) {
-      TajweedLevel.beginner => 'Beginner',
-      TajweedLevel.intermediate => 'Intermediate',
-      TajweedLevel.advanced => 'Advanced',
+      TajweedLevel.beginner => AppLocalizations.of(context).beginner,
+      TajweedLevel.intermediate => AppLocalizations.of(context).intermediate,
+      TajweedLevel.advanced => AppLocalizations.of(context).advanced,
     };
 
     final levelColor = switch (level) {
@@ -29,7 +30,7 @@ class LevelOverviewScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('$levelName Level'),
+        title: Text('$levelName ${AppLocalizations.of(context).levelLabel}'),
       ),
       body: allProgressAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -129,7 +130,7 @@ class LevelOverviewScreen extends ConsumerWidget {
                               if (isCompleted && bestScore > 0) ...[
                                 const SizedBox(height: 4),
                                 Text(
-                                  'Best score: $bestScore%',
+                                  '${AppLocalizations.of(context).bestScore}: $bestScore%',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: levelColor,

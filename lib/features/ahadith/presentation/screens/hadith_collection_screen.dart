@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../data/services/hadith_api_service.dart';
 import '../providers/hadith_providers.dart';
 import 'hadith_list_screen.dart';
@@ -32,7 +33,7 @@ class HadithCollectionScreen extends ConsumerWidget {
                         .withAlpha(100)),
                 const SizedBox(height: 16),
                 Text(
-                  'Could not load sections.\nCheck your internet connection.',
+                  '${AppLocalizations.of(context).couldNotLoad}\n${AppLocalizations.of(context).checkConnection}',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context)
@@ -46,7 +47,7 @@ class HadithCollectionScreen extends ConsumerWidget {
                   onPressed: () =>
                       ref.invalidate(hadithSectionsProvider(collection.key)),
                   icon: const Icon(Icons.refresh_rounded, size: 18),
-                  label: const Text('Retry'),
+                  label: Text(AppLocalizations.of(context).retry),
                 ),
               ],
             ),

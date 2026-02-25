@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/l10n/locale_provider.dart';
 import '../../../../core/providers/reading_preferences_provider.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -13,6 +14,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final currentTheme = ref.watch(themeProvider);
     final currentLocale = ref.watch(localeProvider);
     final currentFontSize = ref.watch(fontSizeProvider);
@@ -21,31 +23,31 @@ class SettingsScreen extends ConsumerWidget {
     final currentTafsir = ref.watch(defaultTafsirProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settings)),
       body: ListView(
         children: [
           // ─── Appearance ───
-          _SectionHeader(title: 'Appearance'),
+          _SectionHeader(title: l10n.appearance),
           ListTile(
             leading: const Icon(Icons.palette_outlined),
-            title: const Text('Theme'),
-            subtitle: Text(_themeName(currentTheme)),
+            title: Text(l10n.theme),
+            subtitle: Text(_themeName(l10n, currentTheme)),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => _showThemePicker(context, ref, currentTheme),
+            onTap: () => _showThemePicker(context, ref, l10n, currentTheme),
           ),
           ListTile(
             leading: const Icon(Icons.language),
-            title: const Text('Language'),
-            subtitle: Text(_currentLanguageName(currentLocale)),
+            title: Text(l10n.language),
+            subtitle: Text(_currentLanguageName(l10n, currentLocale)),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => _showLanguagePicker(context, ref, currentLocale),
+            onTap: () => _showLanguagePicker(context, ref, l10n, currentLocale),
           ),
 
           // ─── Quran Reading ───
-          _SectionHeader(title: 'Quran Reading'),
+          _SectionHeader(title: l10n.quranReading),
           ListTile(
             leading: const Icon(Icons.translate),
-            title: const Text('Default Translation'),
+            title: Text(l10n.defaultTranslation),
             subtitle:
                 Text('${currentTranslation.name} (${currentTranslation.language})'),
             trailing: const Icon(Icons.chevron_right),
@@ -53,61 +55,61 @@ class SettingsScreen extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.menu_book_outlined),
-            title: const Text('Default Tafsir'),
+            title: Text(l10n.defaultTafsir),
             subtitle: Text(currentTafsir.name),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => _showTafsirPicker(context, ref, currentTafsir),
+            onTap: () => _showTafsirPicker(context, ref, l10n, currentTafsir),
           ),
           ListTile(
             leading: const Icon(Icons.text_fields),
-            title: const Text('Default Font Size'),
+            title: Text(l10n.fontSize),
             subtitle: Text(_fontSizeLabel(currentFontSize)),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => _showFontSizePicker(context, ref, currentFontSize),
+            onTap: () => _showFontSizePicker(context, ref, l10n, currentFontSize),
           ),
           SwitchListTile(
             secondary: const Icon(Icons.color_lens_outlined),
-            title: const Text('Tajweed Colors'),
-            subtitle: const Text('Show colored tajweed rules on text'),
+            title: Text(l10n.tajweedColors),
+            subtitle: Text(l10n.showTajweedDesc),
             value: ref.watch(tajweedProvider),
             onChanged: (_) => ref.read(tajweedProvider.notifier).toggle(),
           ),
           ListTile(
             leading: const Icon(Icons.format_list_numbered),
-            title: const Text('Ayah Numbers'),
+            title: Text(l10n.ayahNumbers),
             subtitle: Text(ref.watch(numeralStyleProvider) == NumeralStyle.arabic
-                ? 'Arabic-Indic (١ ٢ ٣)'
-                : 'Western (1 2 3)'),
+                ? '${l10n.arabicIndic} (١ ٢ ٣)'
+                : '${l10n.western} (1 2 3)'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => _showNumeralStylePicker(context, ref),
+            onTap: () => _showNumeralStylePicker(context, ref, l10n),
           ),
           ListTile(
             leading: const Icon(Icons.open_in_new_rounded),
-            title: const Text('App Startup'),
+            title: Text(l10n.appStartup),
             subtitle: Text(
                 ref.watch(startupScreenProvider) == StartupScreen.home
-                    ? 'Home Screen'
-                    : 'Last Reading Position'),
+                    ? l10n.homeScreen
+                    : l10n.lastReadingPosition),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => _showStartupPicker(context, ref),
+            onTap: () => _showStartupPicker(context, ref, l10n),
           ),
 
           // ─── Audio ───
-          _SectionHeader(title: 'Audio'),
+          _SectionHeader(title: l10n.audioSection),
           ListTile(
             leading: const Icon(Icons.person_outline),
-            title: const Text('Default Reciter'),
+            title: Text(l10n.defaultReciter),
             subtitle: Text(currentReciter.name),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => _showReciterPicker(context, ref, currentReciter),
+            onTap: () => _showReciterPicker(context, ref, l10n, currentReciter),
           ),
 
           // ─── Notifications ───
-          _SectionHeader(title: 'Notifications'),
+          _SectionHeader(title: l10n.notifications),
           ListTile(
             leading: const Icon(Icons.notifications_outlined),
-            title: const Text('Prayer Reminders'),
-            subtitle: const Text('Get notified before prayer times'),
+            title: Text(l10n.prayerReminders),
+            subtitle: Text(l10n.prayerRemindersDesc),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.push(
               context,
@@ -118,11 +120,19 @@ class SettingsScreen extends ConsumerWidget {
           ),
 
           // ─── Data ───
-          _SectionHeader(title: 'Data'),
+          _SectionHeader(title: l10n.dataSection),
+          SwitchListTile(
+            secondary: const Icon(Icons.cloud_off_outlined),
+            title: Text(l10n.offlineMode),
+            subtitle: Text(l10n.offlineModeDesc),
+            value: ref.watch(offlineModeProvider),
+            onChanged: (_) =>
+                ref.read(offlineModeProvider.notifier).toggle(),
+          ),
           ListTile(
             leading: const Icon(Icons.download_outlined),
-            title: const Text('Downloads'),
-            subtitle: const Text('Manage offline audio'),
+            title: Text(l10n.downloads),
+            subtitle: Text(l10n.manageOfflineAudio),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.push(
               context,
@@ -131,28 +141,27 @@ class SettingsScreen extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.delete_outline),
-            title: const Text('Clear Cache'),
-            subtitle: const Text('Free up storage space'),
+            title: Text(l10n.clearCache),
+            subtitle: Text(l10n.freeUpStorage),
             onTap: () {
               showDialog(
                 context: context,
                 builder: (dialogContext) => AlertDialog(
-                  title: const Text('Clear Cache?'),
-                  content: const Text(
-                      'This will remove cached data. Downloaded audio will not be affected.'),
+                  title: Text(l10n.clearCacheQuestion),
+                  content: Text(l10n.cacheWarning),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(dialogContext),
-                      child: const Text('Cancel'),
+                      child: Text(l10n.cancel),
                     ),
                     FilledButton(
                       onPressed: () {
                         Navigator.pop(dialogContext);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Cache cleared')),
+                          SnackBar(content: Text(l10n.cacheCleared)),
                         );
                       },
-                      child: const Text('Clear'),
+                      child: Text(l10n.clearBtn),
                     ),
                   ],
                 ),
@@ -161,10 +170,10 @@ class SettingsScreen extends ConsumerWidget {
           ),
 
           // ─── About ───
-          _SectionHeader(title: 'About'),
+          _SectionHeader(title: l10n.about),
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('About Qurani'),
+            title: Text(l10n.aboutQurani),
             subtitle: const Text('Version 1.0.0'),
             onTap: () {
               showAboutDialog(
@@ -178,8 +187,8 @@ class SettingsScreen extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.favorite_outline),
-            title: const Text('Support Us'),
-            subtitle: const Text('Help keep this app free'),
+            title: Text(l10n.supportUs),
+            subtitle: Text(l10n.helpKeepFree),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.push(
               context,
@@ -195,7 +204,7 @@ class SettingsScreen extends ConsumerWidget {
   // ─── Theme Picker ───
 
   void _showThemePicker(
-      BuildContext context, WidgetRef ref, AppThemeMode current) {
+      BuildContext context, WidgetRef ref, AppLocalizations l10n, AppThemeMode current) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -210,7 +219,7 @@ class SettingsScreen extends ConsumerWidget {
             _bottomSheetHandle(),
             const SizedBox(height: 20),
             Text(
-              'Choose Theme',
+              l10n.chooseTheme,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -219,7 +228,7 @@ class SettingsScreen extends ConsumerWidget {
             ...AppThemeMode.values.map((mode) => RadioListTile<AppThemeMode>(
                   value: mode,
                   groupValue: current,
-                  title: Text(_themeName(mode)),
+                  title: Text(_themeName(l10n, mode)),
                   subtitle: Text(_themeDescription(mode)),
                   onChanged: (value) {
                     if (value != null) {
@@ -237,8 +246,8 @@ class SettingsScreen extends ConsumerWidget {
 
   // ─── Language Picker ───
 
-  String _currentLanguageName(Locale? locale) {
-    if (locale == null) return 'System Default';
+  String _currentLanguageName(AppLocalizations l10n, Locale? locale) {
+    if (locale == null) return l10n.systemDefault;
     for (final lang in supportedLanguages) {
       if (lang.code == locale.languageCode) {
         return '${lang.name} (${lang.nativeName})';
@@ -248,50 +257,63 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   void _showLanguagePicker(
-      BuildContext context, WidgetRef ref, Locale? current) {
+      BuildContext context, WidgetRef ref, AppLocalizations l10n, Locale? current) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _bottomSheetHandle(),
-            const SizedBox(height: 20),
-            Text(
-              'Choose Language',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            RadioListTile<String?>(
-              value: null,
-              groupValue: current?.languageCode,
-              title: const Text('System Default'),
-              onChanged: (_) {
-                ref.read(localeProvider.notifier).setLocale(null);
-                Navigator.pop(context);
-              },
-            ),
-            ...supportedLanguages.map((lang) => RadioListTile<String?>(
-                  value: lang.code,
-                  groupValue: current?.languageCode,
-                  title: Text(lang.name),
-                  subtitle: Text(lang.nativeName),
-                  onChanged: (_) {
-                    ref
-                        .read(localeProvider.notifier)
-                        .setLocale(Locale(lang.code));
-                    Navigator.pop(context);
-                  },
-                )),
-            const SizedBox(height: 8),
-          ],
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.6,
+        maxChildSize: 0.85,
+        minChildSize: 0.4,
+        expand: false,
+        builder: (context, scrollController) => Padding(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _bottomSheetHandle(),
+              const SizedBox(height: 20),
+              Text(
+                l10n.chooseLanguage,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: ListView(
+                  controller: scrollController,
+                  children: [
+                    RadioListTile<String?>(
+                      value: null,
+                      groupValue: current?.languageCode,
+                      title: Text(l10n.systemDefault),
+                      onChanged: (_) {
+                        ref.read(localeProvider.notifier).setLocale(null);
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ...supportedLanguages.map((lang) => RadioListTile<String?>(
+                          value: lang.code,
+                          groupValue: current?.languageCode,
+                          title: Text(lang.name),
+                          subtitle: Text(lang.nativeName),
+                          onChanged: (_) {
+                            ref
+                                .read(localeProvider.notifier)
+                                .setLocale(Locale(lang.code));
+                            Navigator.pop(context);
+                          },
+                        )),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -356,7 +378,7 @@ class SettingsScreen extends ConsumerWidget {
   // ─── Tafsir Picker ───
 
   void _showTafsirPicker(
-      BuildContext context, WidgetRef ref, TafsirOption current) {
+      BuildContext context, WidgetRef ref, AppLocalizations l10n, TafsirOption current) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -371,14 +393,14 @@ class SettingsScreen extends ConsumerWidget {
             _bottomSheetHandle(),
             const SizedBox(height: 20),
             Text(
-              'Default Tafsir',
+              l10n.defaultTafsir,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
             const SizedBox(height: 4),
             Text(
-              'Used when viewing tafsir in the reader',
+              l10n.usedForTafsir,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -415,7 +437,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   void _showFontSizePicker(
-      BuildContext context, WidgetRef ref, double current) {
+      BuildContext context, WidgetRef ref, AppLocalizations l10n, double current) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -430,7 +452,7 @@ class SettingsScreen extends ConsumerWidget {
             _bottomSheetHandle(),
             const SizedBox(height: 20),
             Text(
-              'Default Font Size',
+              l10n.fontSize,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -473,7 +495,7 @@ class SettingsScreen extends ConsumerWidget {
   // ─── Reciter Picker ───
 
   void _showReciterPicker(
-      BuildContext context, WidgetRef ref, ReciterOption current) {
+      BuildContext context, WidgetRef ref, AppLocalizations l10n, ReciterOption current) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -494,14 +516,14 @@ class SettingsScreen extends ConsumerWidget {
               _bottomSheetHandle(),
               const SizedBox(height: 20),
               Text(
-                'Default Reciter',
+                l10n.defaultReciter,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
               const SizedBox(height: 4),
               Text(
-                'Used for ayah playback in the reader',
+                l10n.usedForPlayback,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context)
                           .colorScheme
@@ -537,7 +559,7 @@ class SettingsScreen extends ConsumerWidget {
 
   // ─── Startup Screen Picker ───
 
-  void _showStartupPicker(BuildContext context, WidgetRef ref) {
+  void _showStartupPicker(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final current = ref.read(startupScreenProvider);
     showModalBottomSheet(
       context: context,
@@ -553,7 +575,7 @@ class SettingsScreen extends ConsumerWidget {
             _bottomSheetHandle(),
             const SizedBox(height: 20),
             Text(
-              'App Startup',
+              l10n.appStartup,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -562,8 +584,8 @@ class SettingsScreen extends ConsumerWidget {
             RadioListTile<StartupScreen>(
               value: StartupScreen.home,
               groupValue: current,
-              title: const Text('Home Screen'),
-              subtitle: const Text('Always open to the dashboard'),
+              title: Text(l10n.homeScreen),
+              subtitle: Text(l10n.alwaysOpenDashboard),
               onChanged: (value) {
                 if (value != null) {
                   ref
@@ -576,8 +598,8 @@ class SettingsScreen extends ConsumerWidget {
             RadioListTile<StartupScreen>(
               value: StartupScreen.lastPosition,
               groupValue: current,
-              title: const Text('Last Reading Position'),
-              subtitle: const Text('Continue right where you left off'),
+              title: Text(l10n.lastReadingPosition),
+              subtitle: Text(l10n.continueWhereLeft),
               onChanged: (value) {
                 if (value != null) {
                   ref
@@ -596,7 +618,7 @@ class SettingsScreen extends ConsumerWidget {
 
   // ─── Numeral Style Picker ───
 
-  void _showNumeralStylePicker(BuildContext context, WidgetRef ref) {
+  void _showNumeralStylePicker(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final current = ref.read(numeralStyleProvider);
     showModalBottomSheet(
       context: context,
@@ -612,7 +634,7 @@ class SettingsScreen extends ConsumerWidget {
             _bottomSheetHandle(),
             const SizedBox(height: 20),
             Text(
-              'Ayah Numbers Style',
+              l10n.ayahNumbersStyle,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -621,7 +643,7 @@ class SettingsScreen extends ConsumerWidget {
             RadioListTile<NumeralStyle>(
               value: NumeralStyle.arabic,
               groupValue: current,
-              title: const Text('Arabic-Indic'),
+              title: Text(l10n.arabicIndic),
               subtitle: const Text('١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩'),
               onChanged: (value) {
                 if (value != null) {
@@ -633,7 +655,7 @@ class SettingsScreen extends ConsumerWidget {
             RadioListTile<NumeralStyle>(
               value: NumeralStyle.western,
               groupValue: current,
-              title: const Text('Western'),
+              title: Text(l10n.western),
               subtitle: const Text('1 2 3 4 5 6 7 8 9'),
               onChanged: (value) {
                 if (value != null) {
@@ -664,16 +686,16 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  String _themeName(AppThemeMode mode) {
+  String _themeName(AppLocalizations l10n, AppThemeMode mode) {
     switch (mode) {
       case AppThemeMode.light:
-        return 'Light';
+        return l10n.light;
       case AppThemeMode.dark:
-        return 'Dark';
+        return l10n.dark;
       case AppThemeMode.sepia:
-        return 'Sepia';
+        return l10n.sepia;
       case AppThemeMode.amoled:
-        return 'AMOLED';
+        return l10n.amoled;
     }
   }
 

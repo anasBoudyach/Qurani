@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/l10n/app_localizations.dart';
 
 /// Khatmah (Reading Plans) screen.
 /// Lets users set a goal to read the Quran in 30, 60, or 90 days
@@ -77,36 +78,35 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
   Widget build(BuildContext context) {
     if (_loading) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Reading Plan')),
+        appBar: AppBar(title: Text(AppLocalizations.of(context).khatmah)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reading Plan'),
+        title: Text(AppLocalizations.of(context).khatmah),
         actions: [
           if (_planDays != null)
             IconButton(
               icon: const Icon(Icons.restart_alt_rounded),
-              tooltip: 'Reset plan',
+              tooltip: AppLocalizations.of(context).resetPlan,
               onPressed: () => showDialog(
                 context: context,
                 builder: (dialogContext) => AlertDialog(
-                  title: const Text('Reset Plan?'),
-                  content: const Text(
-                      'This will erase your current progress. Are you sure?'),
+                  title: Text(AppLocalizations.of(context).resetPlan),
+                  content: Text(AppLocalizations.of(context).eraseWarning),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(dialogContext),
-                      child: const Text('Cancel'),
+                      child: Text(AppLocalizations.of(context).cancel),
                     ),
                     FilledButton(
                       onPressed: () {
                         _resetPlan();
                         Navigator.pop(dialogContext);
                       },
-                      child: const Text('Reset'),
+                      child: Text(AppLocalizations.of(context).resetBtn),
                     ),
                   ],
                 ),
@@ -141,9 +141,9 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
               const Icon(Icons.auto_stories_rounded,
                   color: Colors.white, size: 48),
               const SizedBox(height: 12),
-              const Text(
-                'Complete the Quran',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context).completeTheQuran,
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -151,7 +151,7 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
               ),
               const SizedBox(height: 4),
               Text(
-                'Choose a reading plan that fits your pace',
+                AppLocalizations.of(context).choosePlanDesc,
                 style: TextStyle(color: Colors.white.withAlpha(204)),
               ),
             ],
@@ -159,7 +159,7 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
         ),
         const SizedBox(height: 24),
         Text(
-          'Choose Your Plan',
+          AppLocalizations.of(context).chooseYourPlan,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -168,7 +168,7 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
         _PlanOption(
           days: 30,
           pagesPerDay: (_totalPages / 30).ceil(),
-          title: 'Intensive',
+          title: AppLocalizations.of(context).intensive,
           subtitle: '~20 pages/day — for dedicated readers',
           color: Colors.deepPurple,
           icon: Icons.bolt_rounded,
@@ -177,7 +177,7 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
         _PlanOption(
           days: 60,
           pagesPerDay: (_totalPages / 60).ceil(),
-          title: 'Moderate',
+          title: AppLocalizations.of(context).moderate,
           subtitle: '~10 pages/day — balanced pace',
           color: Colors.teal,
           icon: Icons.speed_rounded,
@@ -186,7 +186,7 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
         _PlanOption(
           days: 90,
           pagesPerDay: (_totalPages / 90).ceil(),
-          title: 'Gentle',
+          title: AppLocalizations.of(context).gentle,
           subtitle: '~7 pages/day — steady and consistent',
           color: Colors.blue,
           icon: Icons.self_improvement_rounded,
@@ -195,7 +195,7 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
         _PlanOption(
           days: 365,
           pagesPerDay: (_totalPages / 365).ceil(),
-          title: 'Annual',
+          title: AppLocalizations.of(context).annual,
           subtitle: '~2 pages/day — relaxed year-long journey',
           color: Colors.green,
           icon: Icons.calendar_today_rounded,
@@ -252,7 +252,7 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
                           ),
                     ),
                     Text(
-                      '$_pagesRead / $_totalPages pages',
+                      '$_pagesRead / $_totalPages ${AppLocalizations.of(context).pages}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context)
                                 .colorScheme
@@ -284,9 +284,9 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Khatmah Complete!',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(context).khatmahComplete,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.green,
                         ),
@@ -329,7 +329,7 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        isOnTrack ? 'On Track!' : 'Behind Schedule',
+                        isOnTrack ? AppLocalizations.of(context).onTrack : AppLocalizations.of(context).behindSchedule,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: isOnTrack ? Colors.green : Colors.orange,
@@ -352,14 +352,14 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
         Row(
           children: [
             _StatCard(
-              label: 'Daily Target',
+              label: AppLocalizations.of(context).dailyTarget,
               value: '$dailyTarget',
-              unit: 'pages',
+              unit: AppLocalizations.of(context).pages,
               icon: Icons.today_rounded,
             ),
             const SizedBox(width: 12),
             _StatCard(
-              label: 'Days Left',
+              label: AppLocalizations.of(context).daysLeft,
               value: '${daysRemaining.clamp(0, _planDays!)}',
               unit: 'of $_planDays',
               icon: Icons.hourglass_bottom_rounded,
@@ -370,14 +370,14 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
         Row(
           children: [
             _StatCard(
-              label: 'Remaining',
+              label: AppLocalizations.of(context).remaining,
               value: '$pagesRemaining',
-              unit: 'pages',
+              unit: AppLocalizations.of(context).pages,
               icon: Icons.menu_book_rounded,
             ),
             const SizedBox(width: 12),
             _StatCard(
-              label: 'Day',
+              label: AppLocalizations.of(context).days,
               value: '$daysElapsed',
               unit: 'of $_planDays',
               icon: Icons.calendar_today_rounded,
@@ -388,7 +388,7 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
         // Log pages
         if (!isCompleted) ...[
           Text(
-            'Log Today\'s Reading',
+            AppLocalizations.of(context).logReading,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -416,7 +416,7 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
           OutlinedButton.icon(
             onPressed: () => _showCustomInput(),
             icon: const Icon(Icons.edit_rounded, size: 18),
-            label: const Text('Log custom amount'),
+            label: Text(AppLocalizations.of(context).logCustom),
           ),
         ],
         const SizedBox(height: 32),
@@ -429,12 +429,12 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Log Pages Read'),
+        title: Text(AppLocalizations.of(context).logPagesRead),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            hintText: 'Number of pages',
+            hintText: AppLocalizations.of(context).numberOfPages,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -444,7 +444,7 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -454,7 +454,7 @@ class _KhatmahScreenState extends State<KhatmahScreen> {
               }
               Navigator.pop(ctx);
             },
-            child: const Text('Log'),
+            child: Text(AppLocalizations.of(context).logBtn),
           ),
         ],
       ),
@@ -508,7 +508,7 @@ class _PlanOption extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '$title — $days days',
+                      '$title — $days ${AppLocalizations.of(context).days}',
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 2),

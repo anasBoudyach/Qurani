@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/network/api_orchestrator.dart';
+import '../../../../core/providers/reading_preferences_provider.dart';
 import '../../data/repositories/quran_repository.dart';
 
 /// Singleton database provider.
@@ -31,16 +32,19 @@ final quranRepositoryProvider = Provider<QuranRepository>((ref) {
 final surahAyahsProvider =
     FutureProvider.family<List<Ayah>, int>((ref, surahNumber) async {
   final repo = ref.watch(quranRepositoryProvider);
-  return repo.getAyahsForSurah(surahNumber);
+  final offline = ref.watch(offlineModeProvider);
+  return repo.getAyahsForSurah(surahNumber, offlineOnly: offline);
 });
 
 /// Fetches translation for a surah using Al Quran Cloud edition string.
 final surahTranslationProvider = FutureProvider.family<List<AyahTranslation>,
     ({int surahNumber, String edition})>((ref, params) async {
   final repo = ref.watch(quranRepositoryProvider);
+  final offline = ref.watch(offlineModeProvider);
   return repo.getTranslation(
     surahNumber: params.surahNumber,
     edition: params.edition,
+    offlineOnly: offline,
   );
 });
 
@@ -48,12 +52,14 @@ final surahTranslationProvider = FutureProvider.family<List<AyahTranslation>,
 final pageAyahsProvider =
     FutureProvider.family<List<Ayah>, int>((ref, pageNumber) async {
   final repo = ref.watch(quranRepositoryProvider);
-  return repo.getAyahsForPage(pageNumber);
+  final offline = ref.watch(offlineModeProvider);
+  return repo.getAyahsForPage(pageNumber, offlineOnly: offline);
 });
 
 /// Fetches ayahs for a juz.
 final juzAyahsProvider =
     FutureProvider.family<List<Ayah>, int>((ref, juzNumber) async {
   final repo = ref.watch(quranRepositoryProvider);
-  return repo.getAyahsForJuz(juzNumber);
+  final offline = ref.watch(offlineModeProvider);
+  return repo.getAyahsForJuz(juzNumber, offlineOnly: offline);
 });

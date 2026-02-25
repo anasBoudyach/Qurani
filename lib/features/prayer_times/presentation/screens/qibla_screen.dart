@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../../../core/l10n/app_localizations.dart';
 
 /// Qibla compass screen.
 /// Uses device compass + GPS to calculate direction to Kaaba.
@@ -34,7 +35,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
     final locStatus = await Permission.location.request();
     if (!locStatus.isGranted) {
       setState(() {
-        _error = 'Location permission is required for Qibla direction.';
+        _error = 'location_required';
         _loading = false;
       });
       return;
@@ -53,7 +54,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
       });
     } catch (e) {
       setState(() {
-        _error = 'Could not get location. Please enable GPS.';
+        _error = 'location_error';
         _loading = false;
       });
     }
@@ -85,13 +86,25 @@ class _QiblaScreenState extends State<QiblaScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Qibla')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).qibla)),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
               ? _buildError()
               : _buildCompass(),
     );
+  }
+
+  String _localizedError(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    switch (_error) {
+      case 'location_required':
+        return l10n.locationRequired;
+      case 'location_error':
+        return l10n.locationError;
+      default:
+        return _error!;
+    }
   }
 
   Widget _buildError() {
@@ -105,7 +118,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
                 size: 64, color: Theme.of(context).colorScheme.error),
             const SizedBox(height: 16),
             Text(
-              _error!,
+              _localizedError(context),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
@@ -119,7 +132,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
                 _initialize();
               },
               icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              label: Text(AppLocalizations.of(context).retry),
             ),
           ],
         ),
@@ -138,7 +151,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
         const SizedBox(height: 40),
         // Direction info
         Text(
-          'Qibla Direction',
+          AppLocalizations.of(context).qiblaDirection,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Theme.of(context)
                     .colorScheme
@@ -148,7 +161,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
         ),
         const SizedBox(height: 4),
         Text(
-          '${qibla.toStringAsFixed(1)}° from North',
+          '${qibla.toStringAsFixed(1)}° ${AppLocalizations.of(context).fromNorth}',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
@@ -264,7 +277,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
           Padding(
             padding: const EdgeInsets.only(bottom: 24),
             child: Text(
-              'Compass not available on this device.\nShowing calculated direction only.',
+              AppLocalizations.of(context).compassNotAvailable,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context)

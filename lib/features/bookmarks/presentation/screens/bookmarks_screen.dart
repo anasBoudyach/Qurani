@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../quran/data/models/surah_info.dart';
@@ -34,7 +35,7 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bookmarks'),
+        title: Text(AppLocalizations.of(context).bookmarks),
       ),
       body: bookmarksAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -93,7 +94,7 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'No bookmarks yet',
+              AppLocalizations.of(context).noBookmarksYet,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -103,7 +104,7 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Tap the bookmark icon on any ayah\nwhile reading to save it here.',
+              AppLocalizations.of(context).bookmarkDesc,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context)
@@ -132,7 +133,7 @@ class _BookmarkTile extends ConsumerWidget {
       orElse: () => SurahInfo.all.first,
     );
 
-    final timeAgo = _formatTimeAgo(bookmark.createdAt);
+    final timeAgo = _formatTimeAgo(context, bookmark.createdAt);
 
     return Dismissible(
       key: ValueKey('${bookmark.surahId}_${bookmark.ayahNumber}'),
@@ -175,7 +176,7 @@ class _BookmarkTile extends ConsumerWidget {
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         subtitle: Text(
-          'Ayah ${bookmark.ayahNumber} of ${surah.ayahCount} - $timeAgo',
+          '${AppLocalizations.of(context).ayahXofY(bookmark.ayahNumber, surah.ayahCount)} - $timeAgo',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color:
                     Theme.of(context).colorScheme.onSurface.withAlpha(140),
@@ -204,12 +205,12 @@ class _BookmarkTile extends ConsumerWidget {
     );
   }
 
-  String _formatTimeAgo(DateTime date) {
+  String _formatTimeAgo(BuildContext context, DateTime date) {
     final diff = DateTime.now().difference(date);
     if (diff.inDays > 30) return '${(diff.inDays / 30).floor()}mo ago';
     if (diff.inDays > 0) return '${diff.inDays}d ago';
     if (diff.inHours > 0) return '${diff.inHours}h ago';
     if (diff.inMinutes > 0) return '${diff.inMinutes}m ago';
-    return 'Just now';
+    return AppLocalizations.of(context).justNow;
   }
 }

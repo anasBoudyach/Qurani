@@ -2,6 +2,7 @@ import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../data/models/surah_info.dart';
 import '../providers/quran_providers.dart';
 import 'reading_screen.dart';
@@ -61,8 +62,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         title: TextField(
           controller: _controller,
           autofocus: true,
-          decoration: const InputDecoration(
-            hintText: 'Search Quran...',
+          decoration: InputDecoration(
+            hintText: '${AppLocalizations.of(context).searchTheQuran}...',
             border: InputBorder.none,
           ),
           onSubmitted: (value) {
@@ -98,15 +99,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Search the Quran',
+            AppLocalizations.of(context).searchTheQuran,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Search by Arabic text, surah name, or ayah content.\n'
-            'Note: Only cached/downloaded surahs are searchable offline.',
+            AppLocalizations.of(context).searchDesc,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context)
                       .colorScheme
@@ -118,7 +118,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           const SizedBox(height: 24),
           // Quick surah search
           Text(
-            'Quick Find by Surah Name',
+            AppLocalizations.of(context).quickFind,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -276,12 +276,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'No results for "$_query"',
+            '${AppLocalizations.of(context).noResults} "$_query"',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           Text(
-            'Try a different search term or browse surahs',
+            AppLocalizations.of(context).tryDifferent,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context)
                       .colorScheme

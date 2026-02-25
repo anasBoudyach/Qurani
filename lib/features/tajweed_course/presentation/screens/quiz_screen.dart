@@ -2,6 +2,7 @@ import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../shared/widgets/celebration_overlay.dart';
 import '../../../gamification/data/models/daily_goal.dart';
 import '../../../gamification/presentation/providers/gamification_providers.dart';
@@ -261,8 +262,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 onPressed: _nextQuestion,
                 child: Text(
                   _currentIndex < questions.length - 1
-                      ? 'Next Question'
-                      : 'See Results',
+                      ? AppLocalizations.of(context).nextQuestion
+                      : AppLocalizations.of(context).seeResults,
                 ),
               ),
           ],
@@ -273,7 +274,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   Widget _buildResultsScreen() {
     return Scaffold(
-      appBar: AppBar(title: const Text('Quiz Results')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).quizResults)),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
@@ -288,7 +289,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
               ),
               const SizedBox(height: 24),
               Text(
-                passed ? 'Congratulations!' : 'Keep Practicing!',
+                passed ? AppLocalizations.of(context).congratulations : AppLocalizations.of(context).keepPracticing,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -308,8 +309,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
               const SizedBox(height: 8),
               Text(
                 passed
-                    ? 'You passed! This lesson is now marked as complete.'
-                    : 'You need 70% to pass. Review the lesson and try again.',
+                    ? AppLocalizations.of(context).youPassed
+                    : AppLocalizations.of(context).need70,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context)
@@ -332,7 +333,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                     });
                   },
                   icon: const Icon(Icons.refresh),
-                  label: const Text('Retry Quiz'),
+                  label: Text(AppLocalizations.of(context).retryQuiz),
                 ),
               const SizedBox(height: 12),
               OutlinedButton(
@@ -341,7 +342,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },
-                child: const Text('Back to Lessons'),
+                child: Text(AppLocalizations.of(context).backToLessons),
               ),
             ],
           ),

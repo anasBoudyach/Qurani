@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../data/models/tajweed_lesson.dart';
 import '../../data/tajweed_curriculum.dart';
 import '../providers/course_providers.dart';
@@ -14,7 +15,7 @@ class CourseHomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tajweed Course'),
+        title: Text(AppLocalizations.of(context).tajweedCourse),
         actions: [
           // Streak indicator
           streakAsync.when(
@@ -63,7 +64,7 @@ class CourseHomeScreen extends ConsumerWidget {
                     color: Theme.of(context).colorScheme.onSecondary),
                 const SizedBox(height: 12),
                 Text(
-                  'Learn Tajweed',
+                  AppLocalizations.of(context).learnTajweed,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -89,7 +90,7 @@ class CourseHomeScreen extends ConsumerWidget {
           // Level cards
           _LevelCard(
             level: TajweedLevel.beginner,
-            title: 'Beginner',
+            title: AppLocalizations.of(context).beginner,
             subtitle: 'Foundations of tajweed',
             icon: Icons.looks_one_rounded,
             color: Colors.green,
@@ -97,7 +98,7 @@ class CourseHomeScreen extends ConsumerWidget {
           const SizedBox(height: 16),
           _LevelCard(
             level: TajweedLevel.intermediate,
-            title: 'Intermediate',
+            title: AppLocalizations.of(context).intermediate,
             subtitle: 'Noon & meem rules',
             icon: Icons.looks_two_rounded,
             color: Colors.orange,
@@ -105,7 +106,7 @@ class CourseHomeScreen extends ConsumerWidget {
           const SizedBox(height: 16),
           _LevelCard(
             level: TajweedLevel.advanced,
-            title: 'Advanced',
+            title: AppLocalizations.of(context).advanced,
             subtitle: 'Madd, stopping & mastery',
             icon: Icons.looks_3_rounded,
             color: Colors.red,
@@ -202,7 +203,7 @@ class _LevelCard extends ConsumerWidget {
                     const SizedBox(height: 4),
                     completionAsync.when(
                       data: (completed) => Text(
-                        '$completed/${TajweedCurriculum.lessonsPerLevel} lessons completed',
+                        '$completed/${TajweedCurriculum.lessonsPerLevel} ${AppLocalizations.of(context).lessonsCompleted}',
                         style: TextStyle(
                           fontSize: 12,
                           color: color,

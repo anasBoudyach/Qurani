@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../shared/widgets/celebration_overlay.dart';
 import '../../../gamification/data/models/daily_goal.dart';
 import '../../../gamification/presentation/providers/gamification_providers.dart';
@@ -76,7 +77,7 @@ class _AzkarDetailScreenState extends ConsumerState<AzkarDetailScreen> {
                         .withAlpha(100)),
                 const SizedBox(height: 16),
                 Text(
-                  'Could not load azkar.\nCheck your internet connection.',
+                  '${AppLocalizations.of(context).couldNotLoad}\n${AppLocalizations.of(context).checkConnection}',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context)
@@ -92,7 +93,7 @@ class _AzkarDetailScreenState extends ConsumerState<AzkarDetailScreen> {
                     categoryTitle: widget.category.nameArabic,
                   ))),
                   icon: const Icon(Icons.refresh_rounded, size: 18),
-                  label: const Text('Retry'),
+                  label: Text(AppLocalizations.of(context).retry),
                 ),
               ],
             ),
@@ -167,7 +168,7 @@ class _AzkarDetailScreenState extends ConsumerState<AzkarDetailScreen> {
                       if (!complete) ...[
                         const SizedBox(height: 4),
                         Text(
-                          'Tap to count',
+                          AppLocalizations.of(context).tapToCount,
                           style: Theme.of(context)
                               .textTheme
                               .labelSmall

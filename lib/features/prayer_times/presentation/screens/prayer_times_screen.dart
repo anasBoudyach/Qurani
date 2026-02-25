@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/prayer_reminder_provider.dart';
 import '../../data/prayer_reminder_service.dart';
 import '../../../widgets/home_widget_service.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import 'prayer_notification_settings_screen.dart';
 
 /// Prayer times screen using adhan_dart for offline calculation.
@@ -308,14 +309,14 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Calculation Method',
+              AppLocalizations.of(context).calculationMethod,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
             const SizedBox(height: 4),
             Text(
-              'Different regions use different sun angle calculations',
+              AppLocalizations.of(context).calcMethodDesc,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -356,11 +357,11 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Prayer Times'),
+        title: Text(AppLocalizations.of(context).prayerTimes),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
-            tooltip: 'Prayer notifications',
+            tooltip: AppLocalizations.of(context).prayerNotifications,
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
@@ -370,12 +371,12 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.calculate_outlined),
-            tooltip: 'Calculation method',
+            tooltip: AppLocalizations.of(context).calculationMethod,
             onPressed: _showMethodPicker,
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: 'Refresh location',
+            tooltip: AppLocalizations.of(context).refreshLocation,
             onPressed: _calculatePrayerTimes,
           ),
         ],
@@ -407,12 +408,12 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
             FilledButton.icon(
               onPressed: _calculatePrayerTimes,
               icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              label: Text(AppLocalizations.of(context).retry),
             ),
             const SizedBox(height: 12),
             TextButton(
               onPressed: () => Geolocator.openAppSettings(),
-              child: const Text('Open App Settings'),
+              child: Text(AppLocalizations.of(context).openAppSettings),
             ),
           ],
         ),
@@ -446,7 +447,7 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
           child: Column(
             children: [
               Text(
-                'Next Prayer',
+                AppLocalizations.of(context).nextPrayer,
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.white.withAlpha(179),
@@ -520,7 +521,7 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
               ),
               TextButton(
                 onPressed: _showMethodPicker,
-                child: const Text('Change'),
+                child: Text(AppLocalizations.of(context).change),
               ),
             ],
           ),
@@ -645,7 +646,7 @@ class _BellToggle extends ConsumerWidget {
         size: 20,
         color: enabled ? Theme.of(context).colorScheme.primary : null,
       ),
-      tooltip: enabled ? 'Disable reminder' : 'Enable reminder',
+      tooltip: enabled ? AppLocalizations.of(context).reminderDisabled : AppLocalizations.of(context).tapToEnable,
       visualDensity: VisualDensity.compact,
       onPressed: () async {
         await ref
@@ -660,8 +661,8 @@ class _BellToggle extends ConsumerWidget {
             SnackBar(
               content: Text(
                 nowEnabled
-                    ? '$prayerName reminder enabled'
-                    : '$prayerName reminder disabled',
+                    ? '$prayerName ${AppLocalizations.of(context).reminderEnabled}'
+                    : '$prayerName ${AppLocalizations.of(context).reminderDisabled}',
               ),
               duration: const Duration(seconds: 1),
             ),

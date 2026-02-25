@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../quran/data/models/surah_info.dart';
 import '../../../quran/presentation/providers/quran_providers.dart';
 import '../providers/audio_providers.dart';
@@ -17,12 +18,12 @@ class DownloadsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Downloads'),
+        title: Text(AppLocalizations.of(context).downloads),
         actions: [
           if (downloadsAsync.valueOrNull?.isNotEmpty == true)
             IconButton(
               icon: const Icon(Icons.delete_sweep_outlined),
-              tooltip: 'Delete all downloads',
+              tooltip: AppLocalizations.of(context).deleteAll,
               onPressed: () => _confirmDeleteAll(context, ref),
             ),
         ],
@@ -109,7 +110,7 @@ class DownloadsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'No downloads yet',
+            AppLocalizations.of(context).noDownloadsYet,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color:
                       Theme.of(context).colorScheme.onSurface.withAlpha(153),
@@ -117,7 +118,7 @@ class DownloadsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Download surahs from reciter pages\nfor offline listening',
+            AppLocalizations.of(context).downloadOfflineDesc,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color:
@@ -133,13 +134,12 @@ class DownloadsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete All Downloads?'),
-        content: const Text(
-            'This will remove all downloaded audio files. You can re-download them anytime.'),
+        title: Text(AppLocalizations.of(context).deleteAll),
+        content: Text(AppLocalizations.of(context).cacheWarning),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton(
             onPressed: () async {
@@ -153,11 +153,11 @@ class DownloadsScreen extends ConsumerWidget {
               ref.invalidate(totalDownloadSizeProvider);
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('All downloads deleted')),
+                  SnackBar(content: Text(AppLocalizations.of(context).allDownloadsDeleted)),
                 );
               }
             },
-            child: const Text('Delete All'),
+            child: Text(AppLocalizations.of(context).deleteAll),
           ),
         ],
       ),
@@ -223,7 +223,7 @@ class _ReciterDownloadGroup extends ConsumerWidget {
               // Play locally
               IconButton(
                 icon: const Icon(Icons.play_circle_outline),
-                tooltip: 'Play offline',
+                tooltip: AppLocalizations.of(context).playOffline,
                 onPressed: () {
                   ref.read(audioPlayerServiceProvider).playLocal(
                     d.filePath,
@@ -237,7 +237,7 @@ class _ReciterDownloadGroup extends ConsumerWidget {
                 icon: Icon(Icons.close,
                     size: 20,
                     color: Theme.of(context).colorScheme.error),
-                tooltip: 'Delete',
+                tooltip: AppLocalizations.of(context).delete,
                 onPressed: () async {
                   final file = File(d.filePath);
                   if (await file.exists()) {
@@ -261,13 +261,13 @@ class _ReciterDownloadGroup extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Reciter Downloads?'),
+        title: Text(AppLocalizations.of(context).deleteAll),
         content: Text(
-            'Delete all ${downloads.length} downloaded surahs for this reciter?'),
+            '${AppLocalizations.of(context).delete} ${downloads.length} ${AppLocalizations.of(context).downloaded}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton(
             onPressed: () async {
@@ -278,7 +278,7 @@ class _ReciterDownloadGroup extends ConsumerWidget {
               ref.invalidate(totalDownloadSizeProvider);
               ref.invalidate(reciterDownloadsProvider(reciterId));
             },
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context).delete),
           ),
         ],
       ),

@@ -14,9 +14,10 @@ class DuasRepository {
 
   /// Get du'as for a category. Fetches from API on first access, caches locally.
   Future<List<CachedAzkarData>> getDuasForCategory(
-      int categoryId, String categoryTitle) async {
+      int categoryId, String categoryTitle,
+      {bool offlineOnly = false}) async {
     final local = await _db.getAzkarForCategory(categoryId);
-    if (local.isNotEmpty) return local;
+    if (local.isNotEmpty || offlineOnly) return local;
 
     final items = await _api.fetchDuasForCategory(categoryId);
     for (final item in items) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/utils/hijri_utils.dart';
 import '../../../islamic_events/data/models/islamic_event.dart';
 import '../../../islamic_events/presentation/providers/islamic_events_providers.dart';
@@ -28,12 +29,12 @@ class _HijriScreenState extends ConsumerState<HijriScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hijri Calendar'),
+        title: Text(AppLocalizations.of(context).hijri),
         actions: [
           if (!isToday)
             TextButton(
               onPressed: () => setState(() => _selectedDate = DateTime.now()),
-              child: const Text('Today'),
+              child: Text(AppLocalizations.of(context).today),
             ),
         ],
       ),
@@ -113,9 +114,9 @@ class _HijriScreenState extends ConsumerState<HijriScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Gregorian Date',
-                      style: TextStyle(fontSize: 12),
+                    Text(
+                      AppLocalizations.of(context).gregorianDate,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     Text(
                       _formatGregorian(_selectedDate),
@@ -158,7 +159,7 @@ class _HijriScreenState extends ConsumerState<HijriScreen> {
               ),
               const SizedBox(width: 16),
               Text(
-                isToday ? 'Today' : _formatGregorianShort(_selectedDate),
+                isToday ? AppLocalizations.of(context).today : _formatGregorianShort(_selectedDate),
                 style: const TextStyle(fontWeight: FontWeight.w500),
               ),
               const SizedBox(width: 16),
@@ -193,7 +194,7 @@ class _HijriScreenState extends ConsumerState<HijriScreen> {
         );
 
     final subtitle = nextEvent != null
-        ? '${nextEvent.name} — ${nextEvent.daysUntil == 0 ? 'Today!' : 'in ${nextEvent.daysUntil} days'}'
+        ? '${nextEvent.name} — ${nextEvent.daysUntil == 0 ? '${AppLocalizations.of(context).today}!' : 'in ${nextEvent.daysUntil} days'}'
         : '${events.length} events';
 
     return Card(
@@ -201,9 +202,9 @@ class _HijriScreenState extends ConsumerState<HijriScreen> {
       margin: EdgeInsets.zero,
       child: ExpansionTile(
         leading: Icon(Icons.event, color: Colors.amber.shade700),
-        title: const Text(
-          'Upcoming Events',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          AppLocalizations.of(context).upcomingEvents,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
           subtitle,
@@ -216,7 +217,7 @@ class _HijriScreenState extends ConsumerState<HijriScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              'Dates may vary based on local moon sighting',
+              AppLocalizations.of(context).datesMayVary,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -246,9 +247,9 @@ class _HijriScreenState extends ConsumerState<HijriScreen> {
       child: ExpansionTile(
         leading: Icon(Icons.date_range,
             color: Theme.of(context).colorScheme.primary),
-        title: const Text(
-          'Islamic Months',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          AppLocalizations.of(context).islamicMonths,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
           '$currentMonthName ${hijri.year} AH',
@@ -367,7 +368,7 @@ class _EventTimelineItem extends StatelessWidget {
         : Theme.of(context).colorScheme.primary;
 
     final daysText = isToday
-        ? 'Today!'
+        ? '${AppLocalizations.of(context).today}!'
         : '${event.daysUntil} day${event.daysUntil == 1 ? '' : 's'}';
 
     return Opacity(

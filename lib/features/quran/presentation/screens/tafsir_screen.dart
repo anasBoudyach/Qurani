@@ -2,6 +2,7 @@ import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/providers/reading_preferences_provider.dart';
 import '../providers/quran_providers.dart';
 import '../../data/models/surah_info.dart';
@@ -101,7 +102,7 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
     }
 
     setState(() {
-      _error = 'Could not load tafsir. Please check your connection.';
+      _error = 'connection_error';
       _loading = false;
     });
   }
@@ -138,7 +139,7 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
         actions: [
           PopupMenuButton<TafsirOption>(
             icon: const Icon(Icons.swap_horiz),
-            tooltip: 'Change Tafsir',
+            tooltip: AppLocalizations.of(context).changeTafsir,
             onSelected: _onTafsirChanged,
             itemBuilder: (_) => tafsirOptions
                 .map((t) => PopupMenuItem<TafsirOption>(
@@ -178,12 +179,12 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
             Icon(Icons.cloud_off,
                 size: 48, color: Theme.of(context).colorScheme.error),
             const SizedBox(height: 16),
-            Text(_error!, textAlign: TextAlign.center),
+            Text(AppLocalizations.of(context).checkConnection, textAlign: TextAlign.center),
             const SizedBox(height: 16),
             FilledButton.icon(
               onPressed: _fetchTafsir,
               icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              label: Text(AppLocalizations.of(context).retry),
             ),
           ],
         ),
@@ -206,7 +207,7 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
           child: Column(
             children: [
               Text(
-                'Tafsir - ${tafsir.name}',
+                '${AppLocalizations.of(context).tafsir} - ${tafsir.name}',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,

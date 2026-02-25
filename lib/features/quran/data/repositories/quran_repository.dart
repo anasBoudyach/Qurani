@@ -16,30 +16,30 @@ class QuranRepository {
         _api = api;
 
   /// Get ayahs for a surah, fetching from API if not cached locally.
-  Future<List<Ayah>> getAyahsForSurah(int surahNumber) async {
-    // Try local DB first
+  Future<List<Ayah>> getAyahsForSurah(int surahNumber,
+      {bool offlineOnly = false}) async {
     final local = await _db.getAyahsForSurah(surahNumber);
-    if (local.isNotEmpty) return local;
+    if (local.isNotEmpty || offlineOnly) return local;
 
-    // Fetch from API and cache
     await _fetchAndCacheSurah(surahNumber);
     return _db.getAyahsForSurah(surahNumber);
   }
 
   /// Get ayahs for a specific page.
-  Future<List<Ayah>> getAyahsForPage(int pageNumber) async {
+  Future<List<Ayah>> getAyahsForPage(int pageNumber,
+      {bool offlineOnly = false}) async {
     final local = await _db.getAyahsForPage(pageNumber);
-    if (local.isNotEmpty) return local;
+    if (local.isNotEmpty || offlineOnly) return local;
 
-    // Pages require fetching multiple surahs - fetch by page from API
     await _fetchAndCachePage(pageNumber);
     return _db.getAyahsForPage(pageNumber);
   }
 
   /// Get ayahs for a juz.
-  Future<List<Ayah>> getAyahsForJuz(int juzNumber) async {
+  Future<List<Ayah>> getAyahsForJuz(int juzNumber,
+      {bool offlineOnly = false}) async {
     final local = await _db.getAyahsForJuz(juzNumber);
-    if (local.isNotEmpty) return local;
+    if (local.isNotEmpty || offlineOnly) return local;
 
     await _fetchAndCacheJuz(juzNumber);
     return _db.getAyahsForJuz(juzNumber);
@@ -49,19 +49,17 @@ class QuranRepository {
   Future<List<AyahTranslation>> getTranslation({
     required int surahNumber,
     String edition = 'en.sahih',
+    bool offlineOnly = false,
   }) async {
-    // Use edition hashCode as a stable resourceId for local cache key
     final resourceId = edition.hashCode.abs();
 
-    // Check local cache
     final local = await (_db.select(_db.ayahTranslations)
           ..where((t) =>
               t.surahId.equals(surahNumber) &
               t.resourceId.equals(resourceId)))
         .get();
-    if (local.isNotEmpty) return local;
+    if (local.isNotEmpty || offlineOnly) return local;
 
-    // Fetch from API and cache
     await _fetchAndCacheTranslation(surahNumber, edition, resourceId);
     return (_db.select(_db.ayahTranslations)
           ..where((t) =>

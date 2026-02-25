@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/utils/page_transitions.dart';
 import '../../../../shared/widgets/gradient_header.dart';
 import '../../../audio/presentation/screens/downloads_screen.dart';
@@ -14,6 +15,7 @@ class MoreScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final achievementCount =
         ref.watch(achievementCountProvider).whenOrNull(data: (c) => c) ?? 0;
@@ -36,7 +38,7 @@ class MoreScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  'More',
+                  l10n.more,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -45,7 +47,7 @@ class MoreScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Settings & utilities',
+                  l10n.settingsUtilities,
                   style: TextStyle(
                     fontSize: 13,
                     color: Colors.white.withAlpha(170),
@@ -62,24 +64,24 @@ class MoreScreen extends ConsumerWidget {
                   icon: Icons.emoji_events_rounded,
                   iconColor: Colors.amber.shade700,
                   bgColor: Colors.amber,
-                  title: 'Achievements',
-                  subtitle: '$achievementCount badge${achievementCount == 1 ? '' : 's'} unlocked',
+                  title: l10n.achievements,
+                  subtitle: '$achievementCount ${l10n.badgesUnlocked}',
                   onTap: () => _push(context, const AchievementsScreen()),
                 ),
                 _UtilityTile(
                   icon: Icons.download_rounded,
                   iconColor: Colors.blue.shade700,
                   bgColor: Colors.blue,
-                  title: 'Downloads',
-                  subtitle: 'Manage offline audio',
+                  title: l10n.downloads,
+                  subtitle: l10n.manageOfflineAudio,
                   onTap: () => _push(context, const DownloadsScreen()),
                 ),
                 _UtilityTile(
                   icon: Icons.settings_rounded,
                   iconColor: Theme.of(context).colorScheme.primary,
                   bgColor: Theme.of(context).colorScheme.primary,
-                  title: 'Settings',
-                  subtitle: 'Theme, language, audio preferences',
+                  title: l10n.settings,
+                  subtitle: l10n.settingsUtilities,
                   onTap: () => _push(context, const SettingsScreen()),
                 ),
                 const Divider(height: 32),
@@ -87,16 +89,16 @@ class MoreScreen extends ConsumerWidget {
                   icon: Icons.favorite_rounded,
                   iconColor: Colors.pink,
                   bgColor: Colors.pink,
-                  title: 'Support Qurani',
-                  subtitle: 'Help keep this app free - Sadaqah Jariyah',
+                  title: l10n.donate,
+                  subtitle: '${l10n.helpKeepFree} - ${l10n.sadaqahJariyah}',
                   onTap: () => _push(context, const DonateScreen()),
                 ),
                 _UtilityTile(
                   icon: Icons.info_outline_rounded,
                   iconColor: Theme.of(context).colorScheme.onSurface.withAlpha(180),
                   bgColor: Theme.of(context).colorScheme.onSurface,
-                  title: 'About Qurani',
-                  subtitle: 'Version, licenses, open source',
+                  title: l10n.aboutQurani,
+                  subtitle: l10n.versionLicenses,
                   onTap: () => showAboutDialog(
                     context: context,
                     applicationName: 'Qurani',

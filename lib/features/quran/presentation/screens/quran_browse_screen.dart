@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../data/models/surah_info.dart';
 import '../widgets/surah_list_tile.dart';
 import 'reading_screen.dart';
@@ -45,11 +46,11 @@ class _QuranBrowseScreenState extends State<QuranBrowseScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quran'),
+        title: Text(AppLocalizations.of(context).quran),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            tooltip: 'Search Quran',
+            tooltip: AppLocalizations.of(context).searchTheQuran,
             onPressed: () {
               Navigator.push(
                 context,
@@ -60,10 +61,10 @@ class _QuranBrowseScreenState extends State<QuranBrowseScreen>
         ],
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'Surah'),
-            Tab(text: 'Juz'),
-            Tab(text: 'Page'),
+          tabs: [
+            Tab(text: AppLocalizations.of(context).surah),
+            Tab(text: AppLocalizations.of(context).juz),
+            Tab(text: AppLocalizations.of(context).page),
           ],
         ),
       ),
@@ -75,7 +76,7 @@ class _QuranBrowseScreenState extends State<QuranBrowseScreen>
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search surah...',
+                hintText: AppLocalizations.of(context).searchSurah,
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
@@ -146,8 +147,8 @@ class _QuranBrowseScreenState extends State<QuranBrowseScreen>
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
             child: Text('$juzNumber'),
           ),
-          title: Text('Juz $juzNumber'),
-          subtitle: Text('Starts: ${startSurah.nameTransliteration} ${startData[1]}'),
+          title: Text('${AppLocalizations.of(context).juz} $juzNumber'),
+          subtitle: Text('${startSurah.nameTransliteration} ${startData[1]}'),
           trailing: const Icon(Icons.chevron_right),
           onTap: () {
             Navigator.push(

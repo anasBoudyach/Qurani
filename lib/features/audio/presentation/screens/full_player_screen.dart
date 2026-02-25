@@ -101,8 +101,8 @@ class FullPlayerScreen extends ConsumerWidget {
                       const SizedBox(height: 8),
                       Text(
                         currentAyah != null
-                            ? 'Ayah $currentAyah'
-                            : 'Surah ${surah.number}',
+                            ? '${AppLocalizations.of(context).playAyah} $currentAyah'
+                            : '${AppLocalizations.of(context).surah} ${surah.number}',
                         style: TextStyle(
                           fontSize: 16,
                           color: Theme.of(context)
@@ -132,7 +132,7 @@ class FullPlayerScreen extends ConsumerWidget {
               const SizedBox(height: 4),
               Text(
                 currentAyah != null
-                    ? '${surah.nameEnglish} • Ayah $currentAyah'
+                    ? '${surah.nameEnglish} • ${AppLocalizations.of(context).playAyah} $currentAyah'
                     : surah.nameEnglish,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context)
@@ -260,7 +260,7 @@ class _PlaybackControls extends ConsumerWidget {
         IconButton(
           icon: const Icon(Icons.skip_previous_rounded),
           iconSize: 36,
-          tooltip: 'Previous',
+          tooltip: AppLocalizations.of(context).previous,
           onPressed: () => service.skipPrevious(),
         ),
         const SizedBox(width: 16),
@@ -282,7 +282,7 @@ class _PlaybackControls extends ConsumerWidget {
               color: Theme.of(context).colorScheme.onPrimary,
             ),
             iconSize: 40,
-            tooltip: isPlaying ? 'Pause' : 'Play',
+            tooltip: isPlaying ? AppLocalizations.of(context).pause : AppLocalizations.of(context).play,
             onPressed: () => service.togglePlayPause(),
           ),
         ),
@@ -291,7 +291,7 @@ class _PlaybackControls extends ConsumerWidget {
         IconButton(
           icon: const Icon(Icons.skip_next_rounded),
           iconSize: 36,
-          tooltip: 'Next',
+          tooltip: AppLocalizations.of(context).nextTrack,
           onPressed: () => service.skipNext(),
         ),
       ],

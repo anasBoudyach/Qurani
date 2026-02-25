@@ -9,6 +9,7 @@ const _tajweedKey = 'show_tajweed_colors';
 const _numeralStyleKey = 'numeral_style';
 const _readingModeKey = 'last_reading_mode';
 const _startupScreenKey = 'startup_screen';
+const _offlineModeKey = 'offline_mode';
 
 // ─── Font Size ───
 
@@ -315,5 +316,29 @@ class StartupScreenNotifier extends StateNotifier<StartupScreen> {
     state = screen;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_startupScreenKey, screen.name);
+  }
+}
+
+// ─── Offline Mode ───
+
+final offlineModeProvider =
+    StateNotifierProvider<OfflineModeNotifier, bool>((ref) {
+  return OfflineModeNotifier();
+});
+
+class OfflineModeNotifier extends StateNotifier<bool> {
+  OfflineModeNotifier() : super(false) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    state = prefs.getBool(_offlineModeKey) ?? false;
+  }
+
+  Future<void> toggle() async {
+    state = !state;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_offlineModeKey, state);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../quran/data/models/surah_info.dart';
 import 'hifz_screen.dart';
+import '../../../../core/l10n/app_localizations.dart';
 
 /// Setup screen for Hifz mode — pick surah and ayah range.
 class HifzSetupScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class _HifzSetupScreenState extends State<HifzSetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Hifz Mode')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).hifzMode)),
       body: _selectedSurah == null ? _buildSurahPicker() : _buildRangePicker(),
     );
   }
@@ -45,7 +46,7 @@ class _HifzSetupScreenState extends State<HifzSetupScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Choose a Surah to memorize',
+                AppLocalizations.of(context).chooseSurah,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -55,7 +56,7 @@ class _HifzSetupScreenState extends State<HifzSetupScreen> {
               TextField(
                 onChanged: (v) => setState(() => _searchQuery = v),
                 decoration: InputDecoration(
-                  hintText: 'Search surahs...',
+                  hintText: AppLocalizations.of(context).searchSurahs,
                   prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -78,7 +79,7 @@ class _HifzSetupScreenState extends State<HifzSetupScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Popular for Hifz',
+                  AppLocalizations.of(context).popularForHifz,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.bold,
@@ -138,7 +139,7 @@ class _HifzSetupScreenState extends State<HifzSetupScreen> {
                 ),
                 title: Text(surah.nameTransliteration),
                 subtitle: Text(
-                    '${surah.nameEnglish} • ${surah.ayahCount} ayahs'),
+                    '${surah.nameEnglish} • ${surah.ayahCount} ${AppLocalizations.of(context).ayahs}'),
                 trailing: Text(
                   surah.nameArabic,
                   style: const TextStyle(
@@ -193,7 +194,7 @@ class _HifzSetupScreenState extends State<HifzSetupScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${surah.nameTransliteration} • ${surah.ayahCount} ayahs',
+                  '${surah.nameTransliteration} • ${surah.ayahCount} ${AppLocalizations.of(context).ayahs}',
                   style: TextStyle(color: Colors.white.withAlpha(204)),
                 ),
               ],
@@ -203,12 +204,12 @@ class _HifzSetupScreenState extends State<HifzSetupScreen> {
           TextButton.icon(
             onPressed: () => setState(() => _selectedSurah = null),
             icon: const Icon(Icons.swap_horiz, size: 18),
-            label: const Text('Change surah'),
+            label: Text(AppLocalizations.of(context).changeSurah),
           ),
           const SizedBox(height: 24),
           // Ayah range
           Text(
-            'Ayah Range',
+            AppLocalizations.of(context).ayahRange,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -218,19 +219,19 @@ class _HifzSetupScreenState extends State<HifzSetupScreen> {
             children: [
               Expanded(
                 child: _buildRangeField(
-                  label: 'From',
+                  label: AppLocalizations.of(context).fromLabel,
                   value: _startAyah,
                   max: surah.ayahCount,
                   onChanged: (v) => setState(() => _startAyah = v),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text('to', style: TextStyle(fontSize: 16)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(AppLocalizations.of(context).toLabel, style: const TextStyle(fontSize: 16)),
               ),
               Expanded(
                 child: _buildRangeField(
-                  label: 'To',
+                  label: AppLocalizations.of(context).toLabel,
                   value: _endAyah,
                   max: surah.ayahCount,
                   onChanged: (v) => setState(() => _endAyah = v),
@@ -271,7 +272,7 @@ class _HifzSetupScreenState extends State<HifzSetupScreen> {
             },
             icon: const Icon(Icons.play_arrow_rounded),
             label: Text(
-              'Start Memorizing (${_endAyah - _startAyah + 1} ayahs)',
+              '${AppLocalizations.of(context).startMemorizing} (${_endAyah - _startAyah + 1} ${AppLocalizations.of(context).ayahs})',
             ),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),

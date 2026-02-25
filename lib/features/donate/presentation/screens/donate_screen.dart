@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../core/l10n/app_localizations.dart';
 
 /// Donation/Support screen with external links.
 /// No in-app payments — purely external donation links (Sadaqah Jariyah).
@@ -9,7 +10,7 @@ class DonateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Support Qurani')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).supportUs)),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
@@ -31,9 +32,9 @@ class DonateScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.favorite_rounded, color: Colors.white, size: 48),
                 const SizedBox(height: 16),
-                const Text(
-                  'Sadaqah Jariyah',
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context).sadaqahJariyah,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -117,7 +118,7 @@ class DonateScreen extends StatelessWidget {
           const SizedBox(height: 24),
           // Donation options
           Text(
-            'Ways to Support',
+            AppLocalizations.of(context).waysToSupport,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -163,7 +164,7 @@ class DonateScreen extends StatelessWidget {
           const SizedBox(height: 24),
           // What donations fund
           Text(
-            'Your Support Helps',
+            AppLocalizations.of(context).yourSupportHelps,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),

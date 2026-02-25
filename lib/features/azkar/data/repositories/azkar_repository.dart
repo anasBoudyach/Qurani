@@ -14,9 +14,10 @@ class AzkarRepository {
 
   /// Get azkar for a category. Fetches from API on first access, caches locally.
   Future<List<CachedAzkarData>> getAzkarForCategory(
-      int categoryId, String categoryTitle) async {
+      int categoryId, String categoryTitle,
+      {bool offlineOnly = false}) async {
     final local = await _db.getAzkarForCategory(categoryId);
-    if (local.isNotEmpty) return local;
+    if (local.isNotEmpty || offlineOnly) return local;
 
     // Fetch from API and cache
     final items = await _api.fetchAzkarForCategory(categoryId);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/services/notification_service.dart';
 import '../../data/prayer_reminder_provider.dart';
 import '../../data/prayer_reminder_service.dart';
@@ -28,7 +29,7 @@ class PrayerNotificationSettingsScreen extends ConsumerWidget {
     final settings = ref.watch(prayerReminderSettingsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Prayer Notifications')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).prayerNotifications)),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
@@ -53,7 +54,7 @@ class PrayerNotificationSettingsScreen extends ConsumerWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Notifications use your saved location for accurate prayer times.',
+                    AppLocalizations.of(context).notifLocationInfo,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -104,8 +105,8 @@ class PrayerNotificationSettingsScreen extends ConsumerWidget {
                     ],
                   ),
                   subtitle: enabled
-                      ? Text(_offsetLabel(offset))
-                      : const Text('Tap to enable reminder'),
+                      ? Text(_offsetLabel(context, offset))
+                      : Text(AppLocalizations.of(context).tapToEnable),
                   value: enabled,
                   onChanged: (_) async {
                     await ref
@@ -148,15 +149,15 @@ class PrayerNotificationSettingsScreen extends ConsumerWidget {
                 await NotificationService.instance.showTestNotification();
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Test notification sent!'),
-                      duration: Duration(seconds: 2),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context).testNotifSent),
+                      duration: const Duration(seconds: 2),
                     ),
                   );
                 }
               },
               icon: const Icon(Icons.notifications_active_outlined),
-              label: const Text('Send Test Notification'),
+              label: Text(AppLocalizations.of(context).sendTest),
             ),
           ),
 
@@ -166,9 +167,9 @@ class PrayerNotificationSettingsScreen extends ConsumerWidget {
     );
   }
 
-  String _offsetLabel(int minutes) {
-    if (minutes == 0) return 'At prayer time';
-    return '$minutes minutes before';
+  String _offsetLabel(BuildContext context, int minutes) {
+    if (minutes == 0) return AppLocalizations.of(context).atPrayerTime;
+    return '$minutes ${AppLocalizations.of(context).minutesBefore}';
   }
 }
 

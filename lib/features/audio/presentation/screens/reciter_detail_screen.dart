@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/l10n/app_localizations.dart';
+import '../../../../core/providers/reading_preferences_provider.dart';
 import '../../../gamification/data/models/daily_goal.dart';
 import '../../../gamification/presentation/providers/gamification_providers.dart';
 import '../../../quran/data/models/surah_info.dart';
@@ -34,9 +36,13 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
             .toSet() ??
         <int>{};
 
+    // Force offline filter when global offline mode is on
+    final globalOffline = ref.watch(offlineModeProvider);
+    final effectiveOffline = _offlineOnly || globalOffline;
+
     // Filter based on offline mode
     final displaySurahs =
-        _offlineOnly
+        effectiveOffline
             ? allSurahs.where((s) => downloadedSurahIds.contains(s)).toList()
             : allSurahs;
 
@@ -44,8 +50,8 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
       appBar: AppBar(
         title: Text(reciter.name),
         actions: [
-          // Offline toggle
-          if (downloadedSurahIds.isNotEmpty)
+          // Offline toggle (hidden when global offline forces it)
+          if (downloadedSurahIds.isNotEmpty && !globalOffline)
             IconButton(
               icon: Icon(
                 _offlineOnly ? Icons.wifi_off : Icons.wifi,
@@ -53,14 +59,14 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
                     ? Theme.of(context).colorScheme.primary
                     : null,
               ),
-              tooltip: _offlineOnly ? 'Show all surahs' : 'Show offline only',
+              tooltip: _offlineOnly ? AppLocalizations.of(context).showAllSurahs : AppLocalizations.of(context).offlineMode,
               onPressed: () => setState(() => _offlineOnly = !_offlineOnly),
             ),
-          // Download all
-          if (moshaf != null && !_offlineOnly)
+          // Download all (hidden in offline mode)
+          if (moshaf != null && !effectiveOffline)
             IconButton(
               icon: const Icon(Icons.download_rounded),
-              tooltip: 'Download all surahs',
+              tooltip: AppLocalizations.of(context).downloadAll,
               onPressed: () => _downloadAll(moshaf, allSurahs, downloadedSurahIds),
             ),
         ],
@@ -104,8 +110,8 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
                 if (moshaf != null) ...[
                   const SizedBox(height: 4),
                   Text(
-                    '${moshaf.surahTotal} surahs available'
-                    '${downloadedSurahIds.isNotEmpty ? ' · ${downloadedSurahIds.length} downloaded' : ''}',
+                    '${moshaf.surahTotal} ${AppLocalizations.of(context).surahsAvailable}'
+                    '${downloadedSurahIds.isNotEmpty ? ' · ${downloadedSurahIds.length} ${AppLocalizations.of(context).downloaded}' : ''}',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.white.withAlpha(204),
@@ -122,7 +128,7 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
                     ),
                   ],
                 ],
-                if (_offlineOnly) ...[
+                if (effectiveOffline) ...[
                   const SizedBox(height: 8),
                   Container(
                     padding:
@@ -131,14 +137,14 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
                       color: Colors.white.withAlpha(51),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.wifi_off, size: 14, color: Colors.white),
-                        SizedBox(width: 4),
+                        const Icon(Icons.wifi_off, size: 14, color: Colors.white),
+                        const SizedBox(width: 4),
                         Text(
-                          'Offline Mode',
-                          style: TextStyle(
+                          AppLocalizations.of(context).offlineMode,
+                          style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -166,9 +172,9 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
                                 .withAlpha(77)),
                         const SizedBox(height: 12),
                         Text(
-                          _offlineOnly
-                              ? 'No downloaded surahs'
-                              : 'No surahs available',
+                          effectiveOffline
+                              ? AppLocalizations.of(context).noDownloadsYet
+                              : AppLocalizations.of(context).surahsAvailable,
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     color: Theme.of(context)
@@ -177,12 +183,12 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
                                         .withAlpha(128),
                                   ),
                         ),
-                        if (_offlineOnly) ...[
+                        if (effectiveOffline && !globalOffline) ...[
                           const SizedBox(height: 8),
                           TextButton(
                             onPressed: () =>
                                 setState(() => _offlineOnly = false),
-                            child: const Text('Show all surahs'),
+                            child: Text(AppLocalizations.of(context).showAllSurahs),
                           ),
                         ],
                       ],
@@ -256,11 +262,11 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
                                   ],
                                 ),
                               )
-                            else if (!isDownloaded && moshaf != null)
+                            else if (!isDownloaded && moshaf != null && !globalOffline)
                               IconButton(
                                 icon: const Icon(Icons.download_outlined),
                                 iconSize: 24,
-                                tooltip: 'Download',
+                                tooltip: AppLocalizations.of(context).download,
                                 onPressed: () => _downloadSurah(
                                     surah.number, moshaf),
                               ),
@@ -288,6 +294,18 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
 
   void _playSurah(SurahInfo surah, ReciterMoshaf? moshaf, bool isDownloaded) {
     if (moshaf == null) return;
+
+    // Block streaming in offline mode
+    if (ref.read(offlineModeProvider) && !isDownloaded) {
+      ScaffoldMessenger.of(context)
+        ..clearSnackBars()
+        ..showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context).offlineNotAvailable),
+          behavior: SnackBarBehavior.floating,
+        ));
+      return;
+    }
+
     final service = ref.read(audioPlayerServiceProvider);
     // Record listening activity for gamification
     ref.read(gamificationServiceProvider).recordActivity(ActivityType.listenQuran);
@@ -354,7 +372,7 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
 
       if (!success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Download failed')),
+          SnackBar(content: Text(AppLocalizations.of(context).downloadFailed)),
         );
       }
     }
@@ -377,17 +395,17 @@ class _ReciterDetailScreenState extends ConsumerState<ReciterDetailScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Download All?'),
+        title: Text('${AppLocalizations.of(context).downloadAll}?'),
         content: Text(
-            'Download ${toDownload.length} surahs? This may use significant data and storage.'),
+            '${AppLocalizations.of(context).download} ${toDownload.length} ${AppLocalizations.of(context).surahsAvailable}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text('Download'),
+            child: Text(AppLocalizations.of(context).download),
           ),
         ],
       ),

@@ -7,6 +7,7 @@ import '../../../audio/presentation/providers/audio_providers.dart';
 import '../../../quran/data/models/surah_info.dart';
 import '../../../quran/presentation/providers/quran_providers.dart';
 import '../../../quran/presentation/widgets/tajweed_text_widget.dart';
+import '../../../../core/l10n/app_localizations.dart';
 
 /// Hifz (Memorization) mode screen.
 /// Progressively hides ayahs to test recall. User taps to reveal.
@@ -70,7 +71,7 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Hifz: ${widget.surah.nameTransliteration}',
+            Text('${AppLocalizations.of(context).hifz}: ${widget.surah.nameTransliteration}',
                 style: const TextStyle(fontSize: 16)),
             Text(
               widget.surah.nameArabic,
@@ -84,7 +85,7 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
             final showTajweed = ref.watch(tajweedProvider);
             return PopupMenuButton<String>(
               icon: const Icon(Icons.more_vert),
-              tooltip: 'Options',
+              tooltip: AppLocalizations.of(context).options,
               onSelected: (value) {
                 switch (value) {
                   case 'easy':
@@ -102,15 +103,15 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
                 }
               },
               itemBuilder: (_) => [
-                const PopupMenuItem(enabled: false, height: 32, child: Text('Difficulty', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600))),
-                _hifzCheckItem('easy', HifzDifficulty.easy.label, Icons.sentiment_satisfied_rounded, _difficulty == HifzDifficulty.easy),
-                _hifzCheckItem('medium', HifzDifficulty.medium.label, Icons.sentiment_neutral_rounded, _difficulty == HifzDifficulty.medium),
-                _hifzCheckItem('hard', HifzDifficulty.hard.label, Icons.sentiment_very_dissatisfied_rounded, _difficulty == HifzDifficulty.hard),
+                PopupMenuItem(enabled: false, height: 32, child: Text(AppLocalizations.of(context).difficulty, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600))),
+                _hifzCheckItem('easy', AppLocalizations.of(context).easyHint, Icons.sentiment_satisfied_rounded, _difficulty == HifzDifficulty.easy),
+                _hifzCheckItem('medium', AppLocalizations.of(context).mediumHidden, Icons.sentiment_neutral_rounded, _difficulty == HifzDifficulty.medium),
+                _hifzCheckItem('hard', AppLocalizations.of(context).hardType, Icons.sentiment_very_dissatisfied_rounded, _difficulty == HifzDifficulty.hard),
                 const PopupMenuDivider(),
-                _hifzCheckItem('tajweed', 'Tajweed Colors', Icons.color_lens_outlined, showTajweed),
-                _hifzCheckItem('show_all', _showAll ? 'Hide All Ayahs' : 'Show All Ayahs', _showAll ? Icons.visibility_off_rounded : Icons.visibility_rounded, _showAll),
+                _hifzCheckItem('tajweed', AppLocalizations.of(context).tajweedColors, Icons.color_lens_outlined, showTajweed),
+                _hifzCheckItem('show_all', _showAll ? AppLocalizations.of(context).hideAllAyahs : AppLocalizations.of(context).showAllAyahs, _showAll ? Icons.visibility_off_rounded : Icons.visibility_rounded, _showAll),
                 const PopupMenuDivider(),
-                const PopupMenuItem(value: 'reset', child: Row(children: [Icon(Icons.refresh_rounded, size: 20), SizedBox(width: 12), Text('Reset Progress')])),
+                PopupMenuItem(value: 'reset', child: Row(children: [const Icon(Icons.refresh_rounded, size: 20), const SizedBox(width: 12), Text(AppLocalizations.of(context).resetProgress)])),
               ],
             );
           }),
@@ -118,7 +119,7 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
       ),
       body: ayahsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => Center(child: Text('${AppLocalizations.of(context).errorLoading}: $e')),
         data: (ayahs) {
           final endAyah = widget.endAyah > 0
               ? widget.endAyah
@@ -130,7 +131,7 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
               .toList();
 
           if (filtered.isEmpty) {
-            return const Center(child: Text('No ayahs found'));
+            return Center(child: Text(AppLocalizations.of(context).noAyahsFound));
           }
 
           return Column(
@@ -170,6 +171,15 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
     );
   }
 
+  String _difficultyLabel() {
+    final l10n = AppLocalizations.of(context);
+    return switch (_difficulty) {
+      HifzDifficulty.easy => l10n.easyHint,
+      HifzDifficulty.medium => l10n.mediumHidden,
+      HifzDifficulty.hard => l10n.hardType,
+    };
+  }
+
   Widget _buildProgressBar(List<Ayah> ayahs) {
     final total = ayahs.length;
     final revealedCount = _showAll
@@ -188,7 +198,7 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
           Row(
             children: [
               Text(
-                _difficulty.label,
+                _difficultyLabel(),
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -330,14 +340,14 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
                     _RatingButton(
                       icon: Icons.check_circle_rounded,
                       color: Colors.green,
-                      tooltip: 'I knew it',
+                      tooltip: AppLocalizations.of(context).iKnewIt,
                       onTap: () => _rateAyah(ayah.ayahNumber, true),
                     ),
                     const SizedBox(width: 4),
                     _RatingButton(
                       icon: Icons.cancel_rounded,
                       color: Colors.red,
-                      tooltip: 'I didn\'t know',
+                      tooltip: AppLocalizations.of(context).iDidntKnow,
                       onTap: () => _rateAyah(ayah.ayahNumber, false),
                     ),
                   ],
@@ -416,7 +426,7 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Tap to reveal',
+              AppLocalizations.of(context).tapToReveal,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -443,7 +453,7 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Tap to reveal ($wordCount words)',
+              '${AppLocalizations.of(context).tapToReveal} ($wordCount ${AppLocalizations.of(context).ayahs})',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -471,7 +481,7 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Tap and type the first word to reveal',
+              AppLocalizations.of(context).tapTypeReveal,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -514,7 +524,7 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Type the first word'),
+        title: Text(AppLocalizations.of(context).typeFirstWord),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -545,14 +555,14 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton(
             onPressed: () {
               _checkAnswer(controller.text.trim(), firstWord, ayah);
               Navigator.pop(ctx);
             },
-            child: const Text('Check'),
+            child: Text(AppLocalizations.of(context).check),
           ),
         ],
       ),
@@ -568,10 +578,10 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
         _revealedAyahs.add(ayah.ayahNumber);
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Correct! Ma sha Allah!'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).correctMashallah),
           backgroundColor: Colors.green,
-          duration: Duration(seconds: 1),
+          duration: const Duration(seconds: 1),
         ),
       );
     } else {
@@ -581,7 +591,7 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('The word was: $correct'),
+          content: Text('${AppLocalizations.of(context).typeFirstWord}: $correct'),
           backgroundColor: Colors.orange,
           duration: const Duration(seconds: 2),
         ),

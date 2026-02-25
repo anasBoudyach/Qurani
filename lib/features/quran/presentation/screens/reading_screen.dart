@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/providers/reading_preferences_provider.dart';
 import '../../../audio/presentation/providers/audio_providers.dart';
 import '../../../bookmarks/presentation/providers/bookmark_providers.dart';
@@ -13,6 +14,8 @@ import '../../../gamification/presentation/providers/gamification_providers.dart
 import '../../data/models/surah_info.dart';
 import '../providers/quran_providers.dart';
 import '../widgets/tajweed_text_widget.dart';
+import '../../../../core/constants/tajweed_colors.dart';
+import '../../../../core/utils/tajweed_parser.dart';
 import 'tafsir_screen.dart';
 
 /// Main Quran reading screen with 2 modes:
@@ -306,6 +309,8 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
             ],
           ),
           actions: [
+            if (_mode == ReadingMode.mushaf)
+              _mushafPlayButton(),
             Consumer(builder: (context, ref, _) {
               final showTajweed = ref.watch(tajweedProvider);
               final continuous = ref.watch(
@@ -313,7 +318,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
               );
               return PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert),
-                tooltip: 'Options',
+                tooltip: AppLocalizations.of(context).options,
                 onSelected: (value) {
                   switch (value) {
                     case 'mode_recitation':
@@ -331,28 +336,28 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                   }
                 },
                 itemBuilder: (_) => [
-                  const PopupMenuItem(
+                  PopupMenuItem(
                       enabled: false,
                       height: 32,
-                      child: Text('Reading Mode',
-                          style: TextStyle(
+                      child: Text(AppLocalizations.of(context).readingMode,
+                          style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w600))),
-                  _checkItem('mode_recitation', 'Recitation',
+                  _checkItem('mode_recitation', AppLocalizations.of(context).recitation,
                       Icons.auto_stories, _mode == ReadingMode.recitation),
-                  _checkItem('mode_mushaf', 'Mushaf',
+                  _checkItem('mode_mushaf', AppLocalizations.of(context).mushaf,
                       Icons.menu_book_outlined, _mode == ReadingMode.mushaf),
                   const PopupMenuDivider(),
-                  _checkItem('tajweed', 'Tajweed Colors',
+                  _checkItem('tajweed', AppLocalizations.of(context).tajweedColors,
                       Icons.color_lens_outlined, showTajweed),
-                  _checkItem('continuous', 'Continuous Playback',
+                  _checkItem('continuous', AppLocalizations.of(context).continuousPlayback,
                       Icons.playlist_play_rounded, continuous),
                   const PopupMenuDivider(),
-                  const PopupMenuItem(
+                  PopupMenuItem(
                       value: 'translation',
                       child: Row(children: [
-                        Icon(Icons.language, size: 20),
-                        SizedBox(width: 12),
-                        Text('Change Translation')
+                        const Icon(Icons.language, size: 20),
+                        const SizedBox(width: 12),
+                        Text(AppLocalizations.of(context).changeTranslation)
                       ])),
                 ],
               );
@@ -364,7 +369,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
           error: (error, _) => _buildErrorView(error),
           data: (ayahs) {
             if (ayahs.isEmpty) {
-              return const Center(child: Text('No ayahs found'));
+              return Center(child: Text(AppLocalizations.of(context).noAyahsFound));
             }
 
             // Cache ayahs for synchronization and scroll tracking
@@ -453,7 +458,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
               ),
               const SizedBox(height: 20),
               Text(
-                'Translation',
+                AppLocalizations.of(context).translation,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -525,7 +530,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
               ),
               const SizedBox(height: 20),
               Text(
-                'Reciter',
+                AppLocalizations.of(context).reciter,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -587,12 +592,12 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                 size: 64, color: Theme.of(context).colorScheme.error),
             const SizedBox(height: 16),
             Text(
-              'Could not load surah',
+              AppLocalizations.of(context).couldNotLoad,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
             Text(
-              'Please check your internet connection and try again.',
+              AppLocalizations.of(context).checkConnection,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
@@ -602,7 +607,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                 ref.invalidate(surahAyahsProvider(widget.surah.number));
               },
               icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              label: Text(AppLocalizations.of(context).retry),
             ),
           ],
         ),
@@ -721,7 +726,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
             ),
             const SizedBox(height: 2),
             Text(
-              '${widget.surah.nameEnglish} • ${widget.surah.ayahCount} Ayahs',
+              '${widget.surah.nameEnglish} • ${widget.surah.ayahCount} ${AppLocalizations.of(context).ayahNumbers}',
               style: TextStyle(
                 fontSize: 14,
                 color: onPrimary.withAlpha(204),
@@ -736,7 +741,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                widget.surah.isMeccan ? 'Meccan' : 'Medinan',
+                widget.surah.isMeccan ? AppLocalizations.of(context).meccan : AppLocalizations.of(context).medinan,
                 style: TextStyle(
                   fontSize: 12,
                   color: onPrimary.withAlpha(230),
@@ -839,7 +844,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                     ),
                   ),
                 );
-              }, 'Tafsir'),
+              }, AppLocalizations.of(context).tafsir),
             ],
           ),
           const SizedBox(height: 12),
@@ -913,8 +918,8 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
           ref.invalidate(bookmarksProvider);
         },
         tooltip: isBookmarked.valueOrNull == true
-            ? 'Remove bookmark'
-            : 'Bookmark ayah',
+            ? AppLocalizations.of(context).removeBookmark
+            : AppLocalizations.of(context).bookmarkAyah,
         constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
         color: isBookmarked.valueOrNull == true
             ? Theme.of(context).colorScheme.primary
@@ -969,6 +974,15 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
           size: 20,
         ),
         onPressed: () {
+          if (ref.read(offlineModeProvider) && !isThisAyahPlaying && !isThisAyahLoading) {
+            ScaffoldMessenger.of(context)
+              ..clearSnackBars()
+              ..showSnackBar(SnackBar(
+                content: Text(AppLocalizations.of(context).offlineNotAvailable),
+                behavior: SnackBarBehavior.floating,
+              ));
+            return;
+          }
           final service = ref.read(audioPlayerServiceProvider);
           if (isThisAyahPlaying) {
             service.pause();
@@ -985,11 +999,76 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
             );
           }
         },
-        tooltip: isThisAyahPlaying ? 'Pause' : 'Play ayah',
+        tooltip: isThisAyahPlaying ? AppLocalizations.of(context).pause : AppLocalizations.of(context).playAyah,
         constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
         color: isThisAyahPlaying
             ? Theme.of(context).colorScheme.primary
             : Theme.of(context).colorScheme.onSurface.withAlpha(153),
+      );
+    });
+  }
+
+  Widget _mushafPlayButton() {
+    return Consumer(builder: (context, ref, _) {
+      final isPlaying = ref.watch(
+        currentAudioStateProvider.select((s) => s.isPlaying),
+      );
+      final isLoading = ref.watch(
+        currentAudioStateProvider.select((s) => s.isLoading),
+      );
+      final isBuffering = ref.watch(
+        currentAudioStateProvider.select((s) => s.isBuffering),
+      );
+      final playingSurah = ref.watch(
+        currentAudioStateProvider.select((s) => s.currentSurah),
+      );
+
+      final isThisSurahPlaying =
+          isPlaying && playingSurah == widget.surah.number;
+      final isThisSurahLoading = (isLoading || isBuffering) &&
+          playingSurah == widget.surah.number;
+
+      return IconButton(
+        icon: Icon(
+          isThisSurahLoading
+              ? Icons.hourglass_top_rounded
+              : isThisSurahPlaying
+                  ? Icons.pause_rounded
+                  : Icons.play_arrow_rounded,
+        ),
+        onPressed: () {
+          if (ref.read(offlineModeProvider) && !isThisSurahPlaying && !isThisSurahLoading) {
+            ScaffoldMessenger.of(context)
+              ..clearSnackBars()
+              ..showSnackBar(SnackBar(
+                content: Text(AppLocalizations.of(context).offlineNotAvailable),
+                behavior: SnackBarBehavior.floating,
+              ));
+            return;
+          }
+          final service = ref.read(audioPlayerServiceProvider);
+          if (isThisSurahPlaying) {
+            service.pause();
+          } else if (isThisSurahLoading) {
+            // Already loading
+          } else if (playingSurah == widget.surah.number && !isPlaying) {
+            service.play();
+          } else {
+            final reciter = ref.read(defaultReciterProvider);
+            final currentPageAyahs = _pageMap?[_currentPage];
+            final firstAyah = currentPageAyahs?.first.ayahNumber ?? 1;
+            service.playAyah(
+              surahNumber: widget.surah.number,
+              ayahNumber: firstAyah,
+              reciterFolder: reciter.id,
+              reciterName: reciter.name,
+              totalAyahs: widget.surah.ayahCount,
+            );
+          }
+        },
+        tooltip: isThisSurahPlaying
+            ? AppLocalizations.of(context).pause
+            : AppLocalizations.of(context).play,
       );
     });
   }
@@ -1021,6 +1100,16 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
   }
 
   Widget _buildMushafPage(int pageNumber, List<Ayah> ayahs) {
+    final showTajweed = ref.watch(tajweedProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final defaultColor = Theme.of(context).colorScheme.onSurface;
+    final fontSize = ref.watch(fontSizeProvider);
+    final audioState = ref.watch(currentAudioStateProvider);
+    final playingAyah = audioState.isPlaying &&
+            audioState.currentSurah == widget.surah.number
+        ? audioState.currentAyah
+        : null;
+
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -1031,7 +1120,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Juz ${ayahs.first.juzNumber}',
+                  '${AppLocalizations.of(context).juz} ${ayahs.first.juzNumber}',
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: Theme.of(context)
                             .colorScheme
@@ -1040,7 +1129,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                       ),
                 ),
                 Text(
-                  'Page $pageNumber',
+                  '${AppLocalizations.of(context).page} $pageNumber',
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: Theme.of(context)
                             .colorScheme
@@ -1059,15 +1148,13 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                 child: Text.rich(
                   TextSpan(
                     children: ayahs.map((ayah) {
-                      return TextSpan(
-                        text:
-                            '${_plainTextNoNumber(ayah)} \u06DD${formatAyahNumber(ayah.ayahNumber, NumeralStyle.arabic)} ',
-                        style: TextStyle(
-                          fontFamily: 'AmiriQuran',
-                          fontSize: ref.watch(fontSizeProvider),
-                          height: 2.2,
-                          locale: const Locale('ar'),
-                        ),
+                      return _buildMushafAyahSpan(
+                        ayah,
+                        showTajweed: showTajweed,
+                        isDark: isDark,
+                        defaultColor: defaultColor,
+                        fontSize: fontSize,
+                        isPlayingAyah: playingAyah == ayah.ayahNumber,
                       );
                     }).toList(),
                   ),
@@ -1080,5 +1167,66 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
         ],
       ),
     );
+  }
+
+  TextSpan _buildMushafAyahSpan(
+    Ayah ayah, {
+    required bool showTajweed,
+    required bool isDark,
+    required Color defaultColor,
+    required double fontSize,
+    required bool isPlayingAyah,
+  }) {
+    final baseStyle = TextStyle(
+      fontFamily: 'AmiriQuran',
+      fontSize: fontSize,
+      height: 2.2,
+      locale: const Locale('ar'),
+      backgroundColor: isPlayingAyah
+          ? Theme.of(context).colorScheme.primary.withAlpha(30)
+          : null,
+    );
+
+    final numberSuffix =
+        ' \u06DD${formatAyahNumber(ayah.ayahNumber, NumeralStyle.arabic)} ';
+
+    if (showTajweed && ayah.textUthmaniTajweed != null) {
+      final html = _tajweedHtmlNoNumber(ayah.textUthmaniTajweed!);
+      final tokens = TajweedParser.parse(html);
+
+      final children = tokens.map((token) {
+        Color? tokenColor;
+        if (token.hasTajweedRule) {
+          // Reverse-lookup: category -> CSS class -> color
+          for (final entry in TajweedColors.cssClassToCategory.entries) {
+            if (entry.value == token.rule) {
+              final baseColor = TajweedColors.cssClassToColor[entry.key];
+              if (baseColor != null) {
+                tokenColor =
+                    isDark ? TajweedColors.forDarkMode(baseColor) : baseColor;
+              }
+              break;
+            }
+          }
+        }
+        return TextSpan(
+          text: token.text,
+          style: baseStyle.copyWith(color: tokenColor ?? defaultColor),
+        );
+      }).toList();
+
+      // Append ayah number marker
+      children.add(TextSpan(
+        text: numberSuffix,
+        style: baseStyle.copyWith(color: defaultColor),
+      ));
+
+      return TextSpan(children: children);
+    } else {
+      return TextSpan(
+        text: '${_plainTextNoNumber(ayah)}$numberSuffix',
+        style: baseStyle.copyWith(color: defaultColor),
+      );
+    }
   }
 }

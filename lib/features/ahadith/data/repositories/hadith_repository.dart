@@ -13,9 +13,10 @@ class HadithRepository {
         _api = api;
 
   /// Get sections for a collection. Fetches from API on first access.
-  Future<List<CachedHadithSection>> getSections(String collectionKey) async {
+  Future<List<CachedHadithSection>> getSections(String collectionKey,
+      {bool offlineOnly = false}) async {
     final local = await _db.getHadithSections(collectionKey);
-    if (local.isNotEmpty) return local;
+    if (local.isNotEmpty || offlineOnly) return local;
 
     // Fetch from API and cache
     final sections = await _api.fetchSections(collectionKey);
@@ -36,9 +37,10 @@ class HadithRepository {
 
   /// Get hadiths for a section. Fetches from API on first access.
   Future<List<CachedHadith>> getHadithsForSection(
-      String collectionKey, int sectionNumber) async {
+      String collectionKey, int sectionNumber,
+      {bool offlineOnly = false}) async {
     final local = await _db.getHadithsForSection(collectionKey, sectionNumber);
-    if (local.isNotEmpty) return local;
+    if (local.isNotEmpty || offlineOnly) return local;
 
     // Fetch from API and cache
     final hadiths =

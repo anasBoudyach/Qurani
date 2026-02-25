@@ -136,7 +136,7 @@ class MiniPlayerWidget extends ConsumerWidget {
                       padding: EdgeInsets.zero,
                       constraints:
                           const BoxConstraints(minWidth: 36, minHeight: 36),
-                      tooltip: 'Previous',
+                      tooltip: AppLocalizations.of(context).previous,
                       onPressed: () => service.skipPrevious(),
                     );
                   }),
@@ -163,7 +163,7 @@ class MiniPlayerWidget extends ConsumerWidget {
                       padding: EdgeInsets.zero,
                       constraints:
                           const BoxConstraints(minWidth: 40, minHeight: 40),
-                      tooltip: isPlaying ? 'Pause' : 'Play',
+                      tooltip: isPlaying ? AppLocalizations.of(context).pause : AppLocalizations.of(context).play,
                       onPressed: () {
                         ref.read(audioPlayerServiceProvider).togglePlayPause();
                       },
@@ -177,7 +177,7 @@ class MiniPlayerWidget extends ConsumerWidget {
                       padding: EdgeInsets.zero,
                       constraints:
                           const BoxConstraints(minWidth: 36, minHeight: 36),
-                      tooltip: 'Next',
+                      tooltip: AppLocalizations.of(context).nextTrack,
                       onPressed: () => service.skipNext(),
                     );
                   }),
@@ -187,7 +187,7 @@ class MiniPlayerWidget extends ConsumerWidget {
                     padding: EdgeInsets.zero,
                     constraints:
                         const BoxConstraints(minWidth: 32, minHeight: 32),
-                    tooltip: 'Stop playback',
+                    tooltip: AppLocalizations.of(context).stopPlayback,
                     onPressed: () {
                       ref.read(audioPlayerServiceProvider).stop();
                     },

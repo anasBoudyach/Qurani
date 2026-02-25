@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../data/models/reciter.dart';
 import '../providers/audio_providers.dart';
 import 'reciter_detail_screen.dart';
@@ -26,7 +27,7 @@ class _ReciterListScreenState extends ConsumerState<ReciterListScreen> {
     final recitersAsync = ref.watch(defaultRecitersProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Reciters')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).reciters)),
       body: Column(
         children: [
           // Search bar
@@ -35,7 +36,7 @@ class _ReciterListScreenState extends ConsumerState<ReciterListScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search reciters...',
+                hintText: '${AppLocalizations.of(context).searchReciters}...',
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
@@ -65,8 +66,8 @@ class _ReciterListScreenState extends ConsumerState<ReciterListScreen> {
                   return Center(
                     child: Text(
                       _searchQuery.isNotEmpty
-                          ? 'No reciters found for "$_searchQuery"'
-                          : 'No reciters available',
+                          ? '${AppLocalizations.of(context).noResults} "$_searchQuery"'
+                          : AppLocalizations.of(context).reciters,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   );
@@ -130,8 +131,8 @@ class _ReciterListScreenState extends ConsumerState<ReciterListScreen> {
                   title: Text(reciter.name),
                   subtitle: Text(
                     reciter.mpieces.isNotEmpty
-                        ? '${reciter.mpieces.first.surahTotal} surahs'
-                        : 'Reciter',
+                        ? '${reciter.mpieces.first.surahTotal} ${AppLocalizations.of(context).surahsAvailable}'
+                        : AppLocalizations.of(context).reciter,
                   ),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
@@ -182,19 +183,19 @@ class _ReciterListScreenState extends ConsumerState<ReciterListScreen> {
                 color: Theme.of(context).colorScheme.error),
             const SizedBox(height: 16),
             Text(
-              'Could not load reciters',
+              AppLocalizations.of(context).couldNotLoad,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
             Text(
-              'Please check your internet connection.',
+              AppLocalizations.of(context).checkConnection,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: () => ref.invalidate(defaultRecitersProvider),
               icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              label: Text(AppLocalizations.of(context).retry),
             ),
           ],
         ),

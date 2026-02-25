@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../providers/hadith_providers.dart';
 
 class HadithListScreen extends ConsumerWidget {
@@ -42,7 +43,7 @@ class HadithListScreen extends ConsumerWidget {
                         .withAlpha(100)),
                 const SizedBox(height: 16),
                 Text(
-                  'Could not load hadiths.\nCheck your internet connection.',
+                  '${AppLocalizations.of(context).couldNotLoad}\n${AppLocalizations.of(context).checkConnection}',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context)
@@ -60,7 +61,7 @@ class HadithListScreen extends ConsumerWidget {
                     ),
                   )),
                   icon: const Icon(Icons.refresh_rounded, size: 18),
-                  label: const Text('Retry'),
+                  label: Text(AppLocalizations.of(context).retry),
                 ),
               ],
             ),
@@ -191,9 +192,9 @@ class _HadithCard extends StatelessWidget {
                   ));
                   ScaffoldMessenger.of(context)
                     ..clearSnackBars()
-                    ..showSnackBar(const SnackBar(
-                      content: Text('Hadith copied'),
-                      duration: Duration(seconds: 1),
+                    ..showSnackBar(SnackBar(
+                      content: Text(AppLocalizations.of(context).hadithCopied),
+                      duration: const Duration(seconds: 1),
                       behavior: SnackBarBehavior.floating,
                     ));
                 },

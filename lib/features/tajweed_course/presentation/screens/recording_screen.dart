@@ -6,6 +6,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../audio/presentation/providers/audio_providers.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../data/models/tajweed_lesson.dart';
 
 /// Recording & comparison screen for tajweed practice.
@@ -73,8 +74,8 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Microphone permission is required to record.'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).micRequired),
         ),
       );
     }
@@ -206,7 +207,7 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Practice Recording'),
+        title: Text(AppLocalizations.of(context).practiceRecording),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
@@ -290,7 +291,7 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                'Focus: ${widget.example.highlightedWord}',
+                '${AppLocalizations.of(context).focusLabel}: ${widget.example.highlightedWord}',
                 style: const TextStyle(
                   fontFamily: 'AmiriQuran',
                   fontSize: 14,
@@ -320,7 +321,7 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
               Icon(Icons.person, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
               Text(
-                'Sheikh Recitation',
+                AppLocalizations.of(context).sheikhRecitation,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.primary,
@@ -346,7 +347,7 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
               icon: Icon(
                 _isPlayingSheikh ? Icons.pause_rounded : Icons.play_arrow_rounded,
               ),
-              label: Text(_isPlayingSheikh ? 'Pause' : 'Listen to Sheikh'),
+              label: Text(_isPlayingSheikh ? AppLocalizations.of(context).pause : AppLocalizations.of(context).listenToSheikh),
             ),
           ),
         ],
@@ -378,7 +379,7 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
               ),
               const SizedBox(width: 8),
               Text(
-                'Your Recording',
+                AppLocalizations.of(context).yourRecording,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: _isRecording ? Colors.red : Theme.of(context).colorScheme.primary,
@@ -421,7 +422,7 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
               height: 60,
               child: Center(
                 child: Text(
-                  'Tap the button below to start recording',
+                  AppLocalizations.of(context).tapToRecord,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context)
                             .colorScheme
@@ -478,7 +479,7 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
                 IconButton.outlined(
                   onPressed: _startRecording,
                   icon: const Icon(Icons.refresh_rounded),
-                  tooltip: 'Re-record',
+                  tooltip: AppLocalizations.of(context).reRecord,
                 ),
               ],
             ],
@@ -506,7 +507,7 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
                   color: Theme.of(context).colorScheme.tertiary),
               const SizedBox(width: 8),
               Text(
-                'Compare',
+                AppLocalizations.of(context).compareThem,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.tertiary,
@@ -516,7 +517,7 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Listen to the sheikh, then your recording — back to back.',
+            AppLocalizations.of(context).compareDesc,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context)
                       .colorScheme
@@ -528,7 +529,7 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
           FilledButton.icon(
             onPressed: _playBothSequential,
             icon: const Icon(Icons.play_circle_outline_rounded),
-            label: const Text('Play Comparison'),
+            label: Text(AppLocalizations.of(context).playComparison),
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.tertiary,
             ),
@@ -536,9 +537,9 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
           const SizedBox(height: 8),
           // Status indicator
           if (_isPlayingSheikh)
-            _buildPlayingIndicator('Playing sheikh...', Colors.blue),
+            _buildPlayingIndicator(AppLocalizations.of(context).playingSheikh, Colors.blue),
           if (_isPlayingUser)
-            _buildPlayingIndicator('Playing your recording...', Colors.green),
+            _buildPlayingIndicator(AppLocalizations.of(context).playingYours, Colors.green),
         ],
       ),
     );
@@ -575,14 +576,14 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
       child: Column(
         children: [
           Text(
-            'How did you do?',
+            AppLocalizations.of(context).howDidYouDo,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
           const SizedBox(height: 4),
           Text(
-            'Rate your recitation accuracy',
+            AppLocalizations.of(context).rateAccuracy,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context)
                       .colorScheme
@@ -619,7 +620,7 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
           if (_selfRating > 0) ...[
             const SizedBox(height: 12),
             Text(
-              _ratingLabel(_selfRating),
+              _ratingLabel(context, _selfRating),
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.primary,
@@ -637,12 +638,12 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
                       _selfRating = 0;
                     });
                   },
-                  child: const Text('Try Again'),
+                  child: Text(AppLocalizations.of(context).tryAgain),
                 ),
                 const SizedBox(width: 12),
                 FilledButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Done'),
+                  child: Text(AppLocalizations.of(context).done),
                 ),
               ],
             ),
@@ -652,18 +653,19 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
     );
   }
 
-  String _ratingLabel(int rating) {
+  String _ratingLabel(BuildContext context, int rating) {
+    final l10n = AppLocalizations.of(context);
     switch (rating) {
       case 1:
-        return 'Keep practicing!';
+        return l10n.rating1;
       case 2:
-        return 'Getting there!';
+        return l10n.rating2;
       case 3:
-        return 'Good effort!';
+        return l10n.rating3;
       case 4:
-        return 'Very good!';
+        return l10n.rating4;
       case 5:
-        return 'Excellent! Ma sha Allah!';
+        return l10n.rating5;
       default:
         return '';
     }

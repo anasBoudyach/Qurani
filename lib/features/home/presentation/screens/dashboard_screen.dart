@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../../core/utils/hijri_utils.dart';
@@ -145,6 +146,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final lastPosition = ref.watch(lastReadingPositionProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -290,21 +292,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   children: [
                     FeatureTile(
                       icon: Icons.menu_book_rounded,
-                      label: 'Quran',
+                      label: l10n.quran,
                       color: AppColors.accentQuran,
                       compact: true,
                       onTap: () => context.go(RouteNames.quran),
                     ),
                     FeatureTile(
                       icon: Icons.headphones_rounded,
-                      label: 'Listen',
+                      label: l10n.listen,
                       color: AppColors.accentListen,
                       compact: true,
                       onTap: () => context.go(RouteNames.listen),
                     ),
                     FeatureTile(
                       icon: Icons.school_rounded,
-                      label: 'Tajweed',
+                      label: l10n.tajweed,
                       color: AppColors.accentTajweed,
                       compact: true,
                       onTap: () => Navigator.push(
@@ -314,7 +316,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     FeatureTile(
                       icon: Icons.auto_awesome_rounded,
-                      label: 'Azkar',
+                      label: l10n.azkar,
                       color: AppColors.accentAzkar,
                       compact: true,
                       onTap: () => Navigator.push(
@@ -324,7 +326,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     FeatureTile(
                       icon: Icons.access_time_rounded,
-                      label: 'Prayer',
+                      label: l10n.prayer,
                       color: AppColors.accentPrayer,
                       compact: true,
                       onTap: () => Navigator.push(
@@ -334,7 +336,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     FeatureTile(
                       icon: Icons.volunteer_activism_rounded,
-                      label: "Du'as",
+                      label: l10n.duas,
                       color: AppColors.accentDua,
                       compact: true,
                       onTap: () => Navigator.push(
@@ -344,7 +346,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     FeatureTile(
                       icon: Icons.gavel_rounded,
-                      label: 'Ahkam',
+                      label: l10n.ahkam,
                       color: AppColors.accentAhkam,
                       compact: true,
                       onTap: () => Navigator.push(
@@ -354,7 +356,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     FeatureTile(
                       icon: Icons.auto_stories_rounded,
-                      label: 'Ahadith',
+                      label: l10n.ahadith,
                       color: AppColors.accentAhadith,
                       compact: true,
                       onTap: () => Navigator.push(
@@ -364,7 +366,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     FeatureTile(
                       icon: Icons.psychology_rounded,
-                      label: 'Hifz',
+                      label: l10n.hifz,
                       color: AppColors.accentHifz,
                       compact: true,
                       onTap: () => Navigator.push(
@@ -374,7 +376,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     FeatureTile(
                       icon: Icons.track_changes_rounded,
-                      label: 'Khatmah',
+                      label: l10n.khatmah,
                       color: AppColors.accentKhatmah,
                       compact: true,
                       onTap: () => Navigator.push(
@@ -384,7 +386,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     FeatureTile(
                       icon: Icons.explore_rounded,
-                      label: 'Qibla',
+                      label: l10n.qibla,
                       color: AppColors.accentQibla,
                       compact: true,
                       onTap: () => Navigator.push(
@@ -394,7 +396,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     FeatureTile(
                       icon: Icons.calendar_month_rounded,
-                      label: 'Hijri',
+                      label: l10n.hijri,
                       color: AppColors.accentHijri,
                       compact: true,
                       onTap: () => Navigator.push(
@@ -479,7 +481,7 @@ class _StreakGoalsCard extends ConsumerWidget {
                         ),
                   ),
                   Text(
-                    'day streak',
+                    AppLocalizations.of(context).dayStreak,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Theme.of(context)
                               .colorScheme
@@ -541,9 +543,26 @@ class _GoalChip extends StatelessWidget {
   final DailyGoal goal;
   const _GoalChip({required this.goal});
 
+  String _localizedTitle(AppLocalizations l10n) {
+    switch (goal.type) {
+      case DailyGoalType.readQuran:
+        return l10n.readGoal;
+      case DailyGoalType.listenQuran:
+        return l10n.listen;
+      case DailyGoalType.morningAzkar:
+      case DailyGoalType.eveningAzkar:
+        return l10n.azkar;
+      case DailyGoalType.makeDua:
+        return l10n.duaGoal;
+      case DailyGoalType.tajweedLesson:
+        return l10n.tajweed;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final completed = goal.isCompleted;
+    final title = _localizedTitle(AppLocalizations.of(context));
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
@@ -570,7 +589,7 @@ class _GoalChip extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            goal.title,
+            title,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   fontSize: 10,
                   fontWeight: completed ? FontWeight.bold : FontWeight.w500,
@@ -614,7 +633,7 @@ class _AchievementsPreview extends ConsumerWidget {
                 GestureDetector(
                   onTap: () => Navigator.push(context, SlideUpRoute(page: const AchievementsScreen())),
                   child: Text(
-                    'Achievements',
+                    AppLocalizations.of(context).achievements,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -623,7 +642,7 @@ class _AchievementsPreview extends ConsumerWidget {
                 TextButton(
                   onPressed: () => Navigator.push(context, SlideUpRoute(page: const AchievementsScreen())),
                   child: Text(
-                    '${unlocked.length} earned',
+                    '${unlocked.length} ${AppLocalizations.of(context).earned}',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -693,9 +712,10 @@ class _UpcomingEventCard extends StatelessWidget {
 
     final isToday = displayEvent.daysUntil == 0;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
     final daysText = isToday
-        ? 'Today!'
-        : '${displayEvent.daysUntil} day${displayEvent.daysUntil == 1 ? '' : 's'}';
+        ? '${l10n.today}!'
+        : '${displayEvent.daysUntil} ${l10n.days}';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -831,7 +851,7 @@ class _ContinueReadingCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Continue Reading',
+                          AppLocalizations.of(context).continueReading,
                           style: Theme.of(context)
                               .textTheme
                               .labelMedium
@@ -849,7 +869,7 @@ class _ContinueReadingCard extends StatelessWidget {
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          'Ayah $ayahNumber of ${surah.ayahCount}',
+                          AppLocalizations.of(context).ayahXofY(ayahNumber, surah.ayahCount),
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall

@@ -150,6 +150,11 @@
 - [x] Adaptive app icon (vector foreground: open book + gold star, green background)
 - [x] Reciter avatars: mic icons with hash-based color palette (replaces ugly letter avatars)
 - [x] Localization review: all 14 languages verified, Russian/Chinese fixes
+- [x] Full l10n integration: all 40+ screens use localized strings (no hardcoded English)
+- [x] Tajweed colors in mushaf mode (same toggle affects both recitation and mushaf)
+- [x] Audio playback in mushaf mode (AppBar play button, ayah highlighting, reuses AppShell mini player)
+- [x] Offline mode toggle: `offlineModeProvider` with Settings switch + Onboarding option
+- [x] Offline guards: all repositories skip API when offline, streaming blocked, reciter detail forces downloaded-only filter
 - [ ] Google Play Store listing
 
 ---

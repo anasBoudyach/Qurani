@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/providers/reading_preferences_provider.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/theme_provider.dart';
@@ -73,7 +74,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 child: _currentPage < _totalPages - 1
                     ? TextButton(
                         onPressed: _skip,
-                        child: const Text('Skip'),
+                        child: Text(AppLocalizations.of(context).skip),
                       )
                     : const SizedBox(height: 48),
               ),
@@ -128,8 +129,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     ),
                     child: Text(
                       _currentPage == _totalPages - 1
-                          ? 'Get Started'
-                          : 'Next',
+                          ? AppLocalizations.of(context).getStarted
+                          : AppLocalizations.of(context).nextBtn,
                     ),
                   ),
                 ],
@@ -186,7 +187,7 @@ class _WelcomePage extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           Text(
-            'Your complete Quran companion',
+            AppLocalizations.of(context).yourCompleteCompanion,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Theme.of(context)
                       .colorScheme
@@ -197,7 +198,7 @@ class _WelcomePage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Read, listen, learn tajweed, and grow spiritually — all for free.',
+            AppLocalizations.of(context).readListenLearn,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Theme.of(context)
                       .colorScheme
@@ -218,15 +219,16 @@ class _WelcomePage extends StatelessWidget {
 class _FeaturesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final features = [
-      _Feature(Icons.auto_stories_rounded, 'Read the Quran',
-          'Beautiful tajweed-colored text with translations'),
-      _Feature(Icons.headphones_rounded, '260+ Reciters',
-          'Stream or download from world-renowned reciters'),
-      _Feature(Icons.school_rounded, 'Learn Tajweed',
-          '24 structured lessons from beginner to advanced'),
-      _Feature(Icons.favorite_rounded, 'Completely Free',
-          'No ads, no subscriptions — Sadaqah Jariyah'),
+      _Feature(Icons.auto_stories_rounded, l10n.readTheQuran,
+          l10n.beautifulTajweedDesc),
+      _Feature(Icons.headphones_rounded, l10n.reciters260,
+          l10n.streamDownloadDesc),
+      _Feature(Icons.school_rounded, l10n.learnTajweed,
+          l10n.learnTajweed24),
+      _Feature(Icons.favorite_rounded, l10n.completelyFree,
+          l10n.noAdsDesc),
     ];
 
     return Padding(
@@ -235,7 +237,7 @@ class _FeaturesPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Everything You Need',
+            l10n.everythingYouNeed,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -316,14 +318,14 @@ class _ThemePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Choose Your Theme',
+            AppLocalizations.of(context).chooseYourTheme,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
           const SizedBox(height: 8),
           Text(
-            'You can always change this later in settings.',
+            AppLocalizations.of(context).changeLater,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context)
                       .colorScheme
@@ -357,7 +359,7 @@ class _ThemeOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final info = _themeInfo(mode);
+    final info = _themeInfo(mode, context);
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -425,16 +427,17 @@ class _ThemeOption extends StatelessWidget {
     );
   }
 
-  _ThemeInfo _themeInfo(AppThemeMode mode) {
+  _ThemeInfo _themeInfo(AppThemeMode mode, BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     switch (mode) {
       case AppThemeMode.light:
-        return _ThemeInfo('Light', 'Warm off-white', const Color(0xFFFFFBF5));
+        return _ThemeInfo(l10n.light, 'Warm off-white', const Color(0xFFFFFBF5));
       case AppThemeMode.dark:
-        return _ThemeInfo('Dark', 'Standard dark theme', const Color(0xFF1C1B1F));
+        return _ThemeInfo(l10n.dark, 'Standard dark theme', const Color(0xFF1C1B1F));
       case AppThemeMode.sepia:
-        return _ThemeInfo('Sepia', 'Parchment-style', const Color(0xFFF5E6CA));
+        return _ThemeInfo(l10n.sepia, 'Parchment-style', const Color(0xFFF5E6CA));
       case AppThemeMode.amoled:
-        return _ThemeInfo('AMOLED', 'Pure black, saves battery', const Color(0xFF000000));
+        return _ThemeInfo(l10n.amoled, 'Pure black, saves battery', const Color(0xFF000000));
     }
   }
 }
@@ -467,14 +470,14 @@ class _PreferencesPage extends ConsumerWidget {
         children: [
           const SizedBox(height: 24),
           Text(
-            'Reading Preferences',
+            AppLocalizations.of(context).readingPreferences,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Personalize your Quran reading experience.',
+            AppLocalizations.of(context).personalizeDesc,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context)
                       .colorScheme
@@ -487,7 +490,7 @@ class _PreferencesPage extends ConsumerWidget {
           _ToggleCard(
             icon: Icons.color_lens_outlined,
             title: 'Tajweed Colors',
-            subtitle: showTajweed ? 'Colored tajweed rules on text' : 'Plain Arabic text',
+            subtitle: showTajweed ? AppLocalizations.of(context).coloredTajweedOn : AppLocalizations.of(context).plainArabic,
             value: showTajweed,
             onChanged: (_) => ref.read(tajweedProvider.notifier).toggle(),
           ),
@@ -533,13 +536,23 @@ class _PreferencesPage extends ConsumerWidget {
             icon: Icons.open_in_new_rounded,
             title: 'App Startup',
             subtitle: ref.watch(startupScreenProvider) == StartupScreen.home
-                ? 'Home Screen'
-                : 'Last Reading Position',
+                ? AppLocalizations.of(context).homeScreen
+                : AppLocalizations.of(context).lastReadingPosition,
             onTap: () => _showStartupPicker(context, ref),
+          ),
+          _ToggleCard(
+            icon: Icons.cloud_off_outlined,
+            title: AppLocalizations.of(context).offlineMode,
+            subtitle: ref.watch(offlineModeProvider)
+                ? AppLocalizations.of(context).offlineModeDesc
+                : AppLocalizations.of(context).offlineModeDesc,
+            value: ref.watch(offlineModeProvider),
+            onChanged: (_) =>
+                ref.read(offlineModeProvider.notifier).toggle(),
           ),
           const SizedBox(height: 12),
           Text(
-            'You can change these anytime in Settings.',
+            AppLocalizations.of(context).changeInSettings,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context)
                       .colorScheme
@@ -576,8 +589,8 @@ class _PreferencesPage extends ConsumerWidget {
             RadioListTile<StartupScreen>(
               value: StartupScreen.home,
               groupValue: current,
-              title: const Text('Home Screen'),
-              subtitle: const Text('Always open to the dashboard'),
+              title: Text(AppLocalizations.of(context).homeScreen),
+              subtitle: Text(AppLocalizations.of(context).alwaysOpenDashboard),
               onChanged: (_) {
                 ref
                     .read(startupScreenProvider.notifier)
@@ -588,8 +601,8 @@ class _PreferencesPage extends ConsumerWidget {
             RadioListTile<StartupScreen>(
               value: StartupScreen.lastPosition,
               groupValue: current,
-              title: const Text('Last Reading Position'),
-              subtitle: const Text('Continue right where you left off'),
+              title: Text(AppLocalizations.of(context).lastReadingPosition),
+              subtitle: Text(AppLocalizations.of(context).continueWhereLeft),
               onChanged: (_) {
                 ref
                     .read(startupScreenProvider.notifier)
@@ -824,14 +837,14 @@ class _GetStartedPage extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           Text(
-            "You're All Set!",
+            AppLocalizations.of(context).youreAllSet,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
           const SizedBox(height: 16),
           Text(
-            'Start your journey with the Quran.\nMay Allah bless your efforts.',
+            '${AppLocalizations.of(context).startJourney}\n${AppLocalizations.of(context).mayAllahBless}',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   height: 1.6,
                   color: Theme.of(context)
