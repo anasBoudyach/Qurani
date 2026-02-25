@@ -183,14 +183,14 @@
 
 ### Testing
 - [x] Real device testing on RMX3630
-- [ ] Test all 5 tabs navigate correctly
-- [ ] Test audio playback (streaming + downloaded + background)
+- [x] Test all 5 tabs navigate correctly
+- [x] Test audio playback (streaming + downloaded + background)
 - [ ] Test prayer times with GPS
 - [ ] Test Qibla compass
-- [ ] Test tajweed course lesson + quiz flow
+- [x] Test tajweed course lesson + quiz flow
 - [ ] Test downloads + offline mode
-- [ ] Test all 4 themes render correctly
-- [ ] Test onboarding flow (fresh install)
+- [x] Test all 4 themes render correctly
+- [x] Test onboarding flow (fresh install)
 
 ---
 
