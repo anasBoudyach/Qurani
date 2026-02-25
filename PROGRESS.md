@@ -173,7 +173,7 @@
 ### Play Store Assets
 - [x] App icon: `assets/store/icon.png`
 - [x] Feature graphic: `assets/store/feature_graphic.png`
-- [ ] Phone screenshots: 4-8 screenshots from real device (home, quran, audio, tajweed, prayer, settings)
+- [x] Phone screenshots: 8 screenshots in `assets/store/screenshots/` (home, audio, ahkam, prayer, tajweed, hifz, ahadith, tajweed course)
 - [x] App name: "Qurani - Quran, Tajweed, Azkar" (drafted in PROGRESS.md)
 - [x] Short description (drafted in PROGRESS.md)
 - [x] Full description (drafted in PROGRESS.md)

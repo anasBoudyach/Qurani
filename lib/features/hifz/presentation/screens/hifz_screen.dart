@@ -32,7 +32,6 @@ class HifzScreen extends ConsumerStatefulWidget {
 }
 
 class _HifzScreenState extends ConsumerState<HifzScreen> {
-  static final RegExp _diacriticsRegex = RegExp(r'[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED]');
   static final RegExp _htmlTagRegex = RegExp(r'<[^>]*>');
   static final RegExp _ayahEndMarkerRegex = RegExp(r'[\s\u06DD]*[\u0660-\u0669\u06F0-\u06F9]+[\s\u200F\u200E]*$');
   static final RegExp _htmlAyahEndRegex = RegExp(
@@ -92,8 +91,6 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
                     setState(() { _difficulty = HifzDifficulty.easy; _revealedAyahs.clear(); _showAll = false; });
                   case 'medium':
                     setState(() { _difficulty = HifzDifficulty.medium; _revealedAyahs.clear(); _showAll = false; });
-                  case 'hard':
-                    setState(() { _difficulty = HifzDifficulty.hard; _revealedAyahs.clear(); _showAll = false; });
                   case 'tajweed':
                     ref.read(tajweedProvider.notifier).toggle();
                   case 'show_all':
@@ -106,7 +103,6 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
                 PopupMenuItem(enabled: false, height: 32, child: Text(AppLocalizations.of(context).difficulty, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600))),
                 _hifzCheckItem('easy', AppLocalizations.of(context).easyHint, Icons.sentiment_satisfied_rounded, _difficulty == HifzDifficulty.easy),
                 _hifzCheckItem('medium', AppLocalizations.of(context).mediumHidden, Icons.sentiment_neutral_rounded, _difficulty == HifzDifficulty.medium),
-                _hifzCheckItem('hard', AppLocalizations.of(context).hardType, Icons.sentiment_very_dissatisfied_rounded, _difficulty == HifzDifficulty.hard),
                 const PopupMenuDivider(),
                 _hifzCheckItem('tajweed', AppLocalizations.of(context).tajweedColors, Icons.color_lens_outlined, showTajweed),
                 _hifzCheckItem('show_all', _showAll ? AppLocalizations.of(context).hideAllAyahs : AppLocalizations.of(context).showAllAyahs, _showAll ? Icons.visibility_off_rounded : Icons.visibility_rounded, _showAll),
@@ -176,7 +172,6 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
     return switch (_difficulty) {
       HifzDifficulty.easy => l10n.easyHint,
       HifzDifficulty.medium => l10n.mediumHidden,
-      HifzDifficulty.hard => l10n.hardType,
     };
   }
 
@@ -464,44 +459,13 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
           ],
         );
 
-      case HifzDifficulty.hard:
-        // Must type first word to reveal
-        final words = _plainText(ayah).split(' ');
-        final wordCount = words.length;
-        return Column(
-          children: [
-            Text(
-              '⬜ ' * wordCount,
-              style: TextStyle(
-                fontSize: 20,
-                color:
-                    Theme.of(context).colorScheme.onSurface.withAlpha(77),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              AppLocalizations.of(context).tapTypeReveal,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .primary
-                        .withAlpha(153),
-                  ),
-            ),
-          ],
-        );
     }
   }
 
   void _revealAyah(Ayah ayah) {
-    if (_difficulty == HifzDifficulty.hard) {
-      _showTypeChallenge(ayah);
-    } else {
-      setState(() {
-        _revealedAyahs.add(ayah.ayahNumber);
-      });
-    }
+    setState(() {
+      _revealedAyahs.add(ayah.ayahNumber);
+    });
   }
 
   void _rateAyah(int ayahNumber, bool correct) {
@@ -517,98 +481,11 @@ class _HifzScreenState extends ConsumerState<HifzScreen> {
     });
   }
 
-  void _showTypeChallenge(Ayah ayah) {
-    final controller = TextEditingController();
-    final firstWord = _plainText(ayah).split(' ').first;
-
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(AppLocalizations.of(context).typeFirstWord),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Ayah ${ayah.ayahNumber}',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: controller,
-              textDirection: TextDirection.rtl,
-              style: const TextStyle(fontFamily: 'AmiriQuran', fontSize: 22),
-              decoration: InputDecoration(
-                hintText: 'اكتب الكلمة الأولى',
-                hintTextDirection: TextDirection.rtl,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              autofocus: true,
-              onSubmitted: (_) {
-                _checkAnswer(controller.text.trim(), firstWord, ayah);
-                Navigator.pop(ctx);
-              },
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context).cancel),
-          ),
-          FilledButton(
-            onPressed: () {
-              _checkAnswer(controller.text.trim(), firstWord, ayah);
-              Navigator.pop(ctx);
-            },
-            child: Text(AppLocalizations.of(context).check),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _checkAnswer(String typed, String correct, Ayah ayah) {
-    final normalizedTyped = _removeDiacritics(typed);
-    final normalizedCorrect = _removeDiacritics(correct);
-
-    if (normalizedTyped == normalizedCorrect) {
-      setState(() {
-        _revealedAyahs.add(ayah.ayahNumber);
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).correctMashallah),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    } else {
-      // Wrong answer in hard mode — still reveal so they can self-rate
-      setState(() {
-        _revealedAyahs.add(ayah.ayahNumber);
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${AppLocalizations.of(context).typeFirstWord}: $correct'),
-          backgroundColor: Colors.orange,
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
-  }
-
-  /// Remove Arabic diacritics (tashkeel) for flexible comparison.
-  String _removeDiacritics(String text) {
-    return text.replaceAll(_diacriticsRegex, '');
-  }
 }
 
 enum HifzDifficulty {
   easy('Easy - First word hint'),
-  medium('Medium - Fully hidden'),
-  hard('Hard - Type to reveal');
+  medium('Medium - Fully hidden');
 
   final String label;
   const HifzDifficulty(this.label);

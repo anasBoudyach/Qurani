@@ -196,15 +196,18 @@ flutter build appbundle --release
 
 ## Screenshots
 
-<!-- Add device screenshots here -->
-<!-- Example:
 <p align="center">
-  <img src="assets/store/screenshot1.png" width="24%" />
-  <img src="assets/store/screenshot2.png" width="24%" />
-  <img src="assets/store/screenshot3.png" width="24%" />
-  <img src="assets/store/screenshot4.png" width="24%" />
+  <img src="assets/store/screenshots/screen1_home.png" width="24%" />
+  <img src="assets/store/screenshots/screen5_tajweed.png" width="24%" />
+  <img src="assets/store/screenshots/screen2_audio.png" width="24%" />
+  <img src="assets/store/screenshots/screen6_hifz.png" width="24%" />
 </p>
--->
+<p align="center">
+  <img src="assets/store/screenshots/screen4_prayer.png" width="24%" />
+  <img src="assets/store/screenshots/screen8_tajweed_course.png" width="24%" />
+  <img src="assets/store/screenshots/screen7_ahadith.png" width="24%" />
+  <img src="assets/store/screenshots/screen3_ahkam.png" width="24%" />
+</p>
 
 ## Contributing
 

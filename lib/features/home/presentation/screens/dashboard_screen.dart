@@ -163,7 +163,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           // ── Gradient Header with parallax ──
           GradientHeader(
             gradient: AppColors.getDailyHeaderGradient(isDark),
-            height: 200,
+            height: 170,
             showMosque: true,
             scrollOffset: _scrollOffset,
             padding: EdgeInsets.fromLTRB(
@@ -196,7 +196,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                   ],
                 ),
-                const Spacer(),
+                const SizedBox(height: 8),
                 Center(
                   child: Text(
                     dailyAyah.$1,
