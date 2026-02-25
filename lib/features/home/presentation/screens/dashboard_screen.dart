@@ -286,8 +286,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 // ── 4x3 Feature Grid with staggered animation ──
                 StaggeredAnimationGrid(
                   crossAxisCount: 4,
-                  childAspectRatio: 1.0,
-                  mainAxisSpacing: 0,
+                  childAspectRatio: 0.88,
+                  mainAxisSpacing: 4,
                   crossAxisSpacing: 0,
                   children: [
                     FeatureTile(
