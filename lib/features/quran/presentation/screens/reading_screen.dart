@@ -54,6 +54,9 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
       ItemPositionsListener.create();
   PageController? _pageController;
 
+  // Initial scroll tracking
+  bool _initialScrollDone = false;
+
   // Audio auto-scroll state
   bool _userIsScrolling = false;
   Timer? _userScrollTimer;
@@ -373,6 +376,14 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                 _currentAyah <= 1 &&
                 _pageMap!.containsKey(widget.initialPage)) {
               _currentAyah = _pageMap![widget.initialPage]!.first.ayahNumber;
+            }
+
+            // Ensure initial scroll position after list is built
+            if (_currentAyah > 1 && !_initialScrollDone) {
+              _initialScrollDone = true;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _scrollToAyah(_currentAyah, animate: false);
+              });
             }
 
             // Initialize page controller for mushaf if needed
