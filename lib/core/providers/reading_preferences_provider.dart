@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 const _fontSizeKey = 'reading_font_size';
 const _translationKey = 'default_translation';
 const _reciterKey = 'default_reciter';
+const _tafsirKey = 'default_tafsir';
 const _tajweedKey = 'show_tajweed_colors';
 const _numeralStyleKey = 'numeral_style';
 const _readingModeKey = 'last_reading_mode';
@@ -157,6 +158,52 @@ class ReciterOption {
   final String id;
   final String name;
   const ReciterOption(this.id, this.name);
+}
+
+// ─── Default Tafsir ───
+
+final defaultTafsirProvider =
+    StateNotifierProvider<DefaultTafsirNotifier, TafsirOption>((ref) {
+  return DefaultTafsirNotifier();
+});
+
+class DefaultTafsirNotifier extends StateNotifier<TafsirOption> {
+  DefaultTafsirNotifier() : super(tafsirOptions.first) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final slug = prefs.getString(_tafsirKey);
+    if (slug != null) {
+      final match = tafsirOptions.where((t) => t.slug == slug);
+      if (match.isNotEmpty) state = match.first;
+    }
+  }
+
+  Future<void> setTafsir(TafsirOption option) async {
+    state = option;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_tafsirKey, option.slug);
+  }
+}
+
+const tafsirOptions = [
+  TafsirOption(16, 'ar-tafsir-muyassar', 'Al-Muyassar', 'ar.muyassar'),
+  TafsirOption(14, 'ar-tafsir-ibn-kathir', 'Ibn Kathir', ''),
+  TafsirOption(91, 'ar-tafsir-al-saadi', "Al-Sa'di", ''),
+  TafsirOption(90, 'ar-tafsir-al-qurtubi', 'Al-Qurtubi', ''),
+  TafsirOption(15, 'ar-tafsir-al-tabari', 'Al-Tabari', ''),
+  TafsirOption(94, 'ar-tafsir-al-baghawi', 'Al-Baghawi', ''),
+];
+
+class TafsirOption {
+  final int resourceId;
+  final String slug;
+  final String name;
+  /// Al Quran Cloud edition for fallback (empty = no fallback)
+  final String fallbackEdition;
+  const TafsirOption(this.resourceId, this.slug, this.name, this.fallbackEdition);
 }
 
 // ─── Tajweed Colors Toggle ───

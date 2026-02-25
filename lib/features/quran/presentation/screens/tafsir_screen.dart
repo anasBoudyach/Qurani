@@ -1,11 +1,14 @@
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/database/app_database.dart';
+import '../../../../core/providers/reading_preferences_provider.dart';
 import '../providers/quran_providers.dart';
 import '../../data/models/surah_info.dart';
 
 /// Tafsir screen showing interpretation of a specific ayah.
-/// Uses Quran.com API with Al Quran Cloud fallback.
-/// Uses the shared ApiClient singleton (no raw Dio).
+/// Supports 6 curated Arabic tafsirs via Quran.com API with
+/// Al Quran Cloud fallback. Caches results in local DB.
 class TafsirScreen extends ConsumerStatefulWidget {
   final SurahInfo surah;
   final int ayahNumber;
@@ -24,7 +27,6 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
   static final RegExp _htmlTagRegex = RegExp(r'<[^>]*>');
 
   String? _tafsirText;
-  String _tafsirName = 'Ibn Kathir';
   bool _loading = true;
   String? _error;
 
@@ -40,63 +42,129 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
       _error = null;
     });
 
-    final apiClient = ref.read(apiClientProvider);
+    final tafsir = ref.read(defaultTafsirProvider);
+    final db = ref.read(databaseProvider);
 
+    // Check cache first
+    final cached = await db.getCachedTafsir(
+      widget.surah.number,
+      widget.ayahNumber,
+      tafsir.resourceId,
+    );
+    if (cached != null) {
+      setState(() {
+        _tafsirText = cached.tafsirText;
+        _loading = false;
+      });
+      return;
+    }
+
+    final apiClient = ref.read(apiClientProvider);
+    final verseKey = '${widget.surah.number}:${widget.ayahNumber}';
+
+    // Try Quran.com API (primary)
     try {
-      // Try Quran.com API first (tafsir resource ID 169 = Ibn Kathir)
       final response = await apiClient.quranComDio.get(
-        '/quran/tafsirs/169',
-        queryParameters: {
-          'verse_key': '${widget.surah.number}:${widget.ayahNumber}',
-        },
+        '/tafsirs/${tafsir.resourceId}/by_ayah/$verseKey',
       );
 
-      final tafsirs = response.data['tafsirs'] as List?;
-      if (tafsirs != null && tafsirs.isNotEmpty) {
-        String text = tafsirs.first['text'] ?? '';
-        text = text.replaceAll(_htmlTagRegex, '');
-        setState(() {
-          _tafsirText = text;
-          _loading = false;
-        });
-        return;
+      final data = response.data['tafsir'];
+      if (data != null) {
+        String text = (data['text'] ?? '') as String;
+        text = text.replaceAll(_htmlTagRegex, '').trim();
+        if (text.isNotEmpty) {
+          _cacheAndShow(text, tafsir.resourceId, db);
+          return;
+        }
       }
     } catch (_) {
       // Fallback below
     }
 
-    // Fallback to Al Quran Cloud (Ibn Kathir Arabic tafsir)
-    try {
-      final response = await apiClient.alQuranCloudDio.get(
-        '/ayah/${widget.surah.number}:${widget.ayahNumber}/ar.muyassar',
-      );
-      final data = response.data['data'];
-      setState(() {
-        _tafsirText = data['text'] ?? 'No tafsir available';
-        _tafsirName = 'Tafsir Al-Muyassar';
-        _loading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _error = 'Could not load tafsir. Please check your connection.';
-        _loading = false;
-      });
+    // Fallback to Al Quran Cloud (only if edition available)
+    if (tafsir.fallbackEdition.isNotEmpty) {
+      try {
+        final response = await apiClient.alQuranCloudDio.get(
+          '/ayah/$verseKey/${tafsir.fallbackEdition}',
+        );
+        final data = response.data['data'];
+        if (data != null) {
+          final text = (data['text'] ?? '') as String;
+          if (text.isNotEmpty) {
+            _cacheAndShow(text, tafsir.resourceId, db);
+            return;
+          }
+        }
+      } catch (_) {
+        // Error below
+      }
     }
+
+    setState(() {
+      _error = 'Could not load tafsir. Please check your connection.';
+      _loading = false;
+    });
+  }
+
+  void _cacheAndShow(String text, int resourceId, AppDatabase db) {
+    setState(() {
+      _tafsirText = text;
+      _loading = false;
+    });
+    // Cache in background
+    db.cacheTafsir(CachedTafsirsCompanion(
+      surahId: drift.Value(widget.surah.number),
+      ayahNumber: drift.Value(widget.ayahNumber),
+      resourceId: drift.Value(resourceId),
+      tafsirText: drift.Value(text),
+      cachedAt: drift.Value(DateTime.now()),
+    ));
+  }
+
+  void _onTafsirChanged(TafsirOption option) {
+    ref.read(defaultTafsirProvider.notifier).setTafsir(option);
+    _fetchTafsir();
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentTafsir = ref.watch(defaultTafsirProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           '${widget.surah.nameTransliteration} ${widget.ayahNumber}',
         ),
+        actions: [
+          PopupMenuButton<TafsirOption>(
+            icon: const Icon(Icons.swap_horiz),
+            tooltip: 'Change Tafsir',
+            onSelected: _onTafsirChanged,
+            itemBuilder: (_) => tafsirOptions
+                .map((t) => PopupMenuItem<TafsirOption>(
+                      value: t,
+                      child: Row(
+                        children: [
+                          if (t.slug == currentTafsir.slug)
+                            Icon(Icons.check,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.primary)
+                          else
+                            const SizedBox(width: 18),
+                          const SizedBox(width: 8),
+                          Text(t.name),
+                        ],
+                      ),
+                    ))
+                .toList(),
+          ),
+        ],
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
               ? _buildError()
-              : _buildTafsir(),
+              : _buildTafsir(currentTafsir),
     );
   }
 
@@ -107,8 +175,8 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.cloud_off, size: 48,
-                color: Theme.of(context).colorScheme.error),
+            Icon(Icons.cloud_off,
+                size: 48, color: Theme.of(context).colorScheme.error),
             const SizedBox(height: 16),
             Text(_error!, textAlign: TextAlign.center),
             const SizedBox(height: 16),
@@ -123,7 +191,7 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
     );
   }
 
-  Widget _buildTafsir() {
+  Widget _buildTafsir(TafsirOption tafsir) {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
@@ -131,13 +199,14 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer.withAlpha(77),
+            color:
+                Theme.of(context).colorScheme.primaryContainer.withAlpha(77),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
             children: [
               Text(
-                'Tafsir - $_tafsirName',
+                'Tafsir - ${tafsir.name}',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
@@ -162,6 +231,7 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 height: 1.8,
               ),
+          textDirection: TextDirection.rtl,
         ),
       ],
     );

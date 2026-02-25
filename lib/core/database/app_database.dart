@@ -186,6 +186,22 @@ class AyahBookmarks extends Table {
       ];
 }
 
+// ─── Tafsir Cache ───
+
+class CachedTafsirs extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get surahId => integer()();
+  IntColumn get ayahNumber => integer()();
+  IntColumn get resourceId => integer()();
+  TextColumn get tafsirText => text()();
+  DateTimeColumn get cachedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+        {surahId, ayahNumber, resourceId}
+      ];
+}
+
 // ─── Azkar & Du'as Cache ───
 
 class CachedAzkar extends Table {
@@ -222,12 +238,13 @@ class CachedAzkar extends Table {
   CachedHadiths,
   CachedAzkar,
   AyahBookmarks,
+  CachedTafsirs,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -243,6 +260,9 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 4) {
             await m.createTable(ayahBookmarks);
+          }
+          if (from < 5) {
+            await m.createTable(cachedTafsirs);
           }
         },
       );
@@ -377,6 +397,20 @@ class AppDatabase extends _$AppDatabase {
             ..where((a) => a.categoryId.equals(categoryId))
             ..orderBy([(a) => OrderingTerm.asc(a.itemId)]))
           .get();
+
+  // ─── Tafsir Cache Queries ───
+
+  Future<CachedTafsir?> getCachedTafsir(
+          int surahId, int ayahNumber, int resourceId) =>
+      (select(cachedTafsirs)
+            ..where((t) =>
+                t.surahId.equals(surahId) &
+                t.ayahNumber.equals(ayahNumber) &
+                t.resourceId.equals(resourceId)))
+          .getSingleOrNull();
+
+  Future<void> cacheTafsir(CachedTafsirsCompanion data) =>
+      into(cachedTafsirs).insertOnConflictUpdate(data);
 
   // ─── Ayah Bookmark Queries ───
 

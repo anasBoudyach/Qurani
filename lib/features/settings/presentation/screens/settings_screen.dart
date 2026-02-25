@@ -18,6 +18,7 @@ class SettingsScreen extends ConsumerWidget {
     final currentFontSize = ref.watch(fontSizeProvider);
     final currentTranslation = ref.watch(defaultTranslationProvider);
     final currentReciter = ref.watch(defaultReciterProvider);
+    final currentTafsir = ref.watch(defaultTafsirProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
@@ -49,6 +50,13 @@ class SettingsScreen extends ConsumerWidget {
                 Text('${currentTranslation.name} (${currentTranslation.language})'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => _showTranslationPicker(context, ref, currentTranslation),
+          ),
+          ListTile(
+            leading: const Icon(Icons.menu_book_outlined),
+            title: const Text('Default Tafsir'),
+            subtitle: Text(currentTafsir.name),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _showTafsirPicker(context, ref, currentTafsir),
           ),
           ListTile(
             leading: const Icon(Icons.text_fields),
@@ -340,6 +348,58 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  // ─── Tafsir Picker ───
+
+  void _showTafsirPicker(
+      BuildContext context, WidgetRef ref, TafsirOption current) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _bottomSheetHandle(),
+            const SizedBox(height: 20),
+            Text(
+              'Default Tafsir',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Used when viewing tafsir in the reader',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withAlpha(153),
+                  ),
+            ),
+            const SizedBox(height: 16),
+            ...tafsirOptions.map((option) => RadioListTile<String>(
+                  value: option.slug,
+                  groupValue: current.slug,
+                  title: Text(option.name),
+                  onChanged: (_) {
+                    ref
+                        .read(defaultTafsirProvider.notifier)
+                        .setTafsir(option);
+                    Navigator.pop(context);
+                  },
+                )),
+            const SizedBox(height: 8),
+          ],
         ),
       ),
     );

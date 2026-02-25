@@ -6947,6 +6947,419 @@ class AyahBookmarksCompanion extends UpdateCompanion<AyahBookmark> {
   }
 }
 
+class $CachedTafsirsTable extends CachedTafsirs
+    with TableInfo<$CachedTafsirsTable, CachedTafsir> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CachedTafsirsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _surahIdMeta = const VerificationMeta(
+    'surahId',
+  );
+  @override
+  late final GeneratedColumn<int> surahId = GeneratedColumn<int>(
+    'surah_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ayahNumberMeta = const VerificationMeta(
+    'ayahNumber',
+  );
+  @override
+  late final GeneratedColumn<int> ayahNumber = GeneratedColumn<int>(
+    'ayah_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _resourceIdMeta = const VerificationMeta(
+    'resourceId',
+  );
+  @override
+  late final GeneratedColumn<int> resourceId = GeneratedColumn<int>(
+    'resource_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tafsirTextMeta = const VerificationMeta(
+    'tafsirText',
+  );
+  @override
+  late final GeneratedColumn<String> tafsirText = GeneratedColumn<String>(
+    'tafsir_text',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    surahId,
+    ayahNumber,
+    resourceId,
+    tafsirText,
+    cachedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cached_tafsirs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CachedTafsir> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('surah_id')) {
+      context.handle(
+        _surahIdMeta,
+        surahId.isAcceptableOrUnknown(data['surah_id']!, _surahIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_surahIdMeta);
+    }
+    if (data.containsKey('ayah_number')) {
+      context.handle(
+        _ayahNumberMeta,
+        ayahNumber.isAcceptableOrUnknown(data['ayah_number']!, _ayahNumberMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ayahNumberMeta);
+    }
+    if (data.containsKey('resource_id')) {
+      context.handle(
+        _resourceIdMeta,
+        resourceId.isAcceptableOrUnknown(data['resource_id']!, _resourceIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_resourceIdMeta);
+    }
+    if (data.containsKey('tafsir_text')) {
+      context.handle(
+        _tafsirTextMeta,
+        tafsirText.isAcceptableOrUnknown(data['tafsir_text']!, _tafsirTextMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tafsirTextMeta);
+    }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_cachedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {surahId, ayahNumber, resourceId},
+  ];
+  @override
+  CachedTafsir map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CachedTafsir(
+      id:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}id'],
+          )!,
+      surahId:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}surah_id'],
+          )!,
+      ayahNumber:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}ayah_number'],
+          )!,
+      resourceId:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}resource_id'],
+          )!,
+      tafsirText:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}tafsir_text'],
+          )!,
+      cachedAt:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}cached_at'],
+          )!,
+    );
+  }
+
+  @override
+  $CachedTafsirsTable createAlias(String alias) {
+    return $CachedTafsirsTable(attachedDatabase, alias);
+  }
+}
+
+class CachedTafsir extends DataClass implements Insertable<CachedTafsir> {
+  final int id;
+  final int surahId;
+  final int ayahNumber;
+  final int resourceId;
+  final String tafsirText;
+  final DateTime cachedAt;
+  const CachedTafsir({
+    required this.id,
+    required this.surahId,
+    required this.ayahNumber,
+    required this.resourceId,
+    required this.tafsirText,
+    required this.cachedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['surah_id'] = Variable<int>(surahId);
+    map['ayah_number'] = Variable<int>(ayahNumber);
+    map['resource_id'] = Variable<int>(resourceId);
+    map['tafsir_text'] = Variable<String>(tafsirText);
+    map['cached_at'] = Variable<DateTime>(cachedAt);
+    return map;
+  }
+
+  CachedTafsirsCompanion toCompanion(bool nullToAbsent) {
+    return CachedTafsirsCompanion(
+      id: Value(id),
+      surahId: Value(surahId),
+      ayahNumber: Value(ayahNumber),
+      resourceId: Value(resourceId),
+      tafsirText: Value(tafsirText),
+      cachedAt: Value(cachedAt),
+    );
+  }
+
+  factory CachedTafsir.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CachedTafsir(
+      id: serializer.fromJson<int>(json['id']),
+      surahId: serializer.fromJson<int>(json['surahId']),
+      ayahNumber: serializer.fromJson<int>(json['ayahNumber']),
+      resourceId: serializer.fromJson<int>(json['resourceId']),
+      tafsirText: serializer.fromJson<String>(json['tafsirText']),
+      cachedAt: serializer.fromJson<DateTime>(json['cachedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'surahId': serializer.toJson<int>(surahId),
+      'ayahNumber': serializer.toJson<int>(ayahNumber),
+      'resourceId': serializer.toJson<int>(resourceId),
+      'tafsirText': serializer.toJson<String>(tafsirText),
+      'cachedAt': serializer.toJson<DateTime>(cachedAt),
+    };
+  }
+
+  CachedTafsir copyWith({
+    int? id,
+    int? surahId,
+    int? ayahNumber,
+    int? resourceId,
+    String? tafsirText,
+    DateTime? cachedAt,
+  }) => CachedTafsir(
+    id: id ?? this.id,
+    surahId: surahId ?? this.surahId,
+    ayahNumber: ayahNumber ?? this.ayahNumber,
+    resourceId: resourceId ?? this.resourceId,
+    tafsirText: tafsirText ?? this.tafsirText,
+    cachedAt: cachedAt ?? this.cachedAt,
+  );
+  CachedTafsir copyWithCompanion(CachedTafsirsCompanion data) {
+    return CachedTafsir(
+      id: data.id.present ? data.id.value : this.id,
+      surahId: data.surahId.present ? data.surahId.value : this.surahId,
+      ayahNumber:
+          data.ayahNumber.present ? data.ayahNumber.value : this.ayahNumber,
+      resourceId:
+          data.resourceId.present ? data.resourceId.value : this.resourceId,
+      tafsirText:
+          data.tafsirText.present ? data.tafsirText.value : this.tafsirText,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedTafsir(')
+          ..write('id: $id, ')
+          ..write('surahId: $surahId, ')
+          ..write('ayahNumber: $ayahNumber, ')
+          ..write('resourceId: $resourceId, ')
+          ..write('tafsirText: $tafsirText, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, surahId, ayahNumber, resourceId, tafsirText, cachedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CachedTafsir &&
+          other.id == this.id &&
+          other.surahId == this.surahId &&
+          other.ayahNumber == this.ayahNumber &&
+          other.resourceId == this.resourceId &&
+          other.tafsirText == this.tafsirText &&
+          other.cachedAt == this.cachedAt);
+}
+
+class CachedTafsirsCompanion extends UpdateCompanion<CachedTafsir> {
+  final Value<int> id;
+  final Value<int> surahId;
+  final Value<int> ayahNumber;
+  final Value<int> resourceId;
+  final Value<String> tafsirText;
+  final Value<DateTime> cachedAt;
+  const CachedTafsirsCompanion({
+    this.id = const Value.absent(),
+    this.surahId = const Value.absent(),
+    this.ayahNumber = const Value.absent(),
+    this.resourceId = const Value.absent(),
+    this.tafsirText = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+  });
+  CachedTafsirsCompanion.insert({
+    this.id = const Value.absent(),
+    required int surahId,
+    required int ayahNumber,
+    required int resourceId,
+    required String tafsirText,
+    required DateTime cachedAt,
+  }) : surahId = Value(surahId),
+       ayahNumber = Value(ayahNumber),
+       resourceId = Value(resourceId),
+       tafsirText = Value(tafsirText),
+       cachedAt = Value(cachedAt);
+  static Insertable<CachedTafsir> custom({
+    Expression<int>? id,
+    Expression<int>? surahId,
+    Expression<int>? ayahNumber,
+    Expression<int>? resourceId,
+    Expression<String>? tafsirText,
+    Expression<DateTime>? cachedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (surahId != null) 'surah_id': surahId,
+      if (ayahNumber != null) 'ayah_number': ayahNumber,
+      if (resourceId != null) 'resource_id': resourceId,
+      if (tafsirText != null) 'tafsir_text': tafsirText,
+      if (cachedAt != null) 'cached_at': cachedAt,
+    });
+  }
+
+  CachedTafsirsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? surahId,
+    Value<int>? ayahNumber,
+    Value<int>? resourceId,
+    Value<String>? tafsirText,
+    Value<DateTime>? cachedAt,
+  }) {
+    return CachedTafsirsCompanion(
+      id: id ?? this.id,
+      surahId: surahId ?? this.surahId,
+      ayahNumber: ayahNumber ?? this.ayahNumber,
+      resourceId: resourceId ?? this.resourceId,
+      tafsirText: tafsirText ?? this.tafsirText,
+      cachedAt: cachedAt ?? this.cachedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (surahId.present) {
+      map['surah_id'] = Variable<int>(surahId.value);
+    }
+    if (ayahNumber.present) {
+      map['ayah_number'] = Variable<int>(ayahNumber.value);
+    }
+    if (resourceId.present) {
+      map['resource_id'] = Variable<int>(resourceId.value);
+    }
+    if (tafsirText.present) {
+      map['tafsir_text'] = Variable<String>(tafsirText.value);
+    }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedTafsirsCompanion(')
+          ..write('id: $id, ')
+          ..write('surahId: $surahId, ')
+          ..write('ayahNumber: $ayahNumber, ')
+          ..write('resourceId: $resourceId, ')
+          ..write('tafsirText: $tafsirText, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6976,6 +7389,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $CachedHadithsTable cachedHadiths = $CachedHadithsTable(this);
   late final $CachedAzkarTable cachedAzkar = $CachedAzkarTable(this);
   late final $AyahBookmarksTable ayahBookmarks = $AyahBookmarksTable(this);
+  late final $CachedTafsirsTable cachedTafsirs = $CachedTafsirsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6997,6 +7411,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     cachedHadiths,
     cachedAzkar,
     ayahBookmarks,
+    cachedTafsirs,
   ];
 }
 
@@ -12262,6 +12677,236 @@ typedef $$AyahBookmarksTableProcessedTableManager =
       AyahBookmark,
       PrefetchHooks Function({bool surahId})
     >;
+typedef $$CachedTafsirsTableCreateCompanionBuilder =
+    CachedTafsirsCompanion Function({
+      Value<int> id,
+      required int surahId,
+      required int ayahNumber,
+      required int resourceId,
+      required String tafsirText,
+      required DateTime cachedAt,
+    });
+typedef $$CachedTafsirsTableUpdateCompanionBuilder =
+    CachedTafsirsCompanion Function({
+      Value<int> id,
+      Value<int> surahId,
+      Value<int> ayahNumber,
+      Value<int> resourceId,
+      Value<String> tafsirText,
+      Value<DateTime> cachedAt,
+    });
+
+class $$CachedTafsirsTableFilterComposer
+    extends Composer<_$AppDatabase, $CachedTafsirsTable> {
+  $$CachedTafsirsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get surahId => $composableBuilder(
+    column: $table.surahId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ayahNumber => $composableBuilder(
+    column: $table.ayahNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get resourceId => $composableBuilder(
+    column: $table.resourceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tafsirText => $composableBuilder(
+    column: $table.tafsirText,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CachedTafsirsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CachedTafsirsTable> {
+  $$CachedTafsirsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get surahId => $composableBuilder(
+    column: $table.surahId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ayahNumber => $composableBuilder(
+    column: $table.ayahNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get resourceId => $composableBuilder(
+    column: $table.resourceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tafsirText => $composableBuilder(
+    column: $table.tafsirText,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CachedTafsirsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CachedTafsirsTable> {
+  $$CachedTafsirsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get surahId =>
+      $composableBuilder(column: $table.surahId, builder: (column) => column);
+
+  GeneratedColumn<int> get ayahNumber => $composableBuilder(
+    column: $table.ayahNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get resourceId => $composableBuilder(
+    column: $table.resourceId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get tafsirText => $composableBuilder(
+    column: $table.tafsirText,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+}
+
+class $$CachedTafsirsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CachedTafsirsTable,
+          CachedTafsir,
+          $$CachedTafsirsTableFilterComposer,
+          $$CachedTafsirsTableOrderingComposer,
+          $$CachedTafsirsTableAnnotationComposer,
+          $$CachedTafsirsTableCreateCompanionBuilder,
+          $$CachedTafsirsTableUpdateCompanionBuilder,
+          (
+            CachedTafsir,
+            BaseReferences<_$AppDatabase, $CachedTafsirsTable, CachedTafsir>,
+          ),
+          CachedTafsir,
+          PrefetchHooks Function()
+        > {
+  $$CachedTafsirsTableTableManager(_$AppDatabase db, $CachedTafsirsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer:
+              () => $$CachedTafsirsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () =>
+                  $$CachedTafsirsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer:
+              () => $$CachedTafsirsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> surahId = const Value.absent(),
+                Value<int> ayahNumber = const Value.absent(),
+                Value<int> resourceId = const Value.absent(),
+                Value<String> tafsirText = const Value.absent(),
+                Value<DateTime> cachedAt = const Value.absent(),
+              }) => CachedTafsirsCompanion(
+                id: id,
+                surahId: surahId,
+                ayahNumber: ayahNumber,
+                resourceId: resourceId,
+                tafsirText: tafsirText,
+                cachedAt: cachedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int surahId,
+                required int ayahNumber,
+                required int resourceId,
+                required String tafsirText,
+                required DateTime cachedAt,
+              }) => CachedTafsirsCompanion.insert(
+                id: id,
+                surahId: surahId,
+                ayahNumber: ayahNumber,
+                resourceId: resourceId,
+                tafsirText: tafsirText,
+                cachedAt: cachedAt,
+              ),
+          withReferenceMapper:
+              (p0) =>
+                  p0
+                      .map(
+                        (e) => (
+                          e.readTable(table),
+                          BaseReferences(db, table, e),
+                        ),
+                      )
+                      .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CachedTafsirsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CachedTafsirsTable,
+      CachedTafsir,
+      $$CachedTafsirsTableFilterComposer,
+      $$CachedTafsirsTableOrderingComposer,
+      $$CachedTafsirsTableAnnotationComposer,
+      $$CachedTafsirsTableCreateCompanionBuilder,
+      $$CachedTafsirsTableUpdateCompanionBuilder,
+      (
+        CachedTafsir,
+        BaseReferences<_$AppDatabase, $CachedTafsirsTable, CachedTafsir>,
+      ),
+      CachedTafsir,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -12298,4 +12943,6 @@ class $AppDatabaseManager {
       $$CachedAzkarTableTableManager(_db, _db.cachedAzkar);
   $$AyahBookmarksTableTableManager get ayahBookmarks =>
       $$AyahBookmarksTableTableManager(_db, _db.ayahBookmarks);
+  $$CachedTafsirsTableTableManager get cachedTafsirs =>
+      $$CachedTafsirsTableTableManager(_db, _db.cachedTafsirs);
 }

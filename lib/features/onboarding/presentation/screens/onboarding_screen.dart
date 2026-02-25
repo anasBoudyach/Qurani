@@ -454,6 +454,7 @@ class _PreferencesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final translation = ref.watch(defaultTranslationProvider);
+    final tafsir = ref.watch(defaultTafsirProvider);
     final reciter = ref.watch(defaultReciterProvider);
     final fontSize = ref.watch(fontSizeProvider);
     final showTajweed = ref.watch(tajweedProvider);
@@ -509,6 +510,12 @@ class _PreferencesPage extends ConsumerWidget {
             title: 'Translation',
             subtitle: '${translation.name} (${translation.language})',
             onTap: () => _showTranslationPicker(context, ref),
+          ),
+          _PreferenceCard(
+            icon: Icons.menu_book_outlined,
+            title: 'Default Tafsir',
+            subtitle: tafsir.name,
+            onTap: () => _showTafsirPicker(context, ref),
           ),
           _PreferenceCard(
             icon: Icons.person_outline,
@@ -628,6 +635,37 @@ class _PreferencesPage extends ConsumerWidget {
                     },
                   ))
               .toList(),
+        ),
+      ),
+    );
+  }
+
+  void _showTafsirPicker(BuildContext context, WidgetRef ref) {
+    final current = ref.read(defaultTafsirProvider);
+    showModalBottomSheet(
+      context: context,
+      useRootNavigator: false,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ...tafsirOptions.map((option) => RadioListTile<String>(
+                  value: option.slug,
+                  groupValue: current.slug,
+                  title: Text(option.name),
+                  onChanged: (_) {
+                    ref
+                        .read(defaultTafsirProvider.notifier)
+                        .setTafsir(option);
+                    Navigator.pop(sheetContext);
+                  },
+                )),
+            const SizedBox(height: 8),
+          ],
         ),
       ),
     );
