@@ -165,19 +165,21 @@
 - [ ] Generate release signing key (`keytool -genkey ...`) and configure in `build.gradle.kts`
 - [ ] Replace debug signing config with release signing config
 - [ ] Generate proper mipmap PNGs from app icon design (use `flutter_launcher_icons`)
-- [ ] Set version to `1.0.0+1` (already done)
+- [x] Set version to `1.0.0+1` (already done)
+- [x] `flutter analyze` passes with no issues
+- [x] Debug build compiles successfully
 - [ ] Run `flutter build appbundle --release` successfully
 
 ### Play Store Assets
-- [ ] App icon: 512x512 PNG (hi-res, professional design)
-- [ ] Feature graphic: 1024x500 banner image
+- [x] App icon: `assets/store/icon.png`
+- [x] Feature graphic: `assets/store/feature_graphic.png`
 - [ ] Phone screenshots: 4-8 screenshots from real device (home, quran, audio, tajweed, prayer, settings)
-- [ ] App name: "Qurani - Quran, Tajweed, Azkar" (30 chars max)
-- [ ] Short description (80 chars): "Free Quran with 260+ reciters, tajweed course, prayer times & azkar. No ads."
-- [ ] Full description (4000 chars): keyword-rich, multilingual highlights
-- [ ] Category: Books & Reference
-- [ ] Content rating: complete IARC questionnaire
-- [ ] Privacy policy URL (required — disclose location usage for prayer times/qibla)
+- [x] App name: "Qurani - Quran, Tajweed, Azkar" (drafted in PROGRESS.md)
+- [x] Short description (drafted in PROGRESS.md)
+- [x] Full description (drafted in PROGRESS.md)
+- [x] Category: Books & Reference
+- [ ] Content rating: complete IARC questionnaire (done on Play Console)
+- [x] Privacy policy: `PRIVACY_POLICY.md` (needs hosting at a public URL)
 
 ### Testing
 - [x] Real device testing on RMX3630
