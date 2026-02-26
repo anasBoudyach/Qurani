@@ -50,7 +50,7 @@
 - [x] MP3Quran CDN support (surah-level, 260+ reciters)
 - [x] EveryAyah CDN support (verse-level audio)
 - [x] Repeat modes (none, ayah, range, surah)
-- [x] Background audio playback with notification + lock screen controls
+- [x] Background audio notification + lock screen controls (custom Kotlin MediaSession, replaces audio_service which crashed on OEM devices)
 - [x] `MiniPlayerWidget` - 56dp persistent player across all tabs
 - [x] `FullPlayerScreen` - Seek bar, controls, surah artwork, reciter name
 - [x] `ReciterModel` - Data model from MP3Quran API
@@ -61,8 +61,8 @@
 - [x] Mini player wired into AppShell bottom navigation
 - [x] Skip next/previous navigation (surah-level + ayah-level)
 - [x] Auto-advance to next surah on completion (continuous mode)
-- [x] Background audio: AudioServiceActivity for notification/lock screen controls
-- [x] Single-player fix: RecordingScreen reuses shared AudioPlayer (just_audio_background constraint)
+- [x] Background audio notification controls (custom Kotlin MediaSession + MediaNotificationService with try-catch fallback)
+- [x] RecordingScreen reuses shared AudioPlayer
 - [x] Unified playback mode button: Single → Continuous → Repeat Surah → Repeat Ayah
 - [x] Surah repeat handled manually in _handleCompletion (LoopMode.all == LoopMode.one on single source)
 - [x] Playback mode snackbar notification on mode change
@@ -156,6 +156,17 @@
 - [x] Offline mode toggle: `offlineModeProvider` with Settings switch + Onboarding option
 - [x] Offline guards: all repositories skip API when offline, streaming blocked, reciter detail forces downloaded-only filter
 - [ ] Google Play Store listing
+
+---
+
+## Known Issues / Future Work
+
+### Audio notification controls (lock screen / notification)
+- **Problem**: `just_audio_background` / `audio_service` uses `MediaBrowserServiceCompat` which crashes on OEM Android skins (ColorOS, OxygenOS, MIUI, Realme UI)
+- **v4**: Full `just_audio_background` — crashed on testers' phones; worked on RMX3630 (Realme, Android 13) + x86_64 emulators
+- **v5**: Removed Dart-side `just_audio_background` but left native `audio_service` leftovers (half-configured)
+- **v6**: Fully replaced with custom Kotlin `MediaNotificationService` using `MediaSessionCompat` directly (no `MediaBrowserService`), platform channel to Flutter, all wrapped in try-catch. If MediaSession fails on a device, audio plays normally without notification — app never crashes
+- **Status**: Needs tester verification on OEM devices
 
 ---
 

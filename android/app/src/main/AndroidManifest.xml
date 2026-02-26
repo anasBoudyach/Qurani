@@ -4,8 +4,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -95,29 +93,25 @@
                 android:resource="@xml/daily_hadith_widget_info" />
         </receiver>
 
+        <!-- Media notification action receiver (play/pause/skip from notification) -->
+        <receiver
+            android:name=".MediaActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.qurani.qurani.ACTION_PLAY" />
+                <action android:name="com.qurani.qurani.ACTION_PAUSE" />
+                <action android:name="com.qurani.qurani.ACTION_NEXT" />
+                <action android:name="com.qurani.qurani.ACTION_PREV" />
+                <action android:name="com.qurani.qurani.ACTION_STOP" />
+            </intent-filter>
+        </receiver>
+
         <!-- Boot receiver to reschedule prayer notifications after reboot -->
         <receiver
             android:name=".BootReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <!-- Background audio service for lock screen / notification controls -->
-        <service
-            android:name="com.ryanheise.audioservice.AudioService"
-            android:foregroundServiceType="mediaPlayback"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.media.browse.MediaBrowserService" />
-            </intent-filter>
-        </service>
-        <receiver
-            android:name="com.ryanheise.audioservice.MediaButtonReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 

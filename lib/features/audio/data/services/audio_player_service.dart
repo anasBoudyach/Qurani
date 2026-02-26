@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:just_audio/just_audio.dart';
+import '../../../quran/data/models/surah_info.dart';
+import 'media_controls_service.dart';
 
 /// Repeat mode for audio playback.
 enum AudioRepeatMode {
@@ -98,6 +100,7 @@ class AudioPlayerState {
 class AudioPlayerService {
   final AudioPlayer _player = AudioPlayer();
   final _stateController = StreamController<AudioPlayerState>.broadcast();
+  final MediaControlsService _mediaControls = MediaControlsService();
 
   AudioPlayerState _state = const AudioPlayerState();
 
@@ -106,6 +109,7 @@ class AudioPlayerService {
   AudioPlayer get player => _player;
 
   AudioPlayerService() {
+    _mediaControls.attach(this);
     _listenToPlayerState();
   }
 
@@ -153,9 +157,36 @@ class AudioPlayerService {
     );
   }
 
+  DateTime _lastMediaSync = DateTime(0);
+
   void _updateState(AudioPlayerState newState) {
+    final playStateChanged = _state.isPlaying != newState.isPlaying;
     _state = newState;
     _stateController.add(_state);
+    // Throttle notification updates to avoid spamming the platform channel.
+    // Always sync immediately on play/pause changes.
+    final now = DateTime.now();
+    if (playStateChanged || now.difference(_lastMediaSync).inSeconds >= 1) {
+      _lastMediaSync = now;
+      _syncMediaControls();
+    }
+  }
+
+  void _syncMediaControls() {
+    if (_state.hasTrack) {
+      _mediaControls.updatePlaybackState(
+        isPlaying: _state.isPlaying,
+        position: _state.position,
+        duration: _state.duration,
+      );
+    }
+  }
+
+  String _surahName(int surahNumber) {
+    return SurahInfo.all
+        .firstWhere((s) => s.number == surahNumber,
+            orElse: () => SurahInfo.all.first)
+        .nameTransliteration;
   }
 
   /// Play a surah from MP3Quran CDN.
@@ -183,6 +214,10 @@ class AudioPlayerService {
       final url = '$serverUrl$paddedSurah.mp3';
 
       await _player.setAudioSource(AudioSource.uri(Uri.parse(url)));
+      _mediaControls.updateTrack(
+        _surahName(surahNumber),
+        reciterName ?? 'Qurani',
+      );
       await _player.play();
     } catch (e) {
       _updateState(_state.copyWith(
@@ -219,6 +254,10 @@ class AudioPlayerService {
           'https://everyayah.com/data/$reciterFolder/$paddedSurah$paddedAyah.mp3';
 
       await _player.setAudioSource(AudioSource.uri(Uri.parse(url)));
+      _mediaControls.updateTrack(
+        '${_surahName(surahNumber)} - Ayah $ayahNumber',
+        reciterName ?? 'Mishary Alafasy',
+      );
       await _player.play();
     } catch (e) {
       _updateState(_state.copyWith(
@@ -251,6 +290,8 @@ class AudioPlayerService {
       ));
 
       await _player.setAudioSource(AudioSource.file(filePath));
+      final title = surahNumber != null ? _surahName(surahNumber) : 'Qurani';
+      _mediaControls.updateTrack(title, reciterName ?? 'Qurani');
       await _player.play();
     } catch (e) {
       _updateState(_state.copyWith(
@@ -280,6 +321,7 @@ class AudioPlayerService {
 
   Future<void> stop() async {
     await _player.stop();
+    _mediaControls.dismiss();
     _updateState(const AudioPlayerState());
   }
 
