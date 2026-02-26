@@ -163,7 +163,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           // ── Gradient Header with parallax ──
           GradientHeader(
             gradient: AppColors.getDailyHeaderGradient(isDark),
-            height: 170,
             showMosque: true,
             scrollOffset: _scrollOffset,
             padding: EdgeInsets.fromLTRB(

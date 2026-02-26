@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 /// decorative mosque silhouette via [CustomPainter], and content overlay.
 class GradientHeader extends StatelessWidget {
   final List<Color> gradient;
-  final double height;
+  final double? height;
   final Widget? child;
   final bool showMosque;
   final EdgeInsets padding;
@@ -20,7 +20,7 @@ class GradientHeader extends StatelessWidget {
   const GradientHeader({
     super.key,
     required this.gradient,
-    this.height = 220,
+    this.height,
     this.child,
     this.showMosque = false,
     this.padding = const EdgeInsets.fromLTRB(24, 16, 24, 24),
