@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../router/app_router.dart' show rootNavigatorKey;
 import '../../features/donate/presentation/screens/donate_screen.dart';
 
 /// Gentle, non-aggressive prompt dialogs for review and donation.
@@ -17,7 +18,7 @@ class PromptDialogs {
     final result = await showDialog<String>(
       context: context,
       barrierDismissible: true,
-      builder: (ctx) => AlertDialog(
+      builder: (_) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         icon: Container(
           width: 56,
@@ -44,7 +45,7 @@ class PromptDialogs {
         actionsAlignment: MainAxisAlignment.center,
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(ctx, 'never'),
+            onPressed: () => rootNavigatorKey.currentState?.pop('never'),
             child: Text(
               'Don\'t Show Again',
               style: TextStyle(
@@ -53,11 +54,11 @@ class PromptDialogs {
             ),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(ctx),
+            onPressed: () => rootNavigatorKey.currentState?.pop(),
             child: const Text('Not Now'),
           ),
           FilledButton.icon(
-            onPressed: () => Navigator.pop(ctx, 'action'),
+            onPressed: () => rootNavigatorKey.currentState?.pop('action'),
             icon: const Icon(Icons.star_rounded, size: 18),
             label: const Text('Rate App'),
           ),
@@ -78,7 +79,7 @@ class PromptDialogs {
     final result = await showDialog<String>(
       context: context,
       barrierDismissible: true,
-      builder: (ctx) => AlertDialog(
+      builder: (_) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         icon: Container(
           width: 56,
@@ -106,7 +107,7 @@ class PromptDialogs {
         actionsAlignment: MainAxisAlignment.center,
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(ctx, 'never'),
+            onPressed: () => rootNavigatorKey.currentState?.pop('never'),
             child: Text(
               'Don\'t Show Again',
               style: TextStyle(
@@ -115,11 +116,11 @@ class PromptDialogs {
             ),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(ctx),
+            onPressed: () => rootNavigatorKey.currentState?.pop(),
             child: const Text('Not Now'),
           ),
           FilledButton.icon(
-            onPressed: () => Navigator.pop(ctx, 'action'),
+            onPressed: () => rootNavigatorKey.currentState?.pop('action'),
             icon: const Icon(Icons.favorite_rounded, size: 18),
             label: const Text('Support'),
           ),

@@ -1,7 +1,7 @@
 name: qurani
 description: "Qurani - Complete Quran app with tajweed teaching, 260+ reciters, tafsir, and more."
 publish_to: 'none'
-version: 1.0.0+7
+version: 1.0.0+8
 
 environment:
   sdk: ^3.7.2
