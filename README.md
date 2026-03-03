@@ -156,7 +156,7 @@ For general inquiries: **anas.boudyach@gmail.com**
 
 This app is free and will always be free — no ads, no subscriptions. If you'd like to support the project:
 
-- [**GoFundMe**](https://gofund.me/e9c3f292) — help bring Qurani to more platforms
+- [**GoFundMe**](https://www.gofundme.com/f/help-build-a-free-allinone-islamic-app-for-everyone) — help bring Qurani to more platforms
 - [**GitHub Sponsors**](https://github.com/sponsors/anasBoudyach) — one-time or monthly
 - [**Buy Me a Coffee**](https://buymeacoffee.com/anasboudyach) — one-time or monthly
 - [**PayPal**](https://paypal.me/AnasBOUDYACH) — direct donation
