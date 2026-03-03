@@ -128,12 +128,6 @@ No other app teaches all tajweed rules for free.
 ## Screenshots
 
 <p align="center">
-  <img src="assets/store/screenshots_1.png" width="100%" alt="Qurani Screenshots - Home, Tajweed, Audio, Hifz"/>
-</p>
-<p align="center">
-  <img src="assets/store/screenshots_2.png" width="100%" alt="Qurani Screenshots - Prayer Times, Tajweed Course, Ahadith, Ahkam"/>
-</p>
-<p align="center">
   <img src="assets/store/screenshots_3.png" width="100%" alt="Qurani Screenshots - Overview 1"/>
 </p>
 <p align="center">
